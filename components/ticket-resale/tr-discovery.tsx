@@ -3,15 +3,20 @@
 import { useMemo, useState } from "react";
 import { eventDateKey, resaleEvents } from "@/lib/ticket-resale-page";
 import { TrHero } from "./tr-hero";
-import { EventFilters, ALL, type EventFilterState } from "./event-filters";
+import { LocationDateBar, TypeChips, ALL, type EventFilterState } from "./event-filters";
 import { EventSection } from "./event-section";
 
 const RESULT_COUNT = 10;
 
 /**
  * Owns everything the discovery half of the page shares: the hero's search box,
- * the filter bar, and the result grid all read one piece of state, so a search
- * and a filter compose instead of fighting.
+ * the filters, and the rail all read one piece of state, so a search and a
+ * filter compose instead of fighting.
+ *
+ * Laid out the way a listings app opens. Place and date come first, on their
+ * own centred line — a statement of what you are looking at rather than a form.
+ * Then the rail itself, as tall artwork. Then the type chips, directly under
+ * the rail they narrow, so changing one visibly changes the row above it.
  *
  * `children` is whatever the page wants between the hero and the results — the
  * partner row lives there. Taking it as children rather than importing it keeps
@@ -25,7 +30,7 @@ export function TrDiscovery({ children }: { children?: React.ReactNode }) {
     type: ALL,
   });
 
-  /* Options come from the catalogue, so the bar can never offer an empty choice. */
+  /* Options come from the catalogue, so no control can offer an empty choice. */
   const { cities, eventDays, types } = useMemo(
     () => ({
       cities: [...new Set(resaleEvents.map((event) => event.city))].sort(),
@@ -71,7 +76,7 @@ export function TrDiscovery({ children }: { children?: React.ReactNode }) {
     ? `Results for "${query.trim()}"`
     : isNarrowed
       ? "Matching events"
-      : "Suggested for you";
+      : "Popular events";
 
   return (
     <>
@@ -79,15 +84,13 @@ export function TrDiscovery({ children }: { children?: React.ReactNode }) {
 
       {children}
 
-      <section id="suggested" className="scroll-mt-28 bg-paper pt-12 sm:pt-14">
+      <section id="suggested" className="scroll-mt-28 bg-paper pt-10 sm:pt-12">
         <div className="mx-auto w-full max-w-[75rem] px-6 sm:px-10">
-          <EventFilters
+          <LocationDateBar
             cities={cities}
             eventDays={eventDays}
-            types={types}
             value={filters}
             onChange={setFilters}
-            resultCount={matches.length}
           />
         </div>
       </section>
@@ -96,9 +99,21 @@ export function TrDiscovery({ children }: { children?: React.ReactNode }) {
         id="results"
         title={title}
         events={events}
-        initialCount={5}
+        variant="poster"
+        initialCount={8}
         emptyMessage={`Nothing matched${normalized ? ` "${query.trim()}"` : ""}. Try another search, or clear a filter.`}
       />
+
+      <section className="bg-paper pb-9 sm:pb-11">
+        <div className="mx-auto w-full max-w-[75rem] px-6 sm:px-10">
+          <TypeChips
+            types={types}
+            value={filters.type}
+            onChange={(type) => setFilters({ ...filters, type })}
+            resultCount={matches.length}
+          />
+        </div>
+      </section>
     </>
   );
 }

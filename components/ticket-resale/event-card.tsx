@@ -7,23 +7,28 @@ import { Calendar, ChevronRight, Heart, MapPin } from "lucide-react";
 import { clsx } from "@/lib/clsx";
 import { formatUsd, type ResaleEvent } from "@/lib/ticket-resale-page";
 
-export type EventCardVariant = "tile" | "feature";
+export type EventCardVariant = "tile" | "feature" | "poster";
 
 /**
- * One listing, reused everywhere on the route, in two shapes.
+ * One listing, reused everywhere on the route, in three shapes.
  *
- * `tile` is the default rail card: no chrome (border/background/padding), just
- * a square photo and a compact text stack beneath it, matching the
- * marketplace-listing look this route is going for.
+ * `tile` is the default rail card: no chrome, a square photo and a compact text
+ * stack beneath it.
  *
- * `feature` is the wide shape — a landscape photo inside a real card, with the
- * name, a single meta line, and a round chevron on one row underneath. Two of
- * them fit the content column, so it reads as a pair of banners rather than a
- * row of thumbnails. Everything it shows comes off the same `ResaleEvent`; only
- * the proportions differ.
+ * `feature` is the wide shape — a landscape photo inside a real card, name, one
+ * meta line, and a round chevron on a row underneath. Two fit the content
+ * column, so it reads as a pair of banners rather than a row of thumbnails.
+ *
+ * `poster` is the tall shape the discovery rail uses: the photograph *is* the
+ * card, with the name and date set over its foot on a scrim. Nothing sits
+ * outside the frame, so a row of them reads as artwork rather than as records —
+ * which is the point, since it is the first thing under the hero.
+ *
+ * Everything all three show comes off the same `ResaleEvent`; only the
+ * proportions and where the type sits differ.
  *
  * The favorite heart is local, unpersisted UI state — there's no account system
- * yet for it to save against — so it sits outside the link in both shapes, or
+ * yet for it to save against — so it sits outside the link in every shape, or
  * tapping it would navigate.
  */
 export function EventCard({
@@ -34,7 +39,6 @@ export function EventCard({
   variant?: EventCardVariant;
 }) {
   const [saved, setSaved] = useState(false);
-  const feature = variant === "feature";
 
   const heart = (
     <button
@@ -43,22 +47,72 @@ export function EventCard({
       aria-pressed={saved}
       aria-label={saved ? `Remove ${event.name} from saved` : `Save ${event.name}`}
       className={clsx(
-        "absolute flex items-center justify-center rounded-full bg-white/85 text-graphite backdrop-blur-sm transition-colors duration-300 ease-editorial hover:bg-white",
-        /* Inset from the photo's own edge, which the feature card pads away from its own. */
-        feature ? "right-5 top-5 h-9 w-9" : "right-2.5 top-2.5 h-8 w-8",
+        "absolute flex items-center justify-center rounded-full transition-colors duration-300 ease-editorial",
+        variant === "poster"
+          ? /* No plate on the poster — the scrim and a drop shadow carry it, as the
+               reference has it, and a white disc would punch a hole in the artwork. */
+            "right-2.5 top-2.5 h-10 w-10 text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.55)] hover:text-white/80"
+          : variant === "feature"
+            ? "right-5 top-5 h-9 w-9 bg-white/85 text-graphite backdrop-blur-sm hover:bg-white"
+            : "right-2.5 top-2.5 h-8 w-8 bg-white/85 text-graphite backdrop-blur-sm hover:bg-white",
       )}
     >
       <Heart
         className={clsx(
-          feature ? "h-4 w-4" : "h-3.5 w-3.5",
-          saved ? "fill-burgundy text-burgundy" : "text-graphite",
+          variant === "tile" ? "h-3.5 w-3.5" : "h-[1.15rem] w-[1.15rem]",
+          saved
+            ? "fill-burgundy text-burgundy"
+            : variant === "poster"
+              ? "text-white"
+              : "text-graphite",
         )}
         aria-hidden
       />
     </button>
   );
 
-  if (feature) {
+  if (variant === "poster") {
+    return (
+      <div className="group relative h-full w-full text-left">
+        <Link
+          href={`/ticket-resale/${event.slug}`}
+          className="block overflow-hidden rounded-feature"
+        >
+          <div className="relative aspect-[3/4] w-full">
+            <Image
+              src={event.image}
+              alt=""
+              fill
+              sizes="(min-width: 640px) 17rem, 62vw"
+              className={clsx(
+                "object-cover transition-transform duration-[900ms] ease-editorial group-hover:scale-[1.05]",
+                event.imagePosition,
+              )}
+            />
+
+            {/* Deep enough at the foot to hold two lines of type at any brightness */}
+            <div
+              aria-hidden
+              className="absolute inset-0 bg-gradient-to-t from-graphite via-graphite/25 to-transparent"
+            />
+
+            <div className="absolute inset-x-4 bottom-4">
+              <h3 className="line-clamp-2 text-[1.0625rem] font-semibold leading-[1.25] text-white">
+                {event.name}
+              </h3>
+              <p className="mt-1 line-clamp-1 text-[0.8125rem] text-white/70">
+                {event.date} · {event.city}
+              </p>
+            </div>
+          </div>
+        </Link>
+
+        {heart}
+      </div>
+    );
+  }
+
+  if (variant === "feature") {
     return (
       <div className="group relative h-full w-full text-left">
         <Link

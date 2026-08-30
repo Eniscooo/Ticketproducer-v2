@@ -27,7 +27,7 @@ export const formatUsd = (value: number) =>
 
 export const trHero = {
   headline: "Find your next event.",
-  body: "Discover and access tickets for concerts, sports, theater, and live experiences — verified resale, without the markup games.",
+  body: "Verified tickets for concerts, sports, and theater — without the markup games.",
   searchPlaceholder: "Search events, artists, teams or venues",
 };
 

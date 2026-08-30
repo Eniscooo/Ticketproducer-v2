@@ -57,26 +57,33 @@ export function TrHero({ onSearch }: { onSearch: (query: string) => void }) {
   });
 
   return (
-    <section id="top" className="relative bg-paper pb-8 pt-20 sm:pb-8 sm:pt-30 lg:pb-10">
-      <div className="mx-auto grid w-full max-w-[75rem] items-center gap-y-14 px-6 sm:gap-y-16 sm:px-10 lg:grid-cols-12 lg:gap-x-10 xl:gap-x-14">
+    <section id="top" className="relative bg-paper pb-9 pt-20 sm:pb-8 sm:pt-30 lg:pb-10">
+      {/* The stack is tighter below `sm`: on a phone this is three things in a
+          column with the artwork under them, and the desktop gap left the copy
+          stranded at the top of the screen with a hole beneath it. */}
+      <div className="mx-auto grid w-full max-w-[75rem] items-center gap-y-9 px-6 sm:gap-y-16 sm:px-10 lg:grid-cols-12 lg:gap-x-10 xl:gap-x-14">
         <div className="lg:col-span-6">
           <Reveal>
-            <h1 className="ds-display text-[clamp(2.25rem,5.6vw,3.5rem)] text-canvas-text">
+            {/* `text-balance` evens the two lines it wraps to on a phone, instead
+                of leaving one word alone on the second. */}
+            <h1 className="ds-display text-balance text-[clamp(2.25rem,5.6vw,3.5rem)] text-canvas-text">
               {trHero.headline}
             </h1>
-            <p className="ds-body mt-5 max-w-lg text-canvas-text-muted">{trHero.body}</p>
+            <p className="ds-body mt-4 max-w-md text-pretty text-canvas-text-muted sm:mt-5 sm:max-w-lg">
+              {trHero.body}
+            </p>
           </Reveal>
 
           {/* The form centres itself inside whatever box it is given — the max-width
               here is what keeps it flush with the headline on wide single-column
               layouts instead of drifting to the middle of the column. */}
-          <Reveal delay={0.1} className="mt-8 max-w-xl">
+          <Reveal delay={0.1} className="mt-7 max-w-xl sm:mt-8">
             <EventSearch onSearch={onSearch} placeholder={trHero.searchPlaceholder} />
           </Reveal>
         </div>
 
         <div aria-hidden className="lg:col-span-6">
-          <div className="relative mx-auto aspect-square w-full max-w-[27rem] sm:max-w-[32rem] lg:mx-0 lg:max-w-none">
+          <div className="relative mx-auto aspect-square w-full max-w-[23rem] sm:max-w-[32rem] lg:mx-0 lg:max-w-none">
             <div className="absolute left-0 top-0 h-[62%] w-[52%] -rotate-3">
               <motion.div
                 {...settle(0.45, 26)}

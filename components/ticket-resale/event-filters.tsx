@@ -1,6 +1,6 @@
 "use client";
 
-import { MapPin, Navigation } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { clsx } from "@/lib/clsx";
 import { FilterMenu } from "./filter-menu";
 import { DateFilter } from "./date-filter";
@@ -13,54 +13,43 @@ export type EventFilterState = {
 };
 
 export const ALL = "All";
-const ALL_CITIES = "All cities";
-const ALL_DATES = "All dates";
+export const ALL_CITIES = "All cities";
+export const ALL_DATES = "All dates";
 
 /**
- * The quick-nav bar: where, when, and what kind. Every option is derived from
- * the catalogue rather than hard-coded, so the bar can never offer a city or a
- * day with nothing behind it, and it filters the listing below for real.
+ * Where and when, on their own centred line above the listings.
  *
- * Laid out as the reference does — a location and a date control, a hairline,
- * then the type chips — but in this site's own palette, and with popovers of
- * its own instead of native selects, whose OS-drawn menus can't take the
- * design system's radii.
+ * These two are the page's opening statement rather than a form: no boxes, no
+ * fill, just place and date with a hairline between them, the way a listings
+ * app states what you are currently looking at. Both open as a pull-up sheet on
+ * a phone and a popover with a cursor — see `FilterMenu` and `DateFilter`.
  *
- * It scrolls sideways on a phone instead of wrapping, which keeps the whole set
- * on one line the way the reference has it.
+ * Every option is derived from the catalogue, so neither control can offer a
+ * city or a day with nothing behind it.
  */
-export function EventFilters({
+export function LocationDateBar({
   cities,
   eventDays,
-  types,
   value,
   onChange,
-  resultCount,
 }: {
   cities: string[];
   eventDays: Set<string>;
-  types: string[];
   value: EventFilterState;
   onChange: (next: EventFilterState) => void;
-  resultCount: number;
 }) {
   return (
-    <div className="flex flex-wrap items-center gap-3">
-      <span
-        aria-hidden
-        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-control bg-graphite text-white"
-      >
-        <Navigation className="h-4 w-4" aria-hidden />
-      </span>
-
+    <div className="flex items-center justify-center gap-1">
       <FilterMenu
         label="Filter by city"
-        icon={<MapPin className="h-3.5 w-3.5 text-champagne" aria-hidden />}
+        icon={<MapPin className="h-4 w-4 text-taupe" aria-hidden />}
         value={value.city === ALL ? ALL_CITIES : value.city}
         options={cities}
         allLabel={ALL_CITIES}
         onChange={(next) => onChange({ ...value, city: next === ALL_CITIES ? ALL : next })}
       />
+
+      <span aria-hidden className="h-6 w-px shrink-0 bg-canvas-border" />
 
       <DateFilter
         eventDays={eventDays}
@@ -68,27 +57,47 @@ export function EventFilters({
         allLabel={ALL_DATES}
         onChange={(next) => onChange({ ...value, date: next === ALL_DATES ? ALL : next })}
       />
+    </div>
+  );
+}
 
-      <span aria-hidden className="mx-1 hidden h-7 w-px shrink-0 bg-canvas-border sm:block" />
-
-      {/* Only the chips scroll, and they take their own line on a phone */}
+/**
+ * The type chips, which sit under the rail they filter.
+ *
+ * They scroll sideways rather than wrapping, so the set stays on one line at
+ * every width, and the scrollbar is hidden because the row is short enough to
+ * read as a row of controls rather than as a scroller.
+ */
+export function TypeChips({
+  types,
+  value,
+  onChange,
+  resultCount,
+}: {
+  types: string[];
+  value: string;
+  onChange: (next: string) => void;
+  resultCount: number;
+}) {
+  return (
+    <div className="flex items-center gap-3">
       <div
         role="group"
         aria-label="Filter by event type"
-        className="flex basis-full items-center gap-2 overflow-x-auto pb-1 sm:basis-auto sm:flex-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto overscroll-x-contain pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {[ALL, ...types].map((type) => {
-          const active = value.type === type;
+          const active = value === type;
           return (
             <button
               key={type}
               type="button"
               aria-pressed={active}
-              onClick={() => onChange({ ...value, type })}
+              onClick={() => onChange(type)}
               className={clsx(
-                "shrink-0 whitespace-nowrap rounded-ds-pill border px-4 py-2.5 text-[0.875rem] transition-colors duration-300 ease-editorial",
+                "shrink-0 whitespace-nowrap rounded-ds-pill border px-4 py-2.5 text-[0.875rem] font-medium transition-colors duration-300 ease-editorial",
                 active
-                  ? "border-champagne bg-champagne/12 text-canvas-text"
+                  ? "border-champagne bg-champagne/12 text-champagne"
                   : "border-canvas-border bg-surface text-canvas-text-muted hover:border-taupe/50 hover:text-canvas-text",
               )}
             >
@@ -98,7 +107,7 @@ export function EventFilters({
         })}
       </div>
 
-      <p aria-live="polite" className="label ml-auto hidden shrink-0 pl-4 text-taupe sm:block">
+      <p aria-live="polite" className="label hidden shrink-0 pl-1 text-taupe sm:block">
         {resultCount} {resultCount === 1 ? "event" : "events"}
       </p>
     </div>
