@@ -1,11 +1,18 @@
 "use client";
 
+import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { clsx } from "@/lib/clsx";
 import { useReducedMotionSafe } from "@/lib/use-reduced-motion-safe";
+import { useMediaQuery } from "@/lib/use-media-query";
 import { emHero } from "@/lib/event-management-page";
 
 const EASE = [0.16, 0.84, 0.28, 1] as const;
+
+/** Only widths that are plausibly on mains power and a real connection get the film. */
+const BIG_ENOUGH_FOR_VIDEO = "(min-width: 1024px)";
 
 /**
  * Full-bleed video hero, exactly one viewport: `100svh` accounts for mobile
@@ -17,9 +24,28 @@ const EASE = [0.16, 0.84, 0.28, 1] as const;
  * image every time the page loaded. Re-cut the poster if the video is replaced.
  * SiteNav overlays this transparently via its own `/event-management` check
  * rather than this section reserving layout space for the bar.
+ *
+ * HERO.mp4 is 36MB, which is the whole reason this is shaped the way it is:
+ *
+ * - The poster is a real optimised `next/image`, not the `<video poster>`
+ *   attribute, so it is served at the viewport's own size and paints straight
+ *   away. It is the hero's ground; the film only ever covers it.
+ * - The `<video>` is not mounted at all below `lg`, or under reduced motion. A
+ *   phone should never be asked to pull 36MB for decoration it half sees.
+ * - Where it does mount, it fades in on `canplay` instead of appearing at the
+ *   first decoded frame, so the swap is never a flash of black.
+ *
+ * That fixes how long the *page* takes to look right. It does not make the file
+ * smaller — re-encode HERO.mp4 to a few MB and every branch here gets better.
  */
 export function EmHero() {
   const reduceMotion = useReducedMotionSafe();
+  const roomForVideo = useMediaQuery(BIG_ENOUGH_FOR_VIDEO);
+  const [filmReady, setFilmReady] = useState(false);
+
+  /* Both hooks report their "off" value on the server, so the first paint is
+     always the poster alone — which is exactly what we want it to be. */
+  const showVideo = roomForVideo && !reduceMotion;
 
   const rise = (delay: number) => ({
     initial: reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 },
@@ -32,22 +58,32 @@ export function EmHero() {
       id="top"
       className="relative isolate flex h-[100svh] min-h-[100svh] items-center justify-center overflow-hidden bg-graphite"
     >
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        /* The poster carries the first paint, so nothing here is worth blocking
-           it for: `auto` had the browser pulling the whole file down alongside
-           the page's own assets. `none` lets autoplay start the fetch on its
-           own terms, after the critical path is clear. */
-        preload="none"
-        poster="/hero-poster.jpg"
-        aria-hidden
-        className="absolute inset-0 -z-20 h-full w-full object-cover"
-      >
-        <source src="/HERO.mp4" type="video/mp4" />
-      </video>
+      <Image
+        src="/hero-poster.jpg"
+        alt=""
+        fill
+        priority
+        sizes="100vw"
+        className="-z-20 object-cover"
+      />
+
+      {showVideo ? (
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          onCanPlay={() => setFilmReady(true)}
+          aria-hidden
+          className={clsx(
+            "absolute inset-0 -z-20 h-full w-full object-cover transition-opacity duration-1000 ease-editorial",
+            filmReady ? "opacity-100" : "opacity-0",
+          )}
+        >
+          <source src="/HERO.mp4" type="video/mp4" />
+        </video>
+      ) : null}
 
       {/* Scrim carries all the contrast work — darkest where the transparent nav sits */}
       <div

@@ -5,7 +5,7 @@ export const site = {
   eyebrow: ["New York", "Live Events", "Ticketing", "Resale", "Private Access"],
   credibility: "10+ years producing live events, based in New York.",
   description:
-    "Ticket Producer runs the systems behind live events — staffing, venue mapping, and the platform that sells the seat — plus the resale market on the other side, and a concierge line for people who never miss a show.",
+    "Ticket Producer runs the systems behind live events staffing, venue mapping, and the platform that sells the seat plus the resale market on the other side, and a concierge line for people who never miss a show.",
   contact: {
     phone: "1-800-809-0443",
     phoneHref: "tel:+18008090443",

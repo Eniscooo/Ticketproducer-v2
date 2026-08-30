@@ -37,7 +37,9 @@ const MODEL = { w: 1101, h: 614 };
 
 const SPECS = [
   { label: "Based in", value: "New York" },
-  { label: "Track record", value: "10+ years of live events" },
+  /* `desktopOnly` drops a spec below `lg`. The phone hero is headline, caption,
+     and one fact at the foot — a second one crowded the bottom edge. */
+  { label: "Track record", value: "10+ years of live events", desktopOnly: true },
 ];
 
 export function Hero() {
@@ -90,15 +92,15 @@ export function Hero() {
           className={`display-tech text-[clamp(1.35rem,6vw,5.25rem)] tracking-[0.05em] text-white ${HEADLINE_GAP}`}
         >
           {/*
-           * `contents` below `lg` drops these wrappers out of the box tree, so
-           * the four words flow as one wrapped caption — "Live events, produced
-           * properly." From `lg` they become flex rows again and push to the
-           * margins, which is the desktop art direction.
+           * Two stacked lines below `lg` — "Live events," over "produced
+           * properly." — rather than one caption wrapping wherever it runs out
+           * of room. From `lg` the same wrappers become flex rows that push
+           * their words to the margins, which is the desktop art direction.
            */}
-          <span className="contents lg:flex lg:items-baseline lg:justify-between lg:gap-4">
+          <span className="block lg:flex lg:items-baseline lg:justify-between lg:gap-4">
             <span>Live</span> <span>events,</span>
-          </span>{" "}
-          <span className="contents lg:flex lg:items-baseline lg:justify-between lg:gap-4">
+          </span>
+          <span className="block lg:flex lg:items-baseline lg:justify-between lg:gap-4">
             <span>produced</span> <span className="text-brass-light">properly.</span>
           </span>
         </motion.h1>
@@ -107,14 +109,17 @@ export function Hero() {
         <motion.p
           {...rise(0.3)}
           data-reveal
-          className="max-w-lg text-[0.9375rem] leading-[1.75] text-stone lg:hidden"
+          className="max-w-lg text-[clamp(1.0625rem,4.6vw,1.25rem)] leading-[1.6] text-stone lg:hidden"
         >
           {site.description}
         </motion.p>
       </div>
 
-      {/* Stage: plinth, the model rising out of it, the spec row over the top */}
-      <div className="mx-auto w-full max-w-[80rem] px-6 sm:px-10">
+      {/* Stage: plinth, the model rising out of it, the spec row over the top.
+          `mt-auto` below `lg` beats the section's own `justify-center` and drops
+          this block to the foot of the screen; from `lg` the plinth is back and
+          the stage sits where the composition puts it. */}
+      <div className="mt-auto w-full max-w-[80rem] px-6 sm:px-10 lg:mx-auto lg:mt-0">
         <div className="relative">
           <div
             className={`relative ${PLINTH_H} hidden overflow-hidden rounded-[1.75rem] border border-bone/12 bg-charcoal lg:block`}
@@ -170,7 +175,7 @@ export function Hero() {
           >
             <dl className="flex flex-wrap gap-x-10 gap-y-4 lg:flex-col lg:gap-5">
               {SPECS.map((spec) => (
-                <div key={spec.label}>
+                <div key={spec.label} className={spec.desktopOnly ? "hidden lg:block" : undefined}>
                   <dt className="label">{spec.label}</dt>
                   <dd className="mt-1.5 text-sm leading-snug text-stone lg:max-w-[11rem]">
                     {spec.value}
