@@ -1,0 +1,528 @@
+@import "tailwindcss";
+
+/*
+ * Ticket Producer — design system
+ * Restrained luxury palette. Typography and whitespace do the work.
+ */
+@theme {
+  /* Ground */
+  --color-ink: #0a0a0b;
+  --color-ink-deep: #060607;
+  --color-charcoal: #131316;
+  --color-charcoal-soft: #1b1b1f;
+
+  /* Light */
+  --color-bone: #f2eee6;
+  --color-ivory: #faf7f1;
+  --color-stone: #b6afa4;
+  --color-stone-dim: #7d766c;
+
+  /* Accent — brushed brass, never bright gold */
+  --color-brass: #a4855a;
+  --color-brass-light: #c0a479;
+  --color-brass-dim: #6d5940;
+
+  /* Deep support */
+  --color-burgundy: #43191f;
+  --color-umber: #2a201a;
+
+  /*
+   * Editorial body — everything from just after Trusted Partners through
+   * the FAQ and closing contact section. Warm light grounds, dark readable
+   * text; never white-on-white.
+   */
+  --color-paper: #f8f7f3;
+  --color-linen: #f1ede4;
+  --color-graphite: #171716;
+  /* Buttons dim rather than turning gold on hover — graphite lifted toward bone */
+  --color-graphite-dim: #3a3937;
+  --color-slate: #55534e;
+  --color-taupe: #817b70;
+  --color-champagne: #b08d57;
+
+  /*
+   * Theme-reactive canvas roles — kept separate from the four tokens above
+   * so accent surfaces that must stay fixed-dark in both themes (graphite/
+   * slate/linen used as CTA-card backgrounds and the text sitting on them)
+   * never invert. Only these five respond to light/dark mode; light-mode
+   * values match the editorial tokens they stand in for.
+   */
+  --color-canvas-alt: #f1ede4;
+  --color-canvas-text: #171716;
+  --color-canvas-text-muted: #55534e;
+  --color-canvas-border: color-mix(in srgb, var(--color-canvas-text) 12%, transparent);
+  --color-surface: #ffffff;
+
+  /* TP Elite — the visual peak. A private room, entered once. */
+  --color-elite-void: #0d0b0a;
+  --color-elite-umber: #1b1311;
+  --color-elite-burgundy: #4a1b28;
+  --color-elite-gold: #d4af7a;
+  --color-elite-ivory: #f5ede0;
+
+  /*
+   * ── design.md ────────────────────────────────────────────────────────────
+   * Structure, geometry, type scale, spacing rhythm, and component anatomy
+   * from the reference — applied on /event-management. Its zinc/ember palette
+   * and Cosmica face are NOT used: color and typeface stay Ticket Producer's,
+   * so the `ds-*` components below are the reference's shapes in brand colors.
+   */
+
+  /* Type scale, verbatim */
+  --text-ds-caption: 12px;
+  --text-ds-body: 15px;
+  --text-ds-body-lg: 18px;
+  --text-ds-subheading: 20px;
+  --text-ds-heading-sm: 32px;
+  --text-ds-heading: 40px;
+  --text-ds-heading-lg: 56px;
+  --text-ds-display: 64px;
+
+  /* Three repeating radii: generous containers, controlled controls */
+  --radius-card: 36px;
+  --radius-feature: 28px;
+  --radius-control: 14px;
+  --radius-badge: 12px;
+  --radius-ds-icon: 40px;
+  --radius-ds-pill: 10000px;
+
+  /* One typeface, three semantic names — weight and size carry hierarchy. */
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-tech: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+
+  /* Editorial easing — slow out, no bounce */
+  --ease-editorial: cubic-bezier(0.16, 0.84, 0.28, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Anchor targets clear the floating navigation */
+    scroll-padding-top: 6rem;
+    background-color: var(--color-ink);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--color-ink);
+    color: var(--color-bone);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: color-mix(in srgb, var(--color-brass) 30%, transparent);
+    color: var(--color-ivory);
+  }
+
+  :focus-visible {
+    outline: 1px solid var(--color-brass);
+    outline-offset: 4px;
+  }
+
+  /* Restrained scrollbar, dark ground */
+  * {
+    scrollbar-color: var(--color-charcoal-soft) var(--color-ink);
+    scrollbar-width: thin;
+  }
+
+  /*
+   * Light/dark mode: only the theme-reactive canvas tokens above invert.
+   * Chrome (ink/charcoal/bone/brass/elite-*) and the fixed-dark accent
+   * surfaces (graphite/slate/linen-as-background) are unaffected — the
+   * hero videos, TP Elite, floating nav, and every dark CTA card nested in
+   * an editorial section stay exactly as art-directed in both themes.
+   *
+   * No explicit `data-theme` means "follow the OS" — the media query below
+   * does that live, with no JS involved. An explicit choice (`light`/`dark`)
+   * comes from the toggle in SiteNav and overrides the OS preference; the
+   * inline script in app/layout.tsx applies it before first paint.
+   */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --color-paper: #131316;
+      --color-canvas-alt: #1b1b1f;
+      --color-canvas-text: #f2eee6;
+      --color-canvas-text-muted: #b6afa4;
+      --color-taupe: #7d766c;
+      --color-burgundy: #c98a90;
+      --color-surface: #1b1b1f;
+      color-scheme: dark;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --color-paper: #131316;
+    --color-canvas-alt: #1b1b1f;
+    --color-canvas-text: #f2eee6;
+    --color-canvas-text-muted: #b6afa4;
+    --color-taupe: #7d766c;
+    --color-burgundy: #c98a90;
+    --color-surface: #1b1b1f;
+    color-scheme: dark;
+  }
+
+  :root[data-theme="light"] {
+    color-scheme: light;
+  }
+}
+
+@layer components {
+  /* Uppercase micro-label: the spine of the editorial hierarchy */
+  .label {
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-stone-dim);
+  }
+
+  .label-brass {
+    color: var(--color-brass);
+  }
+
+  /* Light-section label tones — muted taupe body, champagne used sparingly for accents */
+  .label-taupe {
+    color: var(--color-taupe);
+  }
+
+  .label-champagne {
+    color: var(--color-champagne);
+  }
+
+  /* Display type: bold and confident, tight leading, optical tracking */
+  .display {
+    font-family: var(--font-display);
+    font-weight: 600;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+  }
+
+  /* Hero headline: wide geometric caps, set tight and architectural */
+  .display-tech {
+    font-family: var(--font-tech);
+    font-weight: 700;
+    line-height: 1.04;
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+  }
+
+  /*
+   * ── design.md components ─────────────────────────────────────────────────
+   * Transcribed from the reference's Components table so the markup on
+   * /event-management stays readable and the spec stays auditable in one place.
+   * Elevation rule: cards get a 1px hairline, never a drop shadow.
+   */
+
+  /*
+   * design.md's hierarchy — bold weight-600 displays on tight 1.12 leading,
+   * compact 15px/1.45 body, no tracking adjustments — set in the brand face
+   * rather than Cosmica.
+   */
+  .ds-display {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    line-height: 1.12;
+    letter-spacing: normal;
+  }
+
+  .ds-heading {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    line-height: 1.28;
+    letter-spacing: normal;
+  }
+
+  .ds-body {
+    font-family: var(--font-sans);
+    font-size: var(--text-ds-body);
+    font-weight: 400;
+    line-height: 1.45;
+  }
+
+  /* Primary CTA — the system's most important interactive element */
+  .ds-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-radius: var(--radius-control);
+    background-color: var(--color-graphite);
+    color: #ffffff;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 400;
+    /* design.md's inset-highlight recipe, retinted off the brand ink */
+    box-shadow:
+      inset 0 0.5px 0 0 rgba(255, 255, 255, 0.42),
+      inset 0 9px 14px -5px rgba(129, 123, 112, 0.35),
+      0 0 0 1.5px color-mix(in srgb, var(--color-graphite) 82%, white),
+      0 4px 6px 0 rgba(23, 23, 22, 0.14);
+    transition:
+      background-color 0.3s var(--ease-editorial),
+      transform 0.3s var(--ease-editorial);
+  }
+
+  .ds-btn-primary:hover {
+    background-color: var(--color-graphite-dim);
+    transform: translateY(-1px);
+  }
+
+  /* Ghost action — white on dark, 36px pill */
+  .ds-btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border-radius: 36px;
+    border: 1px solid var(--color-slate);
+    background-color: #ffffff;
+    color: var(--color-slate);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 400;
+    transition:
+      color 0.3s var(--ease-editorial),
+      border-color 0.3s var(--ease-editorial);
+  }
+
+  .ds-btn-ghost:hover {
+    border-color: var(--color-graphite);
+    color: var(--color-graphite);
+  }
+
+  /* Neutral action on light ground — no border, relies on tone */
+  .ds-btn-neutral {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-radius: var(--radius-control);
+    background-color: var(--color-canvas-alt);
+    color: var(--color-canvas-text);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 400;
+    transition: background-color 0.3s var(--ease-editorial);
+  }
+
+  .ds-btn-neutral:hover {
+    background-color: var(--color-canvas-border);
+  }
+
+  /* Elevation is a hairline, not a shadow */
+  .ds-card {
+    border: 1px solid var(--color-canvas-border);
+    border-radius: var(--radius-card);
+    background-color: var(--color-surface);
+  }
+
+  .ds-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: var(--radius-badge);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.4;
+  }
+
+  /* Outlined tag — the quiet default */
+  .ds-badge-tag {
+    border: 1px solid var(--color-canvas-border);
+    color: var(--color-canvas-text);
+  }
+
+  /* Filled tag — for labels needing more weight */
+  .ds-badge-filled {
+    background-color: var(--color-slate);
+    color: var(--color-linen);
+  }
+
+  /*
+   * The single accent badge. design.md reserves this slot for one vivid color
+   * used as punctuation, never for general UI — that role maps onto the
+   * brand's champagne rather than the reference's orange.
+   */
+  .ds-badge-accent {
+    background-color: var(--color-champagne);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .ds-input {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: var(--radius-control);
+    border: 1px solid var(--color-canvas-border);
+    background-color: var(--color-surface);
+    color: var(--color-canvas-text);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s var(--ease-editorial);
+  }
+
+  .ds-input::placeholder {
+    color: color-mix(in srgb, var(--color-taupe) 70%, transparent);
+  }
+
+  .ds-input:focus {
+    border-color: var(--color-slate);
+  }
+
+  .ds-input[aria-invalid="true"] {
+    border-color: var(--color-champagne);
+  }
+
+  /* Hairline rules carry the structure */
+  .rule {
+    border-color: color-mix(in srgb, var(--color-bone) 12%, transparent);
+  }
+
+  /* Understated link underline that draws in on hover */
+  .link-underline {
+    position: relative;
+  }
+
+  .link-underline::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -0.28em;
+    height: 1px;
+    width: 100%;
+    background-color: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.6s var(--ease-editorial);
+  }
+
+  .link-underline:hover::after,
+  .link-underline:focus-visible::after {
+    transform: scaleX(1);
+  }
+}
+
+@layer utilities {
+  /* Arrival from the entry screen — one slow dissolve, nothing more */
+  @keyframes tp-page-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .page-in {
+    animation: tp-page-in 900ms var(--ease-editorial) both;
+  }
+
+  /* Trusted-partners marquee — translates exactly one duplicated pass width */
+  @keyframes tp-marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  .animate-tp-marquee {
+    animation: tp-marquee 36s linear infinite;
+  }
+
+  /* Reviews marquee — same technique, slower so the overlaid quotes stay readable while they drift past */
+  @keyframes reviews-marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  .animate-reviews-marquee {
+    animation: reviews-marquee 55s linear infinite;
+  }
+
+  /* Film grain — warmth without imagery */
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.035;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .text-balance-tight {
+    text-wrap: balance;
+  }
+
+  /* Keep drawer content clear of notches and home indicators */
+  .safe-y {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /*
+   * Micro-label links sit on a 13px line, which is a fiddly tap target on a
+   * phone. This grows the hit area vertically without touching layout or
+   * pushing `.link-underline`'s rule away from the text — the element only
+   * needs to be positioned, which `.link-underline` already is.
+   */
+  .tap-pad {
+    position: relative;
+  }
+
+  .tap-pad::before {
+    content: "";
+    position: absolute;
+    inset: -0.7rem 0;
+  }
+
+  @media (min-width: 640px) {
+    .tap-pad::before {
+      inset: -0.35rem 0;
+    }
+  }
+
+  /* Long email addresses must not widen the drawer */
+  .break-anywhere {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+}
+
+/* Without scripting the reveal states never resolve — show everything. */
+@media (scripting: none) {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
