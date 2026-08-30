@@ -37,9 +37,7 @@ const MODEL = { w: 1101, h: 614 };
 
 const SPECS = [
   { label: "Based in", value: "New York" },
-  /* `desktopOnly` drops a spec below `lg`. The phone hero is headline, caption,
-     and one fact at the foot — a second one crowded the bottom edge. */
-  { label: "Track record", value: "10+ years of live events", desktopOnly: true },
+  { label: "Track record", value: "10+ years of live events" },
 ];
 
 export function Hero() {
@@ -85,11 +83,14 @@ export function Hero() {
         className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(55%_42%_at_90%_4%,rgba(74,27,40,0.32),transparent_70%)]"
       />
 
-      <div className="mx-auto w-full max-w-[80rem] px-6 sm:px-10">
+      {/* The stage below also takes `mt-auto`, and two auto margins split the
+          leftover height evenly — so this lands a third of the way down rather
+          than pinned to the top with all the slack under it. */}
+      <div className="mx-auto mt-auto w-full max-w-[80rem] px-6 sm:px-10 lg:mt-0">
         <motion.h1
           {...rise(0.18)}
           data-reveal
-          className={`display-tech text-[clamp(1.35rem,6vw,5.25rem)] tracking-[0.05em] text-white ${HEADLINE_GAP}`}
+          className={`display-tech text-[clamp(2.35rem,6vw,5.25rem)] tracking-[0.05em] text-white ${HEADLINE_GAP}`}
         >
           {/*
            * Two stacked lines below `lg` — "Live events," over "produced
@@ -119,7 +120,7 @@ export function Hero() {
           `mt-auto` below `lg` beats the section's own `justify-center` and drops
           this block to the foot of the screen; from `lg` the plinth is back and
           the stage sits where the composition puts it. */}
-      <div className="mt-auto w-full max-w-[80rem] px-6 sm:px-10 lg:mx-auto lg:mt-0">
+      <div className="mt-auto mb-10 w-full max-w-[80rem] px-6 sm:px-10 lg:mx-auto lg:mb-0 lg:mt-0">
         <div className="relative">
           <div
             className={`relative ${PLINTH_H} hidden overflow-hidden rounded-[1.75rem] border border-bone/12 bg-charcoal lg:block`}
@@ -175,7 +176,7 @@ export function Hero() {
           >
             <dl className="flex flex-wrap gap-x-10 gap-y-4 lg:flex-col lg:gap-5">
               {SPECS.map((spec) => (
-                <div key={spec.label} className={spec.desktopOnly ? "hidden lg:block" : undefined}>
+                <div key={spec.label}>
                   <dt className="label">{spec.label}</dt>
                   <dd className="mt-1.5 text-sm leading-snug text-stone lg:max-w-[11rem]">
                     {spec.value}
