@@ -353,8 +353,8 @@ export const emAbout = {
   wall: [
     { src: "/bts.jpg", position: "object-[50%_50%]" },
     { src: "/reviews/reviews1.jpg", position: "object-[50%_20%]" },
-    { src: "/chase.jpg", position: "object-[50%_55%]" },
-    { src: "/drake.jpg", position: "object-[92%_50%]" },
+    { src: "/CHASE.jpg", position: "object-[50%_55%]" },
+    { src: "/DRAKE.jpg", position: "object-[92%_50%]" },
     { src: "/reviews/reviews3.jpg", position: "object-[50%_30%]" },
     { src: "/bgre.jpg", position: "object-[50%_40%]" },
     { src: "/giannis.jpg", position: "object-[55%_50%]" },
