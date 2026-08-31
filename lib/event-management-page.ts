@@ -12,7 +12,7 @@ export const emHero = {
   label: "Event Management",
   headlineTop: "Built for the room.",
   headlineBottom: "Built for the event.",
-  body: "On-site crews, venue mapping, a ticketing platform shaped around your seating chart, and consultants who have run the room before. Not an events package — the operational infrastructure underneath one.",
+  body: " Ticket-Producer is the corporate event planning agency trusted to design, produce, and run your most important moments - anywhere in the world.",
   primaryCta: { label: "Plan Your Event", href: "#event-guide" },
   secondaryCta: { label: "Explore Services", href: "#em-services" },
 };
@@ -351,15 +351,15 @@ export const emAbout = {
    * photography when it exists.
    */
   wall: [
-    { src: "/bgtwo.jpg", position: "object-[50%_50%]" },
+    { src: "/bts.jpg", position: "object-[50%_50%]" },
     { src: "/reviews/reviews1.jpg", position: "object-[50%_20%]" },
-    { src: "/building.png", position: "object-[50%_55%]" },
-    { src: "/intro-bg.jpg", position: "object-[92%_50%]" },
+    { src: "/chase.jpg", position: "object-[50%_55%]" },
+    { src: "/drake.jpg", position: "object-[92%_50%]" },
     { src: "/reviews/reviews3.jpg", position: "object-[50%_30%]" },
     { src: "/bgre.jpg", position: "object-[50%_40%]" },
-    { src: "/reserved.jpg", position: "object-[55%_50%]" },
+    { src: "/giannis.jpg", position: "object-[55%_50%]" },
     { src: "/reviews/reviews2.jpg", position: "object-[44%_50%]" },
-    { src: "/bgd.png", position: "object-[50%_50%]" },
+    { src: "/weekend.jpg", position: "object-[50%_50%]" },
   ],
 };
 

@@ -72,6 +72,13 @@ type ActionProps = {
    * editorial light sections, and washes champagne rather than brass.
    */
   tone?: "solid" | "outline" | "brass" | "ink";
+  /**
+   * `lg` is the hero size — taller, wider, and a step up in type. A real prop
+   * rather than passed-in overrides: `min-h-14` and `min-h-16` are utilities in
+   * the same layer, so which one won would come down to their order in the
+   * generated stylesheet, not the order they appear in `className`.
+   */
+  size?: "md" | "lg";
   className?: string;
   onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
   prefetch?: boolean;
@@ -86,6 +93,7 @@ export function Action({
   href,
   children,
   tone = "outline",
+  size = "md",
   className,
   onClick,
   prefetch,
@@ -93,7 +101,8 @@ export function Action({
   const external = href.startsWith("tel:") || href.startsWith("mailto:");
 
   const classes = clsx(
-    "group relative inline-flex min-h-14 items-center justify-center overflow-hidden rounded-xl px-9 py-4",
+    "group relative inline-flex items-center justify-center overflow-hidden rounded-xl",
+    size === "lg" ? "min-h-15 px-10 py-4.5 text-[0.75rem]" : "min-h-14 px-9 py-4",
     "label transition-colors duration-700 ease-editorial",
     tone === "solid"
       ? "bg-bone text-ink hover:text-ink"

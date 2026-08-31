@@ -12,7 +12,10 @@ import { emAbout } from "@/lib/event-management-page";
  *
  * The wall is held down to a low brightness so it reads as one dim surface
  * rather than nine competing pictures, and each frame comes back up to full
- * under the cursor. That is CSS-only (`group-hover`), so this stays a server
+ * under the cursor. It sits on a black slab rather than straight on the page's
+ * paper: dimmed photographs on a light ground read as underexposed, where on
+ * black they read as lit. The slab's padding matches the grid gap, so the frames
+ * look inlaid into one panel instead of scattered over a backdrop. That is CSS-only (`group-hover`), so this stays a server
  * component; under `prefers-reduced-motion` the site's global rule collapses
  * the transition and the lift still happens, just instantly.
  */
@@ -58,26 +61,28 @@ export function EmAbout() {
       {/* The wall — rooms and the people who run them, three across */}
       <Reveal delay={0.1} className="mt-4">
         <div className="mx-auto w-full max-w-[75rem] px-6 sm:px-10">
-          <ul aria-hidden className="grid grid-cols-3 gap-2 sm:gap-3 lg:gap-4">
-            {emAbout.wall.map((frame) => (
-              <li
-                key={frame.src + frame.position}
-                className="group relative aspect-[3/4] overflow-hidden rounded-control bg-graphite sm:rounded-feature"
-              >
-                <Image
-                  src={frame.src}
-                  alt=""
-                  fill
-                  sizes="(min-width: 1024px) 24rem, 33vw"
-                  className={clsx(
-                    "object-cover brightness-[0.46] saturate-[0.8] transition duration-700 ease-editorial",
-                    "group-hover:scale-[1.03] group-hover:brightness-100 group-hover:saturate-100",
-                    frame.position,
-                  )}
-                />
-              </li>
-            ))}
-          </ul>
+          <div className="rounded-card bg-ink p-2 sm:p-3 lg:p-4">
+            <ul aria-hidden className="grid grid-cols-3 gap-2 sm:gap-3 lg:gap-4">
+              {emAbout.wall.map((frame) => (
+                <li
+                  key={frame.src + frame.position}
+                  className="group relative aspect-[3/4] overflow-hidden rounded-control bg-ink sm:rounded-feature"
+                >
+                  <Image
+                    src={frame.src}
+                    alt=""
+                    fill
+                    sizes="(min-width: 1024px) 24rem, 33vw"
+                    className={clsx(
+                      "object-cover brightness-[0.46] saturate-[0.8] transition duration-700 ease-editorial",
+                      "group-hover:scale-[1.03] group-hover:brightness-100 group-hover:saturate-100",
+                      frame.position,
+                    )}
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </Reveal>
     </section>

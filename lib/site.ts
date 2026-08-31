@@ -1,7 +1,7 @@
 /** Single source of truth for brand copy and contact details. */
 export const site = {
   name: "Ticket Producer",
-  tagline: "Live events, produced properly.",
+  tagline: "Live events, produced properly",
   eyebrow: ["New York", "Live Events", "Ticketing", "Resale", "Private Access"],
   credibility: "10+ years producing live events, based in New York.",
   description:

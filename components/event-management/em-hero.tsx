@@ -6,46 +6,54 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { clsx } from "@/lib/clsx";
 import { useReducedMotionSafe } from "@/lib/use-reduced-motion-safe";
-import { useMediaQuery } from "@/lib/use-media-query";
 import { emHero } from "@/lib/event-management-page";
 
 const EASE = [0.16, 0.84, 0.28, 1] as const;
-
-/** Only widths that are plausibly on mains power and a real connection get the film. */
-const BIG_ENOUGH_FOR_VIDEO = "(min-width: 1024px)";
 
 /**
  * Full-bleed video hero, exactly one viewport: `100svh` accounts for mobile
  * browser chrome so the section never grows taller than the visible screen.
  *
- * The poster is the video's own first frame (extracted from HERO.mp4 at t=0.12
- * into public/hero-poster.jpg), not a stand-in photograph. It used to be
+ * The poster is the film's own first frame (extracted at t=0.12 into
+ * public/hero-poster.jpg), not a stand-in photograph. It used to be
  * /intro-bg.jpg — a different room entirely — which read as a flash of the wrong
  * image every time the page loaded. Re-cut the poster if the video is replaced.
  * SiteNav overlays this transparently via its own `/event-management` check
  * rather than this section reserving layout space for the bar.
  *
- * HERO.mp4 is 36MB, which is the whole reason this is shaped the way it is:
+ * The film is /HERO-web.mp4 at 2.8MB. It was encoded from a 3840x2160, 36 Mbps
+ * master — a mastering bitrate for eight seconds of muted, scrimmed background,
+ * and 34.6MB of deploy weight. That master is deliberately NOT in this repo;
+ * see the README for where it lives and the exact ffmpeg line, and re-cut both
+ * the film and the poster together if it is ever replaced.
+ *
+ * The rest of this is about the gap before any of it arrives:
  *
  * - The poster is a real optimised `next/image`, not the `<video poster>`
  *   attribute, so it is served at the viewport's own size and paints straight
  *   away. It is the hero's ground; the film only ever covers it.
- * - The `<video>` is not mounted at all below `lg`, or under reduced motion. A
- *   phone should never be asked to pull 36MB for decoration it half sees.
- * - Where it does mount, it fades in on `canplay` instead of appearing at the
- *   first decoded frame, so the swap is never a flash of black.
+ * - The `<video>` plays at every width. It was briefly desktop-only to spare
+ *   phones the download, which did save the bytes and also meant the hero had
+ *   no film on a phone — not the trade that was wanted.
+ * - It fades in once it can actually play, so the swap off the poster is never
+ *   a flash of black. Three events arm that fade, not one: a cached video can
+ *   reach `canplay` before React attaches its handler, and a single missed
+ *   event would strand the film at `opacity-0` — invisible, which reads as
+ *   "the video is broken" rather than "the video is still loading".
+ * - Reduced motion still gets the poster alone. That one is a preference, not
+ *   an optimisation.
  *
- * That fixes how long the *page* takes to look right. It does not make the file
- * smaller — re-encode HERO.mp4 to a few MB and every branch here gets better.
+ * Together those cover the gap; the encode above is what removed most of it.
  */
 export function EmHero() {
   const reduceMotion = useReducedMotionSafe();
-  const roomForVideo = useMediaQuery(BIG_ENOUGH_FOR_VIDEO);
   const [filmReady, setFilmReady] = useState(false);
 
-  /* Both hooks report their "off" value on the server, so the first paint is
-     always the poster alone — which is exactly what we want it to be. */
-  const showVideo = roomForVideo && !reduceMotion;
+  /* `useReducedMotionSafe` reports `false` on the server, so the first paint is
+     the poster alone and the film mounts on hydration. */
+  const showVideo = !reduceMotion;
+
+  const revealFilm = () => setFilmReady(true);
 
   const rise = (delay: number) => ({
     initial: reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 },
@@ -74,14 +82,16 @@ export function EmHero() {
           muted
           playsInline
           preload="auto"
-          onCanPlay={() => setFilmReady(true)}
+          onCanPlay={revealFilm}
+          onLoadedData={revealFilm}
+          onPlaying={revealFilm}
           aria-hidden
           className={clsx(
             "absolute inset-0 -z-20 h-full w-full object-cover transition-opacity duration-1000 ease-editorial",
             filmReady ? "opacity-100" : "opacity-0",
           )}
         >
-          <source src="/HERO.mp4" type="video/mp4" />
+          <source src="/HERO-web.mp4" type="video/mp4" />
         </video>
       ) : null}
 

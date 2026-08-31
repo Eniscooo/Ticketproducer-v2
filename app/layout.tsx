@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque } from "next/font/google";
 import Script from "next/script";
+import { SupportButton } from "@/components/site/support-button";
 import "./globals.css";
 
 /** Runs before hydration so a stored theme choice applies before first paint — no stored choice means "follow the OS," handled entirely by CSS. */
@@ -16,7 +17,7 @@ const bricolage = Bricolage_Grotesque({
 
 export const metadata: Metadata = {
   title: {
-    default: "Ticket Producer — Live events, produced properly.",
+    default: "Ticket Producer — Live events, produced properly",
     template: "%s · Ticket Producer",
   },
   description:
@@ -31,7 +32,7 @@ export const metadata: Metadata = {
     "concierge access",
   ],
   openGraph: {
-    title: "Ticket Producer — Live events, produced properly.",
+    title: "Ticket Producer — Live events, produced properly",
     description:
       "Event management, ticket resale, and private concierge access. 10+ years producing live events, based in New York.",
     siteName: "Ticket Producer",
@@ -70,6 +71,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {THEME_INIT_SCRIPT}
         </Script>
         {children}
+
+        {/* Every route: bottom-right, above the resale rail and below every dialog. */}
+        <SupportButton />
       </body>
     </html>
   );

@@ -9,6 +9,7 @@ import { Logo } from "@/components/brand/logo";
 import { ThemeToggle } from "@/components/site/theme-toggle";
 import { clsx } from "@/lib/clsx";
 import { site } from "@/lib/site";
+import { useMediaQuery } from "@/lib/use-media-query";
 import { useReducedMotionSafe } from "@/lib/use-reduced-motion-safe";
 
 const EASE = [0.16, 0.84, 0.28, 1] as const;
@@ -19,6 +20,9 @@ const NAV_LINKS = site.nav;
 const DESKTOP_LINKS = site.services;
 
 const DRAWER_LINKS = [...NAV_LINKS, { label: "Sign In", href: "/sign-in" }];
+
+/** Where the always-visible link row exists, and so where a section tracker has something to mark. */
+const DESKTOP = "(min-width: 1024px)";
 
 /** Only the hash-anchored links have a section to observe; whole-route links are matched on pathname instead. */
 const SECTION_IDS = NAV_LINKS.map((link) => link.href.split("#")[1]).filter(
@@ -35,11 +39,22 @@ function isCurrent(href: string, pathname: string, active: string | null) {
   return pathname === path;
 }
 
-/** Tracks which section owns the upper third of the viewport. */
-function useActiveSection() {
+/**
+ * Tracks which section owns the upper third of the viewport.
+ *
+ * Only runs when `enabled`. Below `lg` the desktop link row is not rendered, so
+ * the only thing the tracker could mark is a drawer the reader has to open to
+ * see — meanwhile it re-rendered the whole nav on every scroll and moved the
+ * highlight under them between openings. It reports `null` there instead, which
+ * leaves `isCurrent` matching on pathname alone: the current *route* still
+ * marks itself, the current *section* no longer chases.
+ */
+function useActiveSection(enabled: boolean) {
   const [active, setActive] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!enabled) return;
+
     const sections = SECTION_IDS.map((id) =>
       document.getElementById(id),
     ).filter((el): el is HTMLElement => el !== null);
@@ -58,16 +73,17 @@ function useActiveSection() {
 
     sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
-  }, []);
+  }, [enabled]);
 
-  return active;
+  /* Derived, not stored — clearing state in an effect would cost a second render. */
+  return enabled ? active : null;
 }
 
 export function SiteNav() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
-  const active = useActiveSection();
+  const active = useActiveSection(useMediaQuery(DESKTOP));
   const reduceMotion = useReducedMotionSafe();
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
