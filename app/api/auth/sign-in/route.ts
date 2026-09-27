@@ -75,7 +75,7 @@ export async function POST(request: Request) {
     console.info(`[auth] sign-in rejected for ${email} — no credential store configured`);
     return invalid(
       {
-        _: "We couldn't match those details. If you don't have an account yet, request access below.",
+        _: "We couldn't match those details. If you don't have an account yet, sign up below.",
       },
       401,
     );
