@@ -33,7 +33,7 @@ export function SiteFooter() {
                     key={item.label}
                     href={item.href}
                     aria-label={item.label}
-                    className="flex h-9 w-9 items-center justify-center rounded-full border border-bone/15 text-stone transition-colors duration-500 hover:border-brass/60 hover:text-brass-light"
+                    className="pressable flex h-11 w-11 items-center justify-center rounded-full border border-bone/15 text-stone hover:border-brass/60 hover:text-brass-light sm:h-9 sm:w-9"
                   >
                     <Glyph className="h-4 w-4" />
                   </a>

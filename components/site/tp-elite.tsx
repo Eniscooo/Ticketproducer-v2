@@ -94,11 +94,11 @@ export function TPElite() {
               </div>
               <a
                 href={site.contact.phoneHref}
-                className="group relative inline-flex min-h-14 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-elite-gold px-9 py-4 text-elite-void transition-colors duration-700 ease-editorial hover:text-elite-void"
+                className="group pressable relative inline-flex min-h-14 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-elite-gold px-9 py-4 text-elite-void"
               >
                 <span
                   aria-hidden
-                  className="pointer-events-none absolute inset-x-0 bottom-0 h-full origin-bottom scale-y-0 bg-elite-ivory/70 transition-transform duration-700 ease-editorial group-hover:scale-y-100"
+                  className="pointer-events-none absolute inset-x-0 bottom-0 h-full origin-bottom scale-y-0 bg-elite-ivory/70 transition-transform duration-500 ease-editorial group-hover:scale-y-100"
                 />
                 <span className="label relative z-10 inline-flex items-center gap-2.5">
                   Sign Up

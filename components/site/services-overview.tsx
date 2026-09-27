@@ -31,7 +31,7 @@ export function ServicesOverview() {
               <Link
                 href={box.href}
                 className={clsx(
-                  "group relative flex h-full flex-col overflow-hidden rounded-[1.75rem] border p-7 transition-all duration-700 ease-editorial sm:p-8",
+                  "group pressable relative flex h-full flex-col overflow-hidden rounded-[1.75rem] border p-7 [--press-scale:0.985] sm:p-8",
                   box.invite
                     ? "border-graphite/15 bg-graphite hover:-translate-y-1.5 hover:border-elite-gold/50 hover:shadow-[0_36px_70px_-40px_rgba(13,11,10,0.55)]"
                     : "border-canvas-border bg-surface hover:-translate-y-1.5 hover:border-champagne/40 hover:shadow-[0_30px_60px_-40px_rgba(23,23,22,0.18)]",
@@ -83,16 +83,16 @@ export function ServicesOverview() {
 
                 <span
                   className={clsx(
-                    "label mt-7 inline-flex items-center gap-2 transition-colors duration-500",
+                    "label mt-7 inline-flex items-center gap-2 transition-colors duration-300 ease-ui",
                     box.invite
                       ? "text-elite-gold group-hover:text-elite-ivory"
-                      : "text-champagne group-hover:text-canvas-text",
+                      : "text-champagne-ink group-hover:text-canvas-text",
                   )}
                 >
                   {box.cta}
                   <ArrowUpRight
                     aria-hidden
-                    className="h-3.5 w-3.5 transition-transform duration-500 ease-editorial group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                    className="h-3.5 w-3.5 transition-transform duration-300 ease-ui group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                   />
                 </span>
               </Link>

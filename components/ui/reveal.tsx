@@ -15,14 +15,22 @@ type RevealProps = {
 };
 
 /**
- * One reveal primitive for the whole site: a slow fade with a few pixels of
- * travel, once, on entry. With reduced motion it renders plainly — the layout
- * is designed to stand without any of this.
+ * One reveal primitive for the whole site: a fade with a few pixels of travel,
+ * once, on entry. With reduced motion it renders plainly — the layout is
+ * designed to stand without any of this.
+ *
+ * It settles in 0.7s. At 1.1s, with sibling staggers stacked on top, a fast
+ * scroll outran it and the reader arrived at sections still half-drawn.
+ * Motion is written as a full `transform` string rather than Framer's `y`
+ * shorthand, which is interpolated on the main thread and drops frames
+ * while images below are decoding.
  */
+const DURATION = 0.7;
+
 export function Reveal({
   children,
   delay = 0,
-  distance = 18,
+  distance = 14,
   as = "div",
   className,
 }: RevealProps) {
@@ -31,6 +39,8 @@ export function Reveal({
   const reduceMotion = useReducedMotionSafe();
 
   const Component = motion[as];
+  const hidden = { opacity: 0, transform: `translateY(${distance}px)` };
+  const shown = { opacity: 1, transform: "translateY(0px)" };
 
   /*
    * The preference is unknown on the server, so SSR emits the animated branch
@@ -42,8 +52,8 @@ export function Reveal({
     return (
       <Component
         className={className}
-        initial={{ opacity: 1, y: 0 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 1, transform: "none" }}
+        animate={{ opacity: 1, transform: "none" }}
         transition={{ duration: 0 }}
       >
         {children}
@@ -56,10 +66,10 @@ export function Reveal({
       ref={ref as never}
       data-reveal
       className={className}
-      initial={{ opacity: 0, y: distance }}
-      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: distance }}
+      initial={hidden}
+      animate={inView ? shown : hidden}
       transition={{
-        duration: 1.1,
+        duration: DURATION,
         delay,
         ease: [0.16, 0.84, 0.28, 1],
       }}

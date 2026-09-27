@@ -47,7 +47,7 @@ export function EventCard({
       aria-pressed={saved}
       aria-label={saved ? `Remove ${event.name} from saved` : `Save ${event.name}`}
       className={clsx(
-        "absolute flex items-center justify-center rounded-full transition-colors duration-300 ease-editorial",
+        "pressable absolute flex items-center justify-center rounded-full",
         variant === "poster"
           ? /* No plate on the poster — the scrim and a drop shadow carry it, as the
                reference has it, and a white disc would punch a hole in the artwork. */
@@ -76,7 +76,7 @@ export function EventCard({
       <div className="group relative h-full w-full text-left">
         <Link
           href={`/ticket-resale/${event.slug}`}
-          className="block overflow-hidden rounded-feature"
+          className="pressable block overflow-hidden rounded-feature"
         >
           <div className="relative aspect-[3/4] w-full">
             <Image
@@ -117,7 +117,7 @@ export function EventCard({
       <div className="group relative h-full w-full text-left">
         <Link
           href={`/ticket-resale/${event.slug}`}
-          className="block h-full rounded-feature border border-canvas-border bg-surface p-3 transition-colors duration-300 ease-editorial hover:border-canvas-text/25"
+          className="pressable block h-full rounded-feature border border-canvas-border bg-surface p-3 [--press-scale:0.985] hover:border-canvas-text/25"
         >
           <div className="relative aspect-[7/2] w-full overflow-hidden rounded-control">
             <Image
@@ -158,7 +158,7 @@ export function EventCard({
 
   return (
     <div className="group relative h-full w-full text-left">
-      <Link href={`/ticket-resale/${event.slug}`} className="block">
+      <Link href={`/ticket-resale/${event.slug}`} className="pressable block">
         <div className="relative aspect-square w-full overflow-hidden rounded-feature">
           <Image
             src={event.image}

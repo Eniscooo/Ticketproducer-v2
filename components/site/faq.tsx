@@ -78,7 +78,7 @@ export function Faq({
                     <div
                       key={item.question}
                       className={clsx(
-                        "overflow-hidden rounded-control transition-colors duration-500 ease-editorial",
+                        "overflow-hidden rounded-control transition-colors duration-250 ease-ui",
                         open ? "bg-canvas-alt" : "bg-canvas-alt/70 hover:bg-canvas-alt",
                       )}
                     >
@@ -96,7 +96,7 @@ export function Faq({
                           <Plus
                             aria-hidden
                             className={clsx(
-                              "h-4 w-4 shrink-0 text-canvas-text-muted transition-transform duration-500 ease-editorial",
+                              "h-4 w-4 shrink-0 text-canvas-text-muted transition-[rotate,color] duration-300 ease-ui",
                               open && "rotate-45 text-champagne",
                             )}
                           />
@@ -110,7 +110,7 @@ export function Faq({
                             animate={{ height: "auto", opacity: 1 }}
                             exit={{ height: 0, opacity: 0 }}
                             transition={{
-                              duration: reduceMotion ? 0.01 : 0.4,
+                              duration: reduceMotion ? 0.01 : 0.32,
                               ease: EASE,
                             }}
                             className="overflow-hidden"

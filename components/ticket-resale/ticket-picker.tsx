@@ -53,7 +53,7 @@ export function TicketPicker({ event }: { event: ResaleEvent }) {
                 aria-checked={i === selected}
                 onClick={() => setSelected(i)}
                 className={clsx(
-                  "flex w-full items-center justify-between gap-4 rounded-control border px-4 py-3.5 text-left transition-colors duration-300 ease-editorial",
+                  "pressable flex w-full items-center justify-between gap-4 rounded-control border px-4 py-3.5 text-left [--press-scale:0.99]",
                   i === selected
                     ? "border-champagne bg-champagne/10"
                     : "border-canvas-border bg-canvas-alt/40 hover:border-taupe/50",
@@ -83,7 +83,7 @@ export function TicketPicker({ event }: { event: ResaleEvent }) {
               onClick={() => setQuantity((q) => Math.max(1, q - 1))}
               disabled={quantity <= 1}
               aria-label="Remove one ticket"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-canvas-border text-canvas-text transition-colors duration-300 ease-editorial hover:bg-canvas-alt disabled:opacity-40"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-canvas-border text-canvas-text pressable hover:bg-canvas-alt disabled:opacity-40"
             >
               <Minus className="h-3.5 w-3.5" aria-hidden />
             </button>
@@ -98,7 +98,7 @@ export function TicketPicker({ event }: { event: ResaleEvent }) {
               onClick={() => setQuantity((q) => Math.min(MAX_QUANTITY, q + 1))}
               disabled={quantity >= MAX_QUANTITY}
               aria-label="Add one ticket"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-canvas-border text-canvas-text transition-colors duration-300 ease-editorial hover:bg-canvas-alt disabled:opacity-40"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-canvas-border text-canvas-text pressable hover:bg-canvas-alt disabled:opacity-40"
             >
               <Plus className="h-3.5 w-3.5" aria-hidden />
             </button>

@@ -226,7 +226,7 @@ function EventDetailsBody({
       <button
         type="button"
         onClick={() => setShowComingSoon(true)}
-        className="label mt-7 flex w-full items-center justify-center rounded-control bg-graphite px-7 py-4 text-linen transition-colors duration-500 ease-editorial hover:bg-graphite-dim"
+        className="label mt-7 flex w-full items-center justify-center rounded-control bg-graphite px-7 py-4 text-linen pressable hover:bg-graphite-dim"
       >
         Reserve {tier.name} — {formatUsd(tier.price)}
       </button>

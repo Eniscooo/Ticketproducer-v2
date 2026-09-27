@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Headset, Maximize2, Minimize2, Phone, SendHorizontal, X } from "lucide-react";
 import { clsx } from "@/lib/clsx";
+import { IconSwap } from "@/components/ui/primitives";
 import { checkEmail } from "@/lib/auth";
 import { useReducedMotionSafe } from "@/lib/use-reduced-motion-safe";
 import { site } from "@/lib/site";
@@ -283,7 +284,7 @@ export function SupportButton() {
                 type="submit"
                 disabled={!draft.trim() || phase === "sending"}
                 aria-label="Send"
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-graphite text-white transition-colors duration-300 ease-editorial hover:bg-graphite-dim disabled:pointer-events-none disabled:opacity-40 sm:h-8 sm:w-8"
+                className="pressable flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-graphite text-white hover:bg-graphite-dim disabled:pointer-events-none disabled:opacity-40 sm:h-8 sm:w-8"
               >
                 <SendHorizontal className="h-4 w-4 sm:h-3.5 sm:w-3.5" aria-hidden />
               </button>
@@ -300,15 +301,16 @@ export function SupportButton() {
         aria-expanded={open}
         aria-label={open ? "Close customer service" : "Customer service"}
         className={clsx(
-          "flex h-14 w-14 items-center justify-center rounded-full text-white shadow-[0_18px_40px_-16px_rgba(23,23,22,0.6)] transition-colors duration-300 ease-editorial sm:h-11 sm:w-11",
+          "pressable flex h-14 w-14 items-center justify-center rounded-full text-white shadow-[0_18px_40px_-16px_rgba(23,23,22,0.6)] sm:h-11 sm:w-11",
           open ? "bg-graphite-dim" : "bg-graphite hover:bg-graphite-dim",
         )}
       >
-        {open ? (
-          <X className="h-5 w-5 sm:h-4 sm:w-4" aria-hidden />
-        ) : (
-          <Headset className="h-[1.35rem] w-[1.35rem] sm:h-[1.1rem] sm:w-[1.1rem]" aria-hidden />
-        )}
+        <IconSwap
+          active={open}
+          className="h-[1.35rem] w-[1.35rem] sm:h-[1.1rem] sm:w-[1.1rem]"
+          off={<Headset className="h-[1.35rem] w-[1.35rem] sm:h-[1.1rem] sm:w-[1.1rem]" />}
+          on={<X className="h-5 w-5 sm:h-4 sm:w-4" />}
+        />
       </button>
     </div>
   );

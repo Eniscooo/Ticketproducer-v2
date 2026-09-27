@@ -15,7 +15,8 @@
   --color-bone: #f2eee6;
   --color-ivory: #faf7f1;
   --color-stone: #b6afa4;
-  --color-stone-dim: #7d766c;
+  /* Lifted from #7d766c so micro-labels on ink clear WCAG AA (4.4:1 → 4.9:1) */
+  --color-stone-dim: #857e73;
 
   /* Accent — brushed brass, never bright gold */
   --color-brass: #a4855a;
@@ -37,8 +38,15 @@
   /* Buttons dim rather than turning gold on hover — graphite lifted toward bone */
   --color-graphite-dim: #3a3937;
   --color-slate: #55534e;
-  --color-taupe: #817b70;
+  /* Darkened from #817b70: taupe carries 11px labels, which measured 3.6:1 on linen. Now 5:1. */
+  --color-taupe: #6a645a;
   --color-champagne: #b08d57;
+  /*
+   * Champagne as *text*. The accent itself is 2.9:1 on paper — fine for rules,
+   * icons, and fills, too faint for an 11px index numeral. Theme-reactive: on
+   * the dark canvas the plain accent already reads at 6:1.
+   */
+  --color-champagne-ink: #80633a;
 
   /*
    * Theme-reactive canvas roles — kept separate from the four tokens above
@@ -93,6 +101,12 @@
 
   /* Editorial easing — slow out, no bounce */
   --ease-editorial: cubic-bezier(0.16, 0.84, 0.28, 1);
+  /*
+   * Interface easing — a stronger ease-out for feedback that has to land
+   * immediately (press, hover, small popovers). The editorial curve above is
+   * for things that arrive; this one is for things that respond.
+   */
+  --ease-ui: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 @layer base {
@@ -117,9 +131,10 @@
     color: var(--color-ivory);
   }
 
+  /* 2px so the ring survives on the light paper ground, where a hairline vanished */
   :focus-visible {
-    outline: 1px solid var(--color-brass);
-    outline-offset: 4px;
+    outline: 2px solid var(--color-brass);
+    outline-offset: 3px;
   }
 
   /* Restrained scrollbar, dark ground */
@@ -146,7 +161,8 @@
       --color-canvas-alt: #1b1b1f;
       --color-canvas-text: #f2eee6;
       --color-canvas-text-muted: #b6afa4;
-      --color-taupe: #7d766c;
+      --color-taupe: #888176;
+      --color-champagne-ink: #b08d57;
       --color-burgundy: #c98a90;
       --color-surface: #1b1b1f;
       color-scheme: dark;
@@ -158,7 +174,8 @@
     --color-canvas-alt: #1b1b1f;
     --color-canvas-text: #f2eee6;
     --color-canvas-text-muted: #b6afa4;
-    --color-taupe: #7d766c;
+    --color-taupe: #888176;
+    --color-champagne-ink: #b08d57;
     --color-burgundy: #c98a90;
     --color-surface: #1b1b1f;
     color-scheme: dark;
@@ -190,7 +207,7 @@
   }
 
   .label-champagne {
-    color: var(--color-champagne);
+    color: var(--color-champagne-ink);
   }
 
   /* Display type: bold and confident, tight leading, optical tracking */
@@ -263,13 +280,16 @@
       0 0 0 1.5px color-mix(in srgb, var(--color-graphite) 82%, white),
       0 4px 6px 0 rgba(23, 23, 22, 0.14);
     transition:
-      background-color 0.3s var(--ease-editorial),
-      transform 0.3s var(--ease-editorial);
+      background-color 0.25s var(--ease-ui),
+      translate 0.25s var(--ease-ui),
+      scale 0.16s var(--ease-ui);
   }
 
-  .ds-btn-primary:hover {
-    background-color: var(--color-graphite-dim);
-    transform: translateY(-1px);
+  @media (hover: hover) and (pointer: fine) {
+    .ds-btn-primary:hover {
+      background-color: var(--color-graphite-dim);
+      translate: 0 -1px;
+    }
   }
 
   /* Ghost action — white on dark, 36px pill */
@@ -287,13 +307,17 @@
     font-size: 14px;
     font-weight: 400;
     transition:
-      color 0.3s var(--ease-editorial),
-      border-color 0.3s var(--ease-editorial);
+      color 0.25s var(--ease-ui),
+      border-color 0.25s var(--ease-ui),
+      background-color 0.25s var(--ease-ui),
+      scale 0.16s var(--ease-ui);
   }
 
-  .ds-btn-ghost:hover {
-    border-color: var(--color-graphite);
-    color: var(--color-graphite);
+  @media (hover: hover) and (pointer: fine) {
+    .ds-btn-ghost:hover {
+      border-color: var(--color-graphite);
+      color: var(--color-graphite);
+    }
   }
 
   /* Neutral action on light ground — no border, relies on tone */
@@ -309,11 +333,22 @@
     font-family: var(--font-sans);
     font-size: 14px;
     font-weight: 400;
-    transition: background-color 0.3s var(--ease-editorial);
+    transition:
+      background-color 0.25s var(--ease-ui),
+      scale 0.16s var(--ease-ui);
   }
 
-  .ds-btn-neutral:hover {
-    background-color: var(--color-canvas-border);
+  @media (hover: hover) and (pointer: fine) {
+    .ds-btn-neutral:hover {
+      background-color: var(--color-canvas-border);
+    }
+  }
+
+  /* Every ds button acknowledges the press — the page heard you */
+  .ds-btn-primary:active:not(:disabled),
+  .ds-btn-ghost:active:not(:disabled),
+  .ds-btn-neutral:active:not(:disabled) {
+    scale: 0.97;
   }
 
   /* Elevation is a hairline, not a shadow */
@@ -403,17 +438,29 @@
     background-color: currentColor;
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform 0.6s var(--ease-editorial);
+    transition: transform 0.4s var(--ease-editorial);
   }
 
-  .link-underline:hover::after,
+  /* The current page keeps its rule drawn — position, not just tint */
+  .link-underline[aria-current]::after,
   .link-underline:focus-visible::after {
     transform: scaleX(1);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .link-underline:hover::after {
+      transform: scaleX(1);
+    }
   }
 }
 
 @layer utilities {
-  /* Arrival from the entry screen — one slow dissolve, nothing more */
+  /*
+   * Arrival on a route — one short dissolve. It was 900ms, which held every
+   * page's first content back for most of a second; the section reveals and
+   * hero entrances below carry the storytelling, so this only needs to take
+   * the edge off the swap.
+   */
   @keyframes tp-page-in {
     from {
       opacity: 0;
@@ -424,7 +471,7 @@
   }
 
   .page-in {
-    animation: tp-page-in 900ms var(--ease-editorial) both;
+    animation: tp-page-in 420ms var(--ease-ui) both;
   }
 
   /* Trusted-partners marquee — translates exactly one duplicated pass width */
@@ -453,6 +500,30 @@
 
   .animate-reviews-marquee {
     animation: reviews-marquee 55s linear infinite;
+  }
+
+  /*
+   * The reviews column — vertical twin of the marquees above. CSS rather than
+   * a Framer loop so it runs off the main thread, pauses under the cursor or
+   * keyboard focus, and is stopped by the reduced-motion rule at the foot of
+   * this file like every other ambient loop.
+   */
+  @keyframes reviews-column {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(-50%);
+    }
+  }
+
+  .animate-reviews-column {
+    animation: reviews-column 44s linear infinite;
+  }
+
+  .animate-reviews-column:hover,
+  .animate-reviews-column:focus-within {
+    animation-play-state: paused;
   }
 
   /* Film grain — warmth without imagery */
@@ -502,6 +573,27 @@
   .break-anywhere {
     overflow-wrap: anywhere;
     word-break: break-word;
+  }
+}
+
+/*
+ * Press feedback for anything tappable that isn't an `Action` or a `ds-btn-*`
+ * (those carry their own). It owns the element's transition list — colors,
+ * the hover lift, and the press scale — so it replaces `transition-colors`
+ * rather than sitting beside it. Tailwind v4's `translate-*` and `scale-*`
+ * write the standalone `translate`/`scale` properties, which is why they are
+ * named here and why `transition-[transform]` alone never animated a lift.
+ */
+@utility pressable {
+  transition-property:
+    color, background-color, border-color, opacity, box-shadow, translate, scale;
+  transition-duration: 250ms, 250ms, 250ms, 250ms, 400ms, 400ms, 160ms;
+  transition-timing-function: var(--ease-ui);
+
+  /* Large surfaces (cards, list rows) set `--press-scale` closer to 1 — the
+     same 3% that reads as a press on a button is a lurch on a 400px card. */
+  &:active:not(:disabled) {
+    scale: var(--press-scale, 0.97);
   }
 }
 

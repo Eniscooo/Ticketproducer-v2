@@ -113,7 +113,7 @@ export function TicketResale() {
             {tr.cta}
             <ArrowUpRight
               aria-hidden
-              className="h-3.5 w-3.5 transition-transform duration-500 ease-editorial group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              className="h-3.5 w-3.5 transition-transform duration-300 ease-ui group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
             />
           </Action>
         </Reveal>

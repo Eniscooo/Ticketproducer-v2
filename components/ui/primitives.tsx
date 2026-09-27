@@ -85,9 +85,14 @@ type ActionProps = {
 };
 
 /**
- * Premium, intentionally-rounded actions with a slow brass wash on hover —
- * a soft corner, not a full pill, so it reads as considered rather than a
- * generic SaaS button.
+ * Premium, intentionally-rounded actions with a brass wash on hover — a soft
+ * corner, not a full pill, so it reads as considered rather than a generic
+ * SaaS button.
+ *
+ * Timing is split by job: the text and border answer the cursor at once, the
+ * wash rises a beat slower so it still reads as a wash, and a press scales the
+ * whole control down for the frame the pointer is held. The wash used to take
+ * 700ms, which made the hover feel like it was catching up with the pointer.
  */
 export function Action({
   href,
@@ -103,7 +108,7 @@ export function Action({
   const classes = clsx(
     "group relative inline-flex items-center justify-center overflow-hidden rounded-xl",
     size === "lg" ? "min-h-15 px-10 py-4.5 text-[0.75rem]" : "min-h-14 px-9 py-4",
-    "label transition-colors duration-700 ease-editorial",
+    "label pressable",
     tone === "solid"
       ? "bg-bone text-ink hover:text-ink"
       : tone === "brass"
@@ -120,7 +125,7 @@ export function Action({
       <span
         aria-hidden
         className={clsx(
-          "pointer-events-none absolute inset-x-0 bottom-0 h-full origin-bottom scale-y-0 transition-transform duration-700 ease-editorial group-hover:scale-y-100",
+          "pointer-events-none absolute inset-x-0 bottom-0 h-full origin-bottom scale-y-0 transition-transform duration-500 ease-editorial group-hover:scale-y-100",
           tone === "solid"
             ? "bg-brass-light/50"
             : tone === "brass"
@@ -146,5 +151,36 @@ export function Action({
     <Link href={href} className={classes} onClick={onClick} prefetch={prefetch}>
       {inner}
     </Link>
+  );
+}
+
+/**
+ * Two icons in one slot, crossfaded on a boolean — menu/close, sun/moon.
+ *
+ * Both glyphs stay mounted and trade opacity, scale, and a 2px blur, so the
+ * swap reads as one icon changing shape rather than two icons trading places.
+ * CSS transitions rather than a Framer exit/enter pair: toggles get tapped
+ * twice in quick succession, and a transition retargets mid-flight where an
+ * exit animation would restart from zero.
+ */
+export function IconSwap({
+  active,
+  off,
+  on,
+  className = "h-5 w-5",
+}: {
+  /** `true` shows `on`, `false` shows `off`. */
+  active: boolean;
+  off: React.ReactNode;
+  on: React.ReactNode;
+  className?: string;
+}) {
+  const layer =
+    "absolute inset-0 flex items-center justify-center transition-[opacity,scale,filter] duration-200 ease-ui";
+  return (
+    <span aria-hidden className={clsx("relative inline-block", className)}>
+      <span className={clsx(layer, active && "scale-[0.6] opacity-0 blur-[2px]")}>{off}</span>
+      <span className={clsx(layer, !active && "scale-[0.6] opacity-0 blur-[2px]")}>{on}</span>
+    </span>
   );
 }

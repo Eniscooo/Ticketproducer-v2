@@ -138,16 +138,15 @@ export function Reviews() {
             </AnimatePresence>
           </div>
 
-          {/* Right — every review, drifting past on a loop */}
+          {/* Right — every review, drifting past on a loop. The loop is CSS
+              (`animate-reviews-column`): it pauses under the cursor so a quote
+              can be finished, and stops outright with reduced motion — the
+              Framer loop it replaced did neither. */}
           <div className="relative h-[500px] overflow-hidden">
             <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-16 bg-gradient-to-b from-paper to-transparent" />
             <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-16 bg-gradient-to-t from-paper to-transparent" />
 
-            <motion.div
-              className="flex flex-col gap-6"
-              animate={{ y: ["0%", "-50%"] }}
-              transition={{ duration: 22, ease: "linear", repeat: Infinity }}
-            >
+            <div className="animate-reviews-column flex flex-col gap-6">
               {/* Two identical passes, so the loop can translate exactly one of them */}
               {[0, 1].map((pass) =>
                 testimonials.map((testimonial, i) => (
@@ -158,11 +157,13 @@ export function Reviews() {
                   />
                 )),
               )}
-            </motion.div>
+            </div>
           </div>
         </div>
 
-        <div className="mt-6 flex items-center justify-center gap-2 lg:justify-start">
+        {/* The visible pip stays 6px; the button around it is a full 44px
+            touch target, so the row is usable with a thumb. */}
+        <div className="mt-3 flex items-center justify-center lg:justify-start">
           {featured.map((testimonial, i) => (
             <button
               key={testimonial.name}
@@ -170,13 +171,18 @@ export function Reviews() {
               onClick={() => setIndex(i)}
               aria-label={`Show testimonial from ${testimonial.name}`}
               aria-current={i === index}
-              className={clsx(
-                "h-1.5 rounded-full transition-all duration-500 ease-editorial",
-                i === index
-                  ? "w-7 bg-champagne"
-                  : "w-1.5 bg-canvas-text/15 hover:bg-canvas-text/30",
-              )}
-            />
+              className="group flex h-11 items-center px-1 lg:first:-ml-1"
+            >
+              <span
+                aria-hidden
+                className={clsx(
+                  "block h-1.5 rounded-full transition-[width,background-color] duration-300 ease-ui",
+                  i === index
+                    ? "w-7 bg-champagne"
+                    : "w-1.5 bg-canvas-text/15 group-hover:bg-canvas-text/30",
+                )}
+              />
+            </button>
           ))}
         </div>
       </div>

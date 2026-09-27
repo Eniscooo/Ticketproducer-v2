@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Mail, Menu, User, X } from "lucide-react";
 import { Logo } from "@/components/brand/logo";
 import { ThemeToggle } from "@/components/site/theme-toggle";
+import { IconSwap } from "@/components/ui/primitives";
 import { clsx } from "@/lib/clsx";
 import { site } from "@/lib/site";
 import { useMediaQuery } from "@/lib/use-media-query";
@@ -156,7 +157,7 @@ export function SiteNav() {
         animate={{ y: 0 }}
         transition={{ duration: duration(0.9), ease: EASE }}
         className={clsx(
-          "fixed z-50 rounded-4xl transition-all duration-700 ease-editorial",
+          "fixed z-50 rounded-4xl transition-[top,width,max-width,background-color,border-color,box-shadow] duration-500 ease-editorial",
           "left-4 right-4 sm:left-1/2 sm:right-auto sm:-translate-x-1/2",
           transparentHero
             ? // Genuinely transparent — the video's own scrim carries contrast here.
@@ -177,7 +178,7 @@ export function SiteNav() {
           <div className="flex h-12 items-center justify-between gap-4 sm:h-14">
             <Link
               href="/services#top"
-              className="shrink-0 transition-opacity duration-500 hover:opacity-70"
+              className="shrink-0 transition-opacity duration-300 ease-ui hover:opacity-70"
               aria-label={`${site.name} — top of page`}
             >
               <Logo variant="compact" />
@@ -193,7 +194,7 @@ export function SiteNav() {
                     href={link.href}
                     aria-current={isActive ? "true" : undefined}
                     className={clsx(
-                      "label link-underline transition-colors duration-500",
+                      "label link-underline transition-colors duration-300 ease-ui",
                       isActive
                         ? "text-brass-light"
                         : "text-bone/75 hover:text-bone",
@@ -211,18 +212,18 @@ export function SiteNav() {
               <Link
                 href="/services#contact"
                 aria-label="Contact"
-                className="flex h-9 w-9 items-center justify-center rounded-full text-bone/75 transition-colors duration-500 hover:text-bone"
+                className="pressable flex h-9 w-9 items-center justify-center rounded-full text-bone/75 hover:bg-bone/8 hover:text-bone"
               >
                 <Mail className="h-[1.05rem] w-[1.05rem]" aria-hidden />
               </Link>
               <Link
                 href="/sign-in"
                 aria-label="Sign in or sign up"
-                className="group relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-full border border-bone/20 text-bone transition-colors duration-500 ease-editorial hover:border-brass/70"
+                className="group pressable relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-full border border-bone/20 text-bone hover:border-brass/70"
               >
                 <span
                   aria-hidden
-                  className="pointer-events-none absolute inset-0 origin-bottom scale-y-0 bg-brass/15 transition-transform duration-700 ease-editorial group-hover:scale-y-100"
+                  className="pointer-events-none absolute inset-0 origin-bottom scale-y-0 bg-brass/15 transition-transform duration-500 ease-editorial group-hover:scale-y-100"
                 />
                 <User className="relative z-10 h-[1.05rem] w-[1.05rem]" aria-hidden />
               </Link>
@@ -238,13 +239,13 @@ export function SiteNav() {
                 aria-expanded={isOpen}
                 aria-controls="tp-site-drawer"
                 aria-label={isOpen ? "Close menu" : "Open menu"}
-                className="-mr-2 flex h-11 w-11 items-center justify-center text-stone transition-colors duration-500 hover:text-bone"
+                className="pressable -mr-2 flex h-11 w-11 items-center justify-center rounded-full text-stone hover:text-bone"
               >
-                {isOpen ? (
-                  <X className="h-5 w-5" aria-hidden />
-                ) : (
-                  <Menu className="h-5 w-5" aria-hidden />
-                )}
+                <IconSwap
+                  active={isOpen}
+                  off={<Menu className="h-5 w-5" />}
+                  on={<X className="h-5 w-5" />}
+                />
               </button>
             </div>
           </div>
@@ -287,7 +288,7 @@ export function SiteNav() {
                         onClick={() => setIsOpen(false)}
                         aria-current={isActive ? "true" : undefined}
                         className={clsx(
-                          "block py-3 text-[1.0625rem] leading-snug transition-colors duration-500",
+                          "block py-3 text-[1.0625rem] leading-snug transition-colors duration-300 ease-ui",
                           isActive ? "text-brass-light" : "text-bone hover:text-brass-light",
                         )}
                       >
@@ -303,7 +304,7 @@ export function SiteNav() {
                 <span className="label block text-stone-dim">Direct line</span>
                 <a
                   href={site.contact.phoneHref}
-                  className="mt-1.5 block text-[1.0625rem] leading-none tracking-wide text-bone transition-colors duration-500 hover:text-brass-light"
+                  className="mt-1.5 block text-[1.0625rem] leading-none tracking-wide text-bone transition-colors duration-300 ease-ui hover:text-brass-light"
                 >
                   {site.contact.phone}
                 </a>

@@ -20,12 +20,12 @@ export function Contact() {
         <Reveal delay={0.12}>
           <a
             href={phoneHref}
-            className="group mt-14 block border-y border-canvas-border py-10 transition-colors duration-700 ease-editorial hover:border-champagne/50 sm:mt-16 sm:py-14"
+            className="group mt-14 block border-y border-canvas-border py-10 transition-colors duration-300 ease-ui hover:border-champagne/50 sm:mt-16 sm:py-14"
           >
-            <span className="label mb-6 block text-taupe group-hover:text-champagne">
+            <span className="label mb-6 block text-taupe transition-colors duration-300 ease-ui group-hover:text-champagne-ink">
               Direct line
             </span>
-            <span className="display block text-[clamp(2.5rem,9vw,7.5rem)] tabular-nums text-canvas-text transition-colors duration-700 ease-editorial group-hover:text-champagne">
+            <span className="display block text-[clamp(2.5rem,9vw,7.5rem)] tabular-nums text-canvas-text transition-colors duration-300 ease-ui group-hover:text-champagne-ink">
               {phone}
             </span>
           </a>
@@ -37,7 +37,7 @@ export function Contact() {
               <span className="label block text-taupe">Email</span>
               <a
                 href={`mailto:${email}`}
-                className="link-underline mt-4 inline-block break-anywhere font-display text-[1.375rem] font-medium text-canvas-text transition-colors duration-500 hover:text-champagne sm:text-[1.625rem]"
+                className="link-underline mt-4 inline-block break-anywhere font-display text-[1.375rem] font-medium text-canvas-text transition-colors duration-300 ease-ui hover:text-champagne-ink sm:text-[1.625rem]"
               >
                 {email}
               </a>

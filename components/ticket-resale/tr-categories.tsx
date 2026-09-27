@@ -30,8 +30,7 @@ export function TrCategories() {
               <Link
                 href={category.href}
                 className={clsx(
-                  "ds-card group block w-full overflow-hidden text-left",
-                  "transition-[transform,border-color] duration-500 ease-editorial",
+                  "ds-card group pressable block w-full overflow-hidden text-left [--press-scale:0.98]",
                   "hover:-translate-y-1 hover:border-champagne/40",
                   "focus-visible:-translate-y-1 focus-visible:border-champagne/40",
                 )}

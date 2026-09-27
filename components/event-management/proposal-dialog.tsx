@@ -256,7 +256,7 @@ export function ProposalDialog({
                   <button
                     type="button"
                     onClick={onClose}
-                    className="label mt-9 rounded-control bg-graphite px-7 py-3.5 text-linen transition-colors duration-500 ease-editorial hover:bg-graphite-dim"
+                    className="label mt-9 rounded-control bg-graphite px-7 py-3.5 text-linen pressable hover:bg-graphite-dim"
                   >
                     Done
                   </button>
@@ -421,7 +421,7 @@ export function ProposalDialog({
                   <button
                     type="submit"
                     disabled={status === "sending"}
-                    className="label mt-8 w-full rounded-control bg-graphite px-7 py-4 text-linen transition-colors duration-500 ease-editorial hover:bg-graphite-dim disabled:cursor-not-allowed disabled:opacity-60"
+                    className="label mt-8 w-full rounded-control bg-graphite px-7 py-4 text-linen pressable hover:bg-graphite-dim disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {status === "sending" ? "Sending…" : "Send Proposal Request"}
                   </button>

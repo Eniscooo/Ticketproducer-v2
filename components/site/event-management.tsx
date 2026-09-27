@@ -45,7 +45,7 @@ export function EventManagement() {
               {em.cta}
               <ArrowUpRight
                 aria-hidden
-                className="h-3.5 w-3.5 transition-transform duration-500 ease-editorial group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                className="h-3.5 w-3.5 transition-transform duration-300 ease-ui group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
               />
             </Action>
           </Reveal>
@@ -59,11 +59,12 @@ export function EventManagement() {
               delay={i * 0.08}
               className="group border-t border-canvas-border last:border-b last:border-canvas-border"
             >
-              <div className="relative flex gap-6 py-10 transition-colors duration-700 ease-editorial sm:gap-10 sm:py-12">
-                {/* Gold rule draws in from the left on approach */}
+              <div className="relative flex gap-6 py-10 sm:gap-10 sm:py-12">
+                {/* Gold rule draws in from the left on approach — scaled, not
+                    widened, so the draw stays on the compositor */}
                 <span
                   aria-hidden
-                  className="pointer-events-none absolute -top-px left-0 h-px w-0 bg-champagne transition-all duration-1000 ease-editorial group-hover:w-full"
+                  className="pointer-events-none absolute -top-px left-0 h-px w-full origin-left scale-x-0 bg-champagne transition-transform duration-700 ease-editorial group-hover:scale-x-100"
                 />
                 {/* The large numeral the editorial layout is built around */}
                 <span className="display shrink-0 text-[3.25rem] leading-none text-canvas-text/10 transition-colors duration-700 ease-editorial group-hover:text-champagne/30 sm:text-[4rem]">
