@@ -220,7 +220,7 @@ export const whatWeDo = {
   label: "What We Do",
   headline: "What Ticket-Producer Handles",
   description:
-    "Ticket Producer runs three disciplines under one roof: the event management systems that build the room, the resale desk that moves the seat, and a private concierge line for the people who never miss a show.",
+    "",
 };
 
 export type ServiceBox = {

@@ -52,7 +52,7 @@ export default function Page() {
             id="em-faq"
             headingLight="Event Management"
             headingBold="Questions"
-            body="What producers and venues ask before they hand over a room. If yours isn't here, the line below reaches the people who would run it."
+            body=""
           />
           <EmFinalCta />
         </main>

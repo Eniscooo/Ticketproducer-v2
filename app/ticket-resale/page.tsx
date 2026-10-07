@@ -78,7 +78,7 @@ export default function Page() {
           id="tr-faq"
           headingLight="Ticket Resale"
           headingBold="Questions"
-          body="What buyers ask most before their first order. If yours isn't here, the line below reaches a real person."
+          body=""
         />
 
         <TrFinalCta />

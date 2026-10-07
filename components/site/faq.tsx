@@ -25,7 +25,7 @@ export function Faq({
   id = "faq",
   headingLight = "Frequently",
   headingBold = "Asked Questions",
-  body = "Answers to what producers and venues ask most. If your situation isn't here, the line below is answered by the people who would run your event.",
+  body = "",
   compact = false,
 }: {
   items?: readonly FaqItem[];
