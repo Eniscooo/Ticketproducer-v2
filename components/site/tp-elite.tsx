@@ -1,7 +1,7 @@
-import Image from "next/image";
 import { Phone } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 import { site, tpElite } from "@/lib/site";
+import { EliteWallet } from "./elite-wallet";
 
 /**
  * The visual peak: the only place in the light body the site turns dark
@@ -15,7 +15,7 @@ export function TPElite() {
   return (
     <section
       id="tp-elite"
-      className="grain relative isolate -mt-16 scroll-mt-28 overflow-hidden rounded-t-[3.5rem] bg-elite-void py-16 shadow-[0_-40px_90px_-40px_rgba(0,0,0,0.65)] sm:-mt-20 sm:rounded-t-[4.5rem] sm:py-20 lg:py-24"
+      className="grain relative isolate mx-auto w-full max-w-[78rem] scroll-mt-28 rounded-feature overflow-hidden bg-elite-void py-8 shadow-[0_-26px_56px_-26px_rgba(0,0,0,0.6)] sm:py-12"
     >
       {/* A richer, warmer ground — the room behind the room */}
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
@@ -68,16 +68,7 @@ export function TPElite() {
             </div>
 
             <Reveal delay={0.15} className="lg:col-span-5">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-[1.5rem] border border-elite-gold/25">
-                <Image
-                  src="/reserved.jpg"
-                  alt=""
-                  fill
-                  sizes="(min-width: 1024px) 32rem, 90vw"
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-elite-void/60 via-elite-void/5 to-transparent" />
-              </div>
+              <EliteWallet />
             </Reveal>
           </div>
 

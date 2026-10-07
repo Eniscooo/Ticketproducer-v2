@@ -60,7 +60,7 @@ export function EventSection({
   subtitle,
   events,
   tone = "paper",
-  initialCount = 4,
+  initialCount = 8,
   emptyMessage,
   variant = "tile",
 }: {

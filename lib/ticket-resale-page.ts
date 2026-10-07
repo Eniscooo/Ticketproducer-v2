@@ -315,6 +315,137 @@ const RAW_EVENTS: RawEvent[] = [
     image: "/bgtwo.jpg",
     imagePosition: "object-[85%_40%]",
     startingPrice: 45,
+  },  {
+    slug: "summer-fields-festival",
+    name: "Summer Fields Festival",
+    date: "Sat, Jun 27, 2026",
+    time: "2:00 PM",
+    venue: "Randall's Island Park",
+    city: "New York, NY",
+    category: "Concerts",
+    image: "/day.jpg",
+    imagePosition: "object-[50%_40%]",
+    startingPrice: 89,
+  },
+  {
+    slug: "harbor-lights-live",
+    name: "Harbor Lights Live",
+    date: "Sat, Aug 22, 2026",
+    time: "7:00 PM",
+    venue: "The Rooftop at Pier 17",
+    city: "New York, NY",
+    category: "Music",
+    image: "/hero-poster.jpg",
+    imagePosition: "object-[50%_50%]",
+    startingPrice: 72,
+  },
+  {
+    slug: "radio-city-late-show",
+    name: "Radio City Late Show",
+    date: "Sat, Sep 19, 2026",
+    time: "10:00 PM",
+    venue: "Radio City Music Hall",
+    city: "New York, NY",
+    category: "Concerts",
+    image: "/intro-bg.jpg",
+    imagePosition: "object-[40%_50%]",
+    startingPrice: 84,
+  },
+  {
+    slug: "midnight-jazz-sessions",
+    name: "Midnight Jazz Sessions",
+    date: "Fri, Jul 31, 2026",
+    time: "11:30 PM",
+    venue: "Blue Note",
+    city: "New York, NY",
+    category: "Music",
+    image: "/conference.jpg",
+    imagePosition: "object-[50%_40%]",
+    startingPrice: 48,
+  },
+  {
+    slug: "brooklyn-block-party",
+    name: "Brooklyn Block Party",
+    date: "Sat, Aug 15, 2026",
+    time: "1:00 PM",
+    venue: "Prospect Park Bandshell",
+    city: "Brooklyn, NY",
+    category: "Music",
+    image: "/day.jpg",
+    imagePosition: "object-[20%_70%]",
+    startingPrice: 35,
+  },
+  {
+    slug: "la-boheme",
+    name: "La Bohème",
+    date: "Fri, Oct 16, 2026",
+    time: "7:30 PM",
+    venue: "Metropolitan Opera House",
+    city: "New York, NY",
+    category: "Theater",
+    image: "/bgone.jpg",
+    imagePosition: "object-[50%_45%]",
+    startingPrice: 110,
+  },
+  {
+    slug: "midnight-at-the-majestic",
+    name: "Midnight at the Majestic",
+    date: "Sat, Nov 14, 2026",
+    time: "8:00 PM",
+    venue: "Majestic Theatre",
+    city: "New York, NY",
+    category: "Theater",
+    image: "/bgre.jpg",
+    imagePosition: "object-[50%_30%]",
+    startingPrice: 99,
+  },
+  {
+    slug: "bucks-vs-knicks",
+    name: "Bucks vs Knicks",
+    date: "Sat, Dec 12, 2026",
+    time: "7:30 PM",
+    venue: "Madison Square Garden",
+    city: "New York, NY",
+    category: "Sports",
+    image: "/giannis.jpg",
+    imagePosition: "object-[50%_25%]",
+    startingPrice: 96,
+  },
+  {
+    slug: "bengals-vs-jets",
+    name: "Bengals vs Jets",
+    date: "Sun, Nov 29, 2026",
+    time: "1:00 PM",
+    venue: "MetLife Stadium",
+    city: "East Rutherford, NJ",
+    category: "Sports",
+    image: "/CHASE.jpg",
+    imagePosition: "object-[50%_25%]",
+    startingPrice: 135,
+  },
+  {
+    slug: "bucks-vs-bulls",
+    name: "Bucks vs Bulls",
+    date: "Sun, Jan 17, 2027",
+    time: "6:00 PM",
+    venue: "United Center",
+    city: "Chicago, IL",
+    category: "Sports",
+    image: "/gianni.jpg",
+    imagePosition: "object-[50%_30%]",
+    startingPrice: 64,
+  },
+  {
+    slug: "brooklyn-arena-showcase",
+    name: "Brooklyn Arena Showcase",
+    date: "Sat, Feb 20, 2027",
+    time: "7:00 PM",
+    venue: "Barclays Center",
+    city: "Brooklyn, NY",
+    category: "Sports",
+    image: "/venue.jpg",
+    imagePosition: "object-[50%_50%]",
+    startingPrice: 55,
   },
 ];
 
@@ -336,29 +467,93 @@ export const eventRails: EventRail[] = [
   {
     id: "popular-concerts",
     title: "Popular Concerts",
-    slugs: ["the-weeknd-live-in-nyc", "summer-nights-live", "chicago-summer-concert", "afrobeats-after-dark"],
+    slugs: [
+      "the-weeknd-live-in-nyc",
+      "summer-nights-live",
+      "summer-fields-festival",
+      "afrobeats-after-dark",
+      "radio-city-late-show",
+      "rb-soul-sessions",
+      "chicago-summer-concert",
+      "harbor-lights-live",
+    ],
   },
   {
     id: "theater",
     title: "Theater",
-    slugs: ["hamilton", "the-great-gatsby", "broadway-nights", "chicago-theater-night"],
+    slugs: [
+      "hamilton",
+      "the-great-gatsby",
+      "la-boheme",
+      "broadway-nights",
+      "midnight-at-the-majestic",
+      "chicago-theater-night",
+    ],
     variant: "feature",
   },
   {
     id: "nyc-shows",
     title: "NYC Shows",
-    slugs: ["broadway-nights", "hamilton", "the-great-gatsby", "new-york-comedy-night"],
+    slugs: [
+      "broadway-nights",
+      "hamilton",
+      "radio-city-late-show",
+      "the-great-gatsby",
+      "midnight-jazz-sessions",
+      "la-boheme",
+      "new-york-comedy-night",
+      "midnight-at-the-majestic",
+    ],
   },
   {
     id: "sports",
     title: "Sports",
-    slugs: ["nba-night", "knicks-home-game", "lakers-vs-knicks", "college-basketball-classic", "united-center-live"],
+    slugs: [
+      "bucks-vs-knicks",
+      "nba-night",
+      "bengals-vs-jets",
+      "knicks-home-game",
+      "lakers-vs-knicks",
+      "brooklyn-arena-showcase",
+      "bucks-vs-bulls",
+      "college-basketball-classic",
+      "united-center-live",
+    ],
   },
   {
     id: "music",
     title: "Music",
-    slugs: ["afrobeats-after-dark", "rb-soul-sessions", "summer-nights-live"],
+    slugs: [
+      "afrobeats-after-dark",
+      "rb-soul-sessions",
+      "midnight-jazz-sessions",
+      "summer-nights-live",
+      "brooklyn-block-party",
+      "harbor-lights-live",
+      "the-weeknd-live-in-nyc",
+      "summer-fields-festival",
+    ],
   },
+];
+
+/**
+ * "Check out your Faves": artists, players, teams, and shows, each linking to
+ * their event page. `position` frames the subject in a circle cropped from
+ * the listing artwork.
+ */
+export const faves = [
+  { name: "Drake", image: "/DRAKE.jpg", position: "object-[50%_32%]", href: "/ticket-resale/summer-nights-live" },
+  { name: "Kendrick", image: "/kendrick.jpg", position: "object-[50%_78%]", href: "/ticket-resale/afrobeats-after-dark" },
+  { name: "The Weeknd", image: "/weekend.jpg", position: "object-[50%_45%]", href: "/ticket-resale/the-weeknd-live-in-nyc" },
+  { name: "BTS", image: "/bts.jpg", position: "object-[50%_85%]", href: "/ticket-resale/rb-soul-sessions" },
+  { name: "Ja'Marr Chase", image: "/CHASE.jpg", position: "object-[50%_22%]", href: "/ticket-resale/bengals-vs-jets" },
+  { name: "Giannis", image: "/giannis.jpg", position: "object-[50%_28%]", href: "/ticket-resale/bucks-vs-knicks" },
+  { name: "Hamilton", image: "/bgd.png", position: "object-[50%_35%]", href: "/ticket-resale/hamilton" },
+  { name: "Summer Fields", image: "/day.jpg", position: "object-[50%_50%]", href: "/ticket-resale/summer-fields-festival" },
+  { name: "La Bohème", image: "/bgone.jpg", position: "object-[50%_45%]", href: "/ticket-resale/la-boheme" },
+  { name: "Knicks", image: "/venue.jpg", position: "object-[50%_50%]", href: "/ticket-resale/knicks-home-game" },
+  { name: "Midnight Jazz", image: "/conference.jpg", position: "object-[50%_40%]", href: "/ticket-resale/midnight-jazz-sessions" },
+  { name: "The Great Gatsby", image: "/bgre.jpg", position: "object-[50%_30%]", href: "/ticket-resale/the-great-gatsby" },
 ];
 
 export const trFaq = [
@@ -410,27 +605,6 @@ export const trFinalCta = {
   body: "Find the event. Choose your seats. Make the night yours.",
   cta: { label: "Explore Events", href: "#suggested" },
 };
-
-/**
- * Popular categories, in the card style the event-management guide uses:
- * photograph, name over the bottom-left corner, nothing else. Every `href` is
- * an anchor to a rail that actually exists further down the page, so none of
- * these is a dead end.
- */
-export type PopularCategory = {
-  title: string;
-  href: string;
-  image: string;
-  imagePosition: string;
-};
-
-export const popularCategories: PopularCategory[] = [
-  { title: "Concerts", href: "#popular-concerts", image: "/day.jpg", imagePosition: "object-[50%_55%]" },
-  { title: "Sports", href: "#sports", image: "/venue.jpg", imagePosition: "object-[50%_45%]" },
-  { title: "Theater", href: "#theater", image: "/bgre.jpg", imagePosition: "object-[50%_40%]" },
-  { title: "Music", href: "#music", image: "/bgtwo.jpg", imagePosition: "object-[50%_50%]" },
-  { title: "NYC Shows", href: "#nyc-shows", image: "/bgd.png", imagePosition: "object-[50%_50%]" },
-];
 
 /**
  * Which seat map an event gets. Sports sit around a court; everything else

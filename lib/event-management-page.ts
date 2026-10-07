@@ -17,34 +17,41 @@ export const emHero = {
   secondaryCta: { label: "Explore Services", href: "#em-services" },
 };
 
-/** The three core services, with the detail this page has room for. */
-export const emServices = [
+/**
+ * "How it works" — the three services re-cut as four steps in the order an
+ * event actually comes together: the plan (Consulting), the room (Venue
+ * Mapping), the door (the Custom Ticketing Platform), and the people on the
+ * night (Event Staffing). Each step's copy is drawn from that service's own
+ * description and points. `demo` picks the looping phone animation.
+ */
+export const emSteps = [
   {
     index: "01",
-    title: eventManagement.items[0].title,
-    body: eventManagement.items[0].body,
-    // Short by design — these render as design.md tag pills, not sentences.
-    points: ["Doors", "Box office", "Floor crew", "Load-out"],
-    image: "/cabin.jpg",
-    imagePosition: "object-center",
+    title: "Create your event",
+    body: "Pre-production, sequencing and an ops review from producers who have run the room. A second set of expert eyes before anything goes live.",
+    demo: "create",
   },
   {
     index: "02",
-    title: eventManagement.items[1].title,
-    body: eventManagement.items[1].body,
-    points: ["Seating charts", "Sightlines", "Capacity modelling", "Custom platform"],
-    image: "/venue.jpg",
-    imagePosition: "object-top",
+    title: "Enable your seat map",
+    body: "Seating charts built around the venue, with sightlines checked and capacity modelled.",
+    demo: "seats",
   },
   {
     index: "03",
-    title: eventManagement.items[2].title,
-    body: eventManagement.items[2].body,
-    points: ["Pre-production", "Sequencing", "Ops review", "Producer support"],
-    image: "/consult.jpg",
-    imagePosition: "object-center",
+    title: "Sell and scan tickets",
+    body: "A ticketing platform built for the room, not a template. Every ticket is checked at the door.",
+    demo: "tickets",
   },
-];
+  {
+    index: "04",
+    title: "Staff the room",
+    body: `${eventManagement.items[0].body} Box office and floor crew, placed and confirmed.`,
+    demo: "staff",
+  },
+] as const;
+
+export type EmStepDemo = (typeof emSteps)[number]["demo"];
 
 export type EventGuideItem = {
   slug: string;

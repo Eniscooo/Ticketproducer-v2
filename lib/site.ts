@@ -73,6 +73,37 @@ export const eventManagement = {
   ] satisfies ServiceItem[],
   cta: "Explore Event Management",
   href: "/event-management",
+  /**
+   * The homepage floor-plan story: each step owns a slice of the section's
+   * scroll progress, starting at `at`. The caption sits under the plan while
+   * that step is current.
+   */
+  steps: [
+    {
+      at: 0,
+      title: "Discovery",
+      body: "We learn what you want guests to feel and remember.",
+      caption: "Your brief: a gala dinner on the waterfront",
+    },
+    {
+      at: 0.22,
+      title: "Design",
+      body: "Layout, stage, colours and flow, shaped around your brief.",
+      caption: "Design: layout, stage and colour palette",
+    },
+    {
+      at: 0.45,
+      title: "Planning",
+      body: "Seating, vendors and timelines, all handled by us.",
+      caption: "Planning: tables placed, vendors booked",
+    },
+    {
+      at: 0.7,
+      title: "Delivery",
+      body: "We run the day so you can be a guest at your own event.",
+      caption: "Event day: lights up, every seat filled",
+    },
+  ],
 };
 
 export const ticketResale = {
@@ -125,6 +156,15 @@ export const tpElite = {
 
 export const pullQuote = "Every seat has a story. We make sure it gets told right.";
 
+/** The five posters that gather into a fan over the pull quote, left to right. */
+export const pullQuotePosters = [
+  "/DRAKE.jpg",
+  "/kendrick.jpg",
+  "/CHASE.jpg",
+  "/giannis.jpg",
+  "/bts.jpg",
+] as const;
+
 /**
  * NOTE: Placeholder figures for layout — every number here needs to be
  * swapped for the real one before this goes live.
@@ -151,6 +191,12 @@ export type Partner = {
    * wordmark to carry the same optical weight.
    */
   em: number;
+  /**
+   * The artwork carries its own dark plate with light lettering. On the dark
+   * band these are knocked out by brightness — plate dropped, lettering kept —
+   * where the rest, dark marks on transparency, are simply turned white.
+   */
+  knockout?: boolean;
 };
 
 /**
@@ -162,12 +208,12 @@ export type Partner = {
  * reads as a missing image rather than a design choice.
  */
 export const trustedPartners: readonly Partner[] = [
-  { name: "StubHub", src: "/logos/stubhub-mark.png", width: 793, height: 361, em: 2.375 },
+  { name: "StubHub", src: "/logos/stubhub-mark.png", width: 793, height: 361, em: 2.375, knockout: true },
   { name: "Ticketmaster", src: "/logos/ticketmaster-mark.png", width: 794, height: 114, em: 1.125 },
   { name: "SeatGeek", src: "/logos/seatgeek-mark.png", width: 550, height: 390, em: 2.125 },
   { name: "Vivid Seats", src: "/logos/vivid-seats-mark.png", width: 540, height: 102, em: 1.1875 },
   { name: "Eventbrite", src: "/logos/eventbrite-mark.png", width: 534, height: 94, em: 1.1875 },
-  { name: "Gametime", src: "/logos/gametime-mark.png", width: 495, height: 128, em: 2 },
+  { name: "Gametime", src: "/logos/gametime-mark.png", width: 495, height: 128, em: 2, knockout: true },
 ];
 
 export const whatWeDo = {

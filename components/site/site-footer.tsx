@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Logo } from "@/components/brand/logo";
 import { InstagramGlyph, LinkedInGlyph, XGlyph } from "@/components/brand/social-icons";
 import { site } from "@/lib/site";
+import { FooterWordmark } from "./footer-wordmark";
 
 const SOCIAL_GLYPHS = {
   Instagram: InstagramGlyph,
@@ -25,21 +26,6 @@ export function SiteFooter() {
             <p className="mt-6 max-w-xs text-sm leading-relaxed text-stone">
               {site.description}
             </p>
-            <div className="mt-7 flex items-center gap-3">
-              {site.social.map((item) => {
-                const Glyph = SOCIAL_GLYPHS[item.label as keyof typeof SOCIAL_GLYPHS];
-                return (
-                  <a
-                    key={item.label}
-                    href={item.href}
-                    aria-label={item.label}
-                    className="pressable flex h-11 w-11 items-center justify-center rounded-full border border-bone/15 text-stone hover:border-brass/60 hover:text-brass-light sm:h-9 sm:w-9"
-                  >
-                    <Glyph className="h-4 w-4" />
-                  </a>
-                );
-              })}
-            </div>
           </div>
 
           {/* Services */}
@@ -99,23 +85,41 @@ export function SiteFooter() {
           </div>
         </div>
 
+        {/* Sign-off bar: copyright, then the legal links and socials */}
         <div className="mt-14 flex flex-col gap-5 border-t border-bone/10 pt-7 sm:mt-16 sm:flex-row sm:items-center sm:justify-between">
-          <p className="label text-stone-dim/80">
-            © 2026 {site.name}. All rights reserved.
-          </p>
-          <nav aria-label="Legal" className="flex flex-wrap gap-x-6 gap-y-5 sm:gap-y-2">
-            {site.legal.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="label link-underline tap-pad text-stone-dim transition-colors duration-500 hover:text-bone"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
+          <p className="label text-stone-dim/80">© 2026 {site.name}</p>
+          <div className="flex flex-wrap items-center gap-x-8 gap-y-5">
+            <nav aria-label="Legal" className="flex flex-wrap gap-x-6 gap-y-5 sm:gap-y-2">
+              {site.legal.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="label link-underline tap-pad text-stone transition-colors duration-500 hover:text-bone"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+            <div className="flex items-center gap-2.5">
+              {site.social.map((item) => {
+                const Glyph = SOCIAL_GLYPHS[item.label as keyof typeof SOCIAL_GLYPHS];
+                return (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    aria-label={item.label}
+                    className="pressable flex h-11 w-11 items-center justify-center rounded-full border border-bone/15 text-stone hover:border-brass/60 hover:text-brass-light sm:h-9 sm:w-9"
+                  >
+                    <Glyph className="h-4 w-4" />
+                  </a>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
+
+      <FooterWordmark />
     </footer>
   );
 }

@@ -5,6 +5,7 @@ import { Faq } from "@/components/site/faq";
 import { ProposalProvider } from "@/components/event-management/proposal-context";
 import { EmHero } from "@/components/event-management/em-hero";
 import { EmServices } from "@/components/event-management/em-services";
+import { DashboardMarquee } from "@/components/event-management/dashboard-marquee";
 import { BudgetCalculator } from "@/components/event-management/budget-calculator";
 import { EventGuide } from "@/components/event-management/event-guide";
 import { EmAbout } from "@/components/event-management/em-about";
@@ -42,6 +43,7 @@ export default function Page() {
         <main className="flex-1">
           <EmHero />
           <EmServices />
+          <DashboardMarquee />
           <BudgetCalculator />
           <EventGuide />
           <EmAbout />

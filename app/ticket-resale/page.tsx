@@ -5,7 +5,7 @@ import { Faq } from "@/components/site/faq";
 import { TrustedPartners } from "@/components/site/trusted-partners";
 import { TicketResaleNav } from "@/components/ticket-resale/ticket-resale-nav";
 import { TrDiscovery } from "@/components/ticket-resale/tr-discovery";
-import { TrCategories } from "@/components/ticket-resale/tr-categories";
+import { TrFaves } from "@/components/ticket-resale/tr-faves";
 import { TrSubscribe } from "@/components/ticket-resale/tr-subscribe";
 import { EventSection } from "@/components/ticket-resale/event-section";
 import { TrFinalCta } from "@/components/ticket-resale/tr-final-cta";
@@ -19,18 +19,18 @@ export const metadata: Metadata = {
 
 /**
  * Order of the page: hero, then the partner row as the proof line directly
- * under it, then the filter bar and results, then categories as a shortcut into
- * the rails. `TrustedPartners` is passed to `TrDiscovery` as children rather
- * than rendered here, because it has to land between the hero and the results
- * that share the discovery component's state — passing it down keeps it
- * server-rendered.
+ * under it, then the filter bar and results, then the faves row as a shortcut
+ * into the acts on the rails. `TrustedPartners` is passed to `TrDiscovery` as
+ * children rather than rendered here, because it has to land between the hero
+ * and the results that share the discovery component's state — passing it
+ * down keeps it server-rendered.
  *
  * Cards link to /ticket-resale/[slug] now, so there is no shared dialog
  * provider to wrap the tree in.
  *
- * `TicketResaleNav` is fixed to the foot of the window and scroll-triggered, so
- * its position in this tree is immaterial — it reserves no layout space and the
- * container needs no padding to stay clear of it.
+ * `TicketResaleNav` is fixed in place (a rail in the left margin, or a bar at
+ * the foot of the window) and always on screen, so its position in this tree is
+ * immaterial — it reserves no layout space.
  */
 export default function Page() {
   return (
@@ -49,7 +49,7 @@ export default function Page() {
           <TrustedPartners tone="light" />
         </TrDiscovery>
 
-        <TrCategories />
+        <TrFaves />
 
         <TicketResaleNav />
 

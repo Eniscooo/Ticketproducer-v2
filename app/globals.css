@@ -107,6 +107,15 @@
    * for things that arrive; this one is for things that respond.
    */
   --ease-ui: cubic-bezier(0.23, 1, 0.32, 1);
+  /*
+   * Overshoot-and-settle, for small pieces placed into a diagram (tables,
+   * tags, ticks, wallet cards). Never for text or anything the reader reads
+   * while it moves.
+   */
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Success state inside the product demos — check-ins, confirmations. */
+  --color-confirm: #5bbd8a;
 }
 
 @layer base {
@@ -597,17 +606,278 @@
   }
 }
 
+/*
+ * Stacking cards — see components/ui/card-stack.tsx. Unlayered on purpose, so
+ * it outranks the `relative` utility the stacked sections already carry. The
+ * spacing below each card is scroll room: the card holds while the next one
+ * approaches. Sticky (and its measured `top`) only applies once the script has
+ * measured and set `data-stack-ready`. Without script or motion the cards sit
+ * `--stack-rest-gap` apart instead.
+ */
+.card-stack > :not(:last-child) {
+  margin-bottom: 14vh;
+}
+
+.card-stack[data-stack-ready] > * {
+  position: sticky;
+}
+
+@media (max-width: 639px) {
+  .card-stack > :not(:last-child) {
+    margin-bottom: 10vh;
+  }
+}
+
+/*
+ * Step reveals — an element carries `data-at` and a script adds `.on` once its
+ * moment arrives: scroll progress for the floor plan, a timed loop for the
+ * phone demos. Taking `.on` away plays it back out, so scrolling up (or a demo
+ * restarting) reverses cleanly. Opacity and transform only; `fill-box` makes
+ * SVG pieces scale about their own centre rather than the canvas origin.
+ */
+.fx-fade,
+.fx-pop,
+.fx-drop,
+.fx-up,
+.fx-in-left,
+.fx-grow-x {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    opacity 0.35s var(--ease-ui),
+    transform 0.55s var(--ease-bounce);
+}
+
+.fx-fade {
+  opacity: 0;
+}
+
+.fx-pop {
+  opacity: 0;
+  transform: scale(0.55);
+}
+
+.fx-drop {
+  opacity: 0;
+  transform: translateY(-14px) scale(0.85);
+}
+
+.fx-up {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.fx-in-left {
+  opacity: 0;
+  transform: translateX(-40px);
+}
+
+.fx-grow-x {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition-timing-function: var(--ease-ui), var(--ease-editorial);
+}
+
+.on:is(.fx-fade, .fx-pop, .fx-drop, .fx-up, .fx-in-left, .fx-grow-x) {
+  opacity: 1;
+  transform: none;
+}
+
+/* Linework drawn along its own length — pair with `pathLength="1"`. */
+.fx-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.9s var(--ease-editorial);
+}
+
+.fx-draw.on {
+  stroke-dashoffset: 0;
+}
+
+/* One pass of a scanner line down its frame, each time it switches on. */
+@keyframes tp-scan-sweep {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  12%,
+  88% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(var(--scan-travel, 100px));
+    opacity: 0;
+  }
+}
+
+.fx-scan {
+  opacity: 0;
+}
+
+.fx-scan.on {
+  animation: tp-scan-sweep 1.1s var(--ease-ui) both;
+}
+
+/* Check-in lane — the bar flashes as each ticket crosses it. */
+@keyframes tp-flash {
+  0% {
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Sales feed — a new order drops in at the top of the list. */
+@keyframes tp-drop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-14px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* A live indicator: breathing, not blinking. */
+@keyframes tp-live {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/*
+ * Wallet — three cards tucked into a pocket rise in a staggered bounce when
+ * the section arrives, and lift a little further under the cursor. `--rest`,
+ * `--open`, and `--delay` are set per card.
+ */
+.wallet-card {
+  transform: translateY(var(--rest));
+  transition: transform 0.9s var(--ease-bounce) var(--delay, 0ms);
+}
+
+.is-open .wallet-card {
+  transform: translateY(var(--open));
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .is-open:hover .wallet-card {
+    transform: translateY(calc(var(--open) - 9%));
+    transition-delay: calc(var(--delay, 0ms) / 3);
+  }
+}
+
+/*
+ * Dashboard wall — see components/event-management/dashboard-marquee.tsx.
+ * Each track holds its widgets twice, so sliding it -50% lands on an identical
+ * frame and the loop is seamless. Edges fade into the page.
+ */
+.dash-wall {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
+}
+
+@keyframes tp-dash-up {
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+.dash-track {
+  animation: tp-dash-up var(--dash-duration, 40s) linear infinite;
+}
+
+.dash-wall[data-offscreen] .dash-track {
+  animation-play-state: paused;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .dash-col:hover .dash-track {
+    animation-play-state: paused;
+  }
+}
+
+/*
+ * Footer wordmark — see components/site/footer-wordmark.tsx. Outline only
+ * (stroke, no fill), sized to the viewport so it always spans it, with the
+ * line box tight enough that the strip's height cuts through the letters.
+ */
+.footer-wordmark {
+  font-family: var(--font-display);
+  font-size: 13vw;
+  font-weight: 500;
+  line-height: 0.8;
+  letter-spacing: -0.012em;
+  white-space: nowrap;
+  color: transparent;
+}
+
+/* The brass copy shows only in a soft circle around the pointer. */
+.footer-wordmark-spot {
+  -webkit-mask-image: radial-gradient(
+    260px circle at var(--spot-x, -999px) var(--spot-y, -999px),
+    black 25%,
+    transparent 72%
+  );
+  mask-image: radial-gradient(
+    260px circle at var(--spot-x, -999px) var(--spot-y, -999px),
+    black 25%,
+    transparent 72%
+  );
+}
+
+/*
+ * Gathering posters — see components/site/quote-gather.tsx. `--e` (0–1, eased)
+ * is the only value script writes; this blends the scattered start (vw/vh from
+ * centre, a 15–30° tilt, 0.75 scale) into the poster's slot in the fan.
+ */
+.gather-poster {
+  --e: 0;
+  transform:
+    translate(
+      calc(var(--sx) * 1vw * (1 - var(--e)) + var(--fx) * var(--fan-step) * var(--e)),
+      calc(var(--sy) * 1vh * (1 - var(--e)) + var(--fy) * var(--e))
+    )
+    rotate(calc(var(--sr) * (1 - var(--e)) + var(--fr) * var(--e)))
+    scale(calc(0.75 + 0.25 * var(--e)));
+}
+
 /* Without scripting the reveal states never resolve — show everything. */
 @media (scripting: none) {
   [data-reveal] {
     opacity: 1 !important;
     transform: none !important;
   }
+
+  .card-stack > :not(:last-child) {
+    margin-bottom: var(--stack-rest-gap, 0);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  /* Scroll-linked motion shows its finished state: a plain column, a set fan. */
+  .card-stack > :not(:last-child) {
+    margin-bottom: var(--stack-rest-gap, 0);
+  }
+
+  .gather-poster {
+    --e: 1 !important;
+  }
+
+  .dash-track {
+    animation: none !important;
   }
 
   *,

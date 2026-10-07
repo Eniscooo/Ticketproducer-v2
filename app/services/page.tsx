@@ -14,7 +14,8 @@ import { ReviewsMarquee } from "@/components/site/reviews-marquee";
 import { Faq } from "@/components/site/faq";
 import { Contact } from "@/components/site/contact";
 import { SiteFooter } from "@/components/site/site-footer";
-import { pullQuote, site } from "@/lib/site";
+import { CardStack } from "@/components/ui/card-stack";
+import { pullQuote, pullQuotePosters, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Services",
@@ -39,10 +40,18 @@ export default function Page() {
         <StatsBar />
         <TrustedPartners />
         <ServicesOverview />
-        <PullQuote quote={pullQuote} />
-        <EventManagement />
-        <TicketResale />
-        <TPElite />
+        <PullQuote quote={pullQuote} posters={pullQuotePosters} />
+        {/*
+          The three services as stacking cards on the quote's linen: each sits
+          on the page rather than spanning it, pins, and steps back (smaller,
+          dimmer) as the next one slides over. The bottom padding clears the
+          rounded top of the section that follows.
+        */}
+        <CardStack className="bg-canvas-alt px-3 pb-24 pt-10 [--stack-rest-gap:1.5rem] sm:px-6 sm:pb-28">
+          <EventManagement />
+          <TicketResale />
+          <TPElite />
+        </CardStack>
         <WhyTicketProducer />
         <PullQuote quote={site.tagline} />
         <Reviews />

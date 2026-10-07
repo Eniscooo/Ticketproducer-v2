@@ -27,41 +27,93 @@ const EDGE_FADE = {
  * were keyed to transparent with a feathered edge so no logo carries a visible
  * box on the plate. Originals stay in public/logos as the sources.
  *
- * Every mark sits on the same fixed light plate in both tones: four of the six
- * are dark-on-light artwork, so a plate that inverted with the section would
- * make them disappear. Showing a marketplace's mark states that the desk works
- * across it, not that it endorses Ticket Producer.
+ * On the dark band the marks sit straight on the ground, no plate, in one dim
+ * white so the row blends into the band instead of reading as six stickers;
+ * each comes up under the cursor. Four of the six are dark-on-transparent
+ * artwork and are simply turned white. StubHub and Gametime carry their own
+ * dark plate, which a plain whitening would turn into a solid block, so those
+ * go through the `knockout` SVG filter below: brightness becomes alpha, the
+ * dark plate drops out and the light lettering stays. The light tone keeps the
+ * fixed light plate, where the original colours read. Showing a marketplace's
+ * mark states that the desk works across it, not that it endorses Ticket
+ * Producer.
  */
-const PLATE =
-  "inline-flex h-12 w-[10rem] shrink-0 items-center justify-center rounded-badge border border-graphite/10 bg-bone px-4 text-[0.9rem] transition-colors duration-500 ease-editorial hover:border-champagne/50 sm:h-14 sm:w-[11.5rem] sm:px-5 sm:text-[1rem]";
+const SLOT =
+  "inline-flex h-12 w-[10rem] shrink-0 items-center justify-center px-4 text-[0.9rem] sm:h-14 sm:w-[11.5rem] sm:px-5 sm:text-[1rem]";
 
 const TONE = {
   dark: {
+    plate: "group/mark",
+    mark: "opacity-55 transition-opacity duration-500 ease-editorial group-hover/mark:opacity-90",
     section:
       "relative isolate -mt-8 overflow-hidden rounded-t-[2rem] bg-ink-deep pb-14 pt-10 shadow-[0_-24px_50px_-35px_rgba(0,0,0,0.7)] sm:pb-16 sm:pt-12",
     label: "label text-center text-stone-dim",
     seam: "bg-gradient-to-b from-transparent to-paper",
   },
   light: {
+    plate:
+      "rounded-badge border border-graphite/10 bg-bone transition-colors duration-500 ease-editorial hover:border-champagne/50",
+    mark: "",
     section: "relative overflow-hidden bg-paper py-9 sm:py-10",
     label: "label text-center text-taupe",
     seam: "",
   },
 } as const;
 
-/** One plate; `em` sizing means the row scales from the plate's font size alone. */
-function Mark({ partner }: { partner: Partner }) {
+/** One slot; `em` sizing means the row scales from the slot's font size alone. */
+function Mark({
+  partner,
+  tone,
+  knockoutId,
+}: {
+  partner: Partner;
+  tone: keyof typeof TONE;
+  knockoutId: string;
+}) {
+  const whiten = tone === "dark";
   return (
-    <span className={PLATE}>
+    <span className={clsx(SLOT, TONE[tone].plate)}>
       <Image
         src={partner.src}
         alt=""
         width={partner.width}
         height={partner.height}
-        style={{ height: `${partner.em}em` }}
-        className="w-auto max-w-full object-contain"
+        style={{
+          height: `${partner.em}em`,
+          filter:
+            whiten && partner.knockout ? `url(#${knockoutId})` : undefined,
+        }}
+        className={clsx(
+          "w-auto max-w-full object-contain",
+          whiten && !partner.knockout && "brightness-0 invert",
+          TONE[tone].mark,
+        )}
       />
     </span>
+  );
+}
+
+/**
+ * White, with alpha taken from the pixel's brightness and then pushed so the
+ * dark plates — and the lighter fringe the keying left round StubHub's
+ * bubble — fall to nothing (below ~0.5) while the lettering (~0.9) stays solid.
+ * Composited back inside the source alpha so the transparent surround stays
+ * transparent whatever colour it was keyed from.
+ */
+function KnockoutFilter({ id }: { id: string }) {
+  return (
+    <svg aria-hidden className="absolute h-0 w-0">
+      <filter id={id} colorInterpolationFilters="sRGB">
+        <feColorMatrix
+          type="matrix"
+          values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0.2126 0.7152 0.0722 0 0"
+        />
+        <feComponentTransfer>
+          <feFuncA type="linear" slope="2.5" intercept="-1.2" />
+        </feComponentTransfer>
+        <feComposite in2="SourceAlpha" operator="in" />
+      </filter>
+    </svg>
   );
 }
 
@@ -87,9 +139,11 @@ export function TrustedPartners({
 } = {}) {
   const palette = TONE[tone];
   const labelId = `${id}-label`;
+  const knockoutId = `${id}-knockout`;
 
   return (
     <section aria-labelledby={labelId} className={palette.section}>
+      {tone === "dark" ? <KnockoutFilter id={knockoutId} /> : null}
       <div className="mx-auto w-full max-w-[84rem] px-6 sm:px-10">
         <Reveal>
           <p id={labelId} className={palette.label}>
@@ -109,7 +163,12 @@ export function TrustedPartners({
           {[0, 1].map((pass) => (
             <div key={pass} className="flex shrink-0 items-center gap-5 sm:gap-6">
               {partners.map((partner) => (
-                <Mark key={partner.name} partner={partner} />
+                <Mark
+                  key={partner.name}
+                  partner={partner}
+                  tone={tone}
+                  knockoutId={knockoutId}
+                />
               ))}
             </div>
           ))}
