@@ -16,6 +16,13 @@ const nextConfig: NextConfig = {
        instead of re-encoding on a stale-cache miss. */
     minimumCacheTTL: 31536000,
   },
+  /*
+   * v1 put everything on one long /services page. v2 splits it into the
+   * landing page and the two sides, so old links land on the new front door.
+   */
+  redirects() {
+    return [{ source: "/services", destination: "/", permanent: true }];
+  },
 };
 
 export default nextConfig;

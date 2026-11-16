@@ -21,7 +21,7 @@ export function TrFinalCta() {
       <div className="mx-auto w-full max-w-[75rem] px-6 sm:px-10">
         <div className="relative isolate overflow-hidden rounded-card bg-graphite px-7 py-16 text-center sm:px-12 sm:py-20">
           <Image
-            src="/bgs.jpg"
+            src="/nyc/skyline-lower-manhattan.jpg"
             alt=""
             fill
             sizes="(min-width: 1024px) 75rem, 100vw"

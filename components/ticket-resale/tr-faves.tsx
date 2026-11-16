@@ -13,7 +13,7 @@ const ARROW =
   "grid h-10 w-10 place-items-center rounded-full border border-canvas-border bg-surface text-canvas-text transition-[background-color,opacity] duration-300 ease-editorial hover:bg-canvas-alt disabled:pointer-events-none disabled:opacity-35";
 
 /**
- * "Check out your Faves": a row of round portraits on the page's own ground,
+ * "Popular in New York": a row of round venue crops on the page's own ground,
  * sized and spaced like the event rails around it, each a link to that act's
  * tickets, scrolled sideways by swipe, trackpad, or the arrow pair in the
  * heading row. The scroller follows `EventSection`'s rules for the same
@@ -62,7 +62,7 @@ export function TrFaves() {
       <div className="mx-auto w-full max-w-[75rem] px-6 sm:px-10">
         <Reveal className="flex items-center justify-between gap-4">
           <h2 className="ds-display text-[clamp(1.5rem,2.6vw,2rem)] text-canvas-text">
-            Check out your Faves
+            Popular in New York
           </h2>
           {/* Only when the row overflows — on a wide screen all of it fits */}
           <div className={clsx("flex shrink-0 gap-2.5", !canPrev && !canNext && "invisible")}>
@@ -70,7 +70,7 @@ export function TrFaves() {
               type="button"
               onClick={() => page(-1)}
               disabled={!canPrev}
-              aria-label="Scroll faves left"
+              aria-label="Scroll popular picks left"
               className={ARROW}
             >
               <ArrowLeft aria-hidden className="h-4 w-4" />
@@ -79,7 +79,7 @@ export function TrFaves() {
               type="button"
               onClick={() => page(1)}
               disabled={!canNext}
-              aria-label="Scroll faves right"
+              aria-label="Scroll popular picks right"
               className={ARROW}
             >
               <ArrowRight aria-hidden className="h-4 w-4" />

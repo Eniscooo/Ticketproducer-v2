@@ -4,7 +4,13 @@ import { SiteNav } from "@/components/site/site-nav";
 import { SiteFooter } from "@/components/site/site-footer";
 import { Action } from "@/components/ui/primitives";
 import { Reveal } from "@/components/ui/reveal";
-import { site } from "@/lib/site";
+import { sides, site } from "@/lib/site";
+
+const WAYS_OUT = [
+  { label: "Home", href: "/" },
+  { label: sides.events.label, href: sides.events.href },
+  { label: sides.tickets.label, href: sides.tickets.href },
+];
 
 export const metadata: Metadata = {
   title: "Page not found",
@@ -14,8 +20,8 @@ export const metadata: Metadata = {
 /**
  * The 404 for unmatched URLs and for `notFound()` calls — an unknown resale
  * slug lands here. Same shell as the legal routes, so a wrong turn still reads
- * as the same site, and every way out goes somewhere real: the three services
- * and the direct line.
+ * as the same site, and every way out goes somewhere real: home, the two sides
+ * of the site, and the direct line.
  */
 export default function NotFound() {
   return (
@@ -37,7 +43,7 @@ export default function NotFound() {
 
           <Reveal delay={0.08}>
             <ul className="mt-12 grid gap-2.5 sm:grid-cols-3">
-              {site.services.map((item) => (
+              {WAYS_OUT.map((item) => (
                 <li key={item.href}>
                   <Action href={item.href} tone="ink" className="w-full">
                     {item.label}

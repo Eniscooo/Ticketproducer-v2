@@ -24,11 +24,11 @@ export function EmFinalCta() {
       <div className="mx-auto w-full max-w-[75rem] px-6 sm:px-10">
         <div className="relative isolate overflow-hidden rounded-card bg-graphite px-7 py-16 text-center sm:px-12 sm:py-20">
           <Image
-            src="/trees.jpg"
+            src="/nyc/skyline-brooklyn-bridge.jpg"
             alt=""
             fill
             sizes="(min-width: 1024px) 75rem, 100vw"
-            className="-z-10 object-cover object-[50%_38%] opacity-50"
+            className="-z-10 object-cover object-[50%_55%] opacity-50"
           />
           <div
             aria-hidden

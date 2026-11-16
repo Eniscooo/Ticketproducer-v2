@@ -4,7 +4,7 @@ import { whyChoose } from "@/lib/site";
 
 export function WhyTicketProducer() {
   return (
-    <section className="relative isolate -mt-8 overflow-hidden rounded-t-[2rem] bg-paper py-20 shadow-[0_-24px_50px_-35px_rgba(23,23,22,0.12)] sm:py-28 lg:py-36">
+    <section id="about" className="relative isolate -mt-8 scroll-mt-20 overflow-hidden rounded-t-[2rem] bg-paper py-20 shadow-[0_-24px_50px_-35px_rgba(23,23,22,0.12)] sm:py-28 lg:py-36">
       {/* Subtle imagery, not decoration for its own sake — the same architectural linework used above the fold */}
       <div
         aria-hidden

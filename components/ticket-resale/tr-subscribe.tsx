@@ -60,7 +60,7 @@ export function TrSubscribe() {
         <Reveal>
           <div className="relative isolate overflow-hidden rounded-card bg-graphite px-7 py-12 sm:px-12 sm:py-16">
             <Image
-              src="/bgs.jpg"
+              src="/nyc/skyline-mono.jpg"
               alt=""
               fill
               sizes="(min-width: 1024px) 75rem, 100vw"

@@ -4,7 +4,7 @@
  * Kept separate from lib/site.ts (which holds brand-wide copy) so the deep-dive
  * page can carry its own structures without bloating the shared module. Service
  * titles and bodies are re-exported from `eventManagement` in lib/site.ts rather
- * than retyped, so the summary card on /services and this page can never drift.
+ * than retyped, so the summary on the landing page and this page can never drift.
  */
 import { eventManagement } from "@/lib/site";
 
@@ -349,24 +349,23 @@ export const emAbout = {
     },
   ],
   /*
-   * The wall under the block: nine portrait frames, three rooms per row with
-   * the people down the middle. Every tile is a distinct asset — the six
-   * venue photographs in /public plus the three client portraits in
-   * /public/reviews — so nothing repeats across a grid where all nine are
+   * The wall under the block: nine portrait frames of the rooms we work in —
+   * New York's halls, houses and arenas, plus the city around them. Every tile
+   * is a distinct asset so nothing repeats across a grid where all nine are
    * visible at once. `position` is the cover crop that turns a landscape
-   * source into a portrait frame; swap these for dedicated production
-   * photography when it exists.
+   * source into a portrait frame. Swap these for our own event photography
+   * when it exists — that is the one thing better than the rooms themselves.
    */
   wall: [
-    { src: "/bts.jpg", position: "object-[50%_50%]" },
-    { src: "/reviews/reviews1.jpg", position: "object-[50%_20%]" },
-    { src: "/CHASE.jpg", position: "object-[50%_55%]" },
-    { src: "/DRAKE.jpg", position: "object-[92%_50%]" },
-    { src: "/reviews/reviews3.jpg", position: "object-[50%_30%]" },
-    { src: "/bgre.jpg", position: "object-[50%_40%]" },
-    { src: "/giannis.jpg", position: "object-[55%_50%]" },
-    { src: "/reviews/reviews2.jpg", position: "object-[44%_50%]" },
-    { src: "/weekend.jpg", position: "object-[50%_50%]" },
+    { src: "/nyc/marquee-radio-city.jpg", position: "object-[30%_45%]" },
+    { src: "/nyc/met-opera-interior.jpg", position: "object-[50%_50%]" },
+    { src: "/nyc/skyline-empire-state.jpg", position: "object-[60%_40%]" },
+    { src: "/intro-bg.jpg", position: "object-[40%_50%]" },
+    { src: "/nyc/marquee-richard-rodgers.jpg", position: "object-[40%_50%]" },
+    { src: "/nyc/msg-basketball.jpg", position: "object-[50%_55%]" },
+    { src: "/nyc/skyline-hudson-yards.jpg", position: "object-[50%_45%]" },
+    { src: "/nyc/met-opera-exterior.jpg", position: "object-[50%_50%]" },
+    { src: "/nyc/jazz-sax.jpg", position: "object-[50%_35%]" },
   ],
 };
 

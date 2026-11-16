@@ -13,9 +13,9 @@ import {
  * marketplace — names, dates, prices, and tiers are not real inventory. Swap
  * `resaleEvents` for a real catalog/API response before this goes live; every
  * component here reads from this shape so that's the only file that needs to
- * change. Card imagery is reused from the site's existing venue/theater
- * photography (there is no dedicated arena/stadium photography yet) with
- * distinct crops per card — replace with real event photography first.
+ * change. Card imagery is real New York venue photography (Unsplash License —
+ * see PHOTO-CREDITS.md), matched to each event's venue or genre; swap in
+ * official event artwork once a real catalog is connected.
  */
 
 export const formatUsd = (value: number) =>
@@ -138,50 +138,50 @@ type RawEvent = Omit<ResaleEvent, "tiers">;
 const RAW_EVENTS: RawEvent[] = [
   {
     slug: "summer-nights-live",
-    name: "Drake",
+    name: "Summer Nights Live",
     date: "Sat, Jun 13, 2026",
     time: "7:30 PM",
     venue: "Central Park SummerStage",
     city: "New York, NY",
     category: "Concerts",
-    image: "/DRAKE.jpg",
-    imagePosition: "object-[20%_35%]",
+    image: "/nyc/concert-blue.jpg",
+    imagePosition: "object-[50%_35%]",
     startingPrice: 68,
   },
   {
     slug: "afrobeats-after-dark",
-    name: "Kendrick",
+    name: "Afrobeats After Dark",
     date: "Fri, Jul 10, 2026",
     time: "8:00 PM",
     venue: "Terminal 5",
     city: "New York, NY",
     category: "Music",
-    image: "/kendrick.jpg",
-    imagePosition: "object-[70%_55%]",
+    image: "/nyc/concert-red.jpg",
+    imagePosition: "object-[55%_45%]",
     startingPrice: 54,
   },
   {
-    slug: "the-weeknd-live-in-nyc",
-    name: "The Weeknd — Live in NYC",
+    slug: "garden-nights-live",
+    name: "Garden Nights — Live in NYC",
     date: "Thu, Sep 3, 2026",
     time: "8:30 PM",
     venue: "Madison Square Garden",
     city: "New York, NY",
     category: "Concerts",
-    image: "/weekend.jpg",
-    imagePosition: "object-[30%_40%]",
+    image: "/nyc/concert-mono.jpg",
+    imagePosition: "object-[50%_40%]",
     startingPrice: 129,
   },
   {
     slug: "rb-soul-sessions",
-    name: "BTS",
+    name: "R&B Soul Sessions",
     date: "Sat, Aug 8, 2026",
     time: "7:00 PM",
     venue: "Kings Theatre",
     city: "Brooklyn, NY",
     category: "Music",
-    image: "/bts.jpg",
-    imagePosition: "object-[45%_20%]",
+    image: "/bgtwo.jpg",
+    imagePosition: "object-[50%_35%]",
     startingPrice: 61,
   },
   {
@@ -192,8 +192,8 @@ const RAW_EVENTS: RawEvent[] = [
     venue: "Shubert Theatre",
     city: "New York, NY",
     category: "Theater",
-    image: "/bgd.png",
-    imagePosition: "object-[50%_15%]",
+    image: "/nyc/times-square.jpg",
+    imagePosition: "object-[50%_40%]",
     startingPrice: 89,
   },
   {
@@ -216,8 +216,8 @@ const RAW_EVENTS: RawEvent[] = [
     venue: "Richard Rodgers Theatre",
     city: "New York, NY",
     category: "Theater",
-    image: "/bgd.png",
-    imagePosition: "object-[20%_45%]",
+    image: "/nyc/marquee-hamilton.jpg",
+    imagePosition: "object-[72%_35%]",
     startingPrice: 149,
   },
   {
@@ -252,8 +252,8 @@ const RAW_EVENTS: RawEvent[] = [
     venue: "United Center",
     city: "Chicago, IL",
     category: "Sports",
-    image: "/intro-bg.jpg",
-    imagePosition: "object-[75%_50%]",
+    image: "/venue.jpg",
+    imagePosition: "object-[30%_50%]",
     startingPrice: 74,
   },
   {
@@ -264,8 +264,8 @@ const RAW_EVENTS: RawEvent[] = [
     venue: "Chicago Theatre",
     city: "Chicago, IL",
     category: "Theater",
-    image: "/bgd.png",
-    imagePosition: "object-[80%_30%]",
+    image: "/venues/chicago-theatre.jpg",
+    imagePosition: "object-[50%_70%]",
     startingPrice: 82,
   },
   {
@@ -276,8 +276,8 @@ const RAW_EVENTS: RawEvent[] = [
     venue: "Madison Square Garden",
     city: "New York, NY",
     category: "Sports",
-    image: "/intro-bg.jpg",
-    imagePosition: "object-[15%_65%]",
+    image: "/nyc/msg-basketball.jpg",
+    imagePosition: "object-[50%_55%]",
     startingPrice: 65,
   },
   {
@@ -288,8 +288,8 @@ const RAW_EVENTS: RawEvent[] = [
     venue: "Madison Square Garden",
     city: "New York, NY",
     category: "Sports",
-    image: "/bgtwo.jpg",
-    imagePosition: "object-[60%_10%]",
+    image: "/nyc/msg-basketball.jpg",
+    imagePosition: "object-[50%_70%]",
     startingPrice: 72,
   },
   {
@@ -300,8 +300,8 @@ const RAW_EVENTS: RawEvent[] = [
     venue: "Madison Square Garden",
     city: "New York, NY",
     category: "Sports",
-    image: "/intro-bg.jpg",
-    imagePosition: "object-[50%_80%]",
+    image: "/nyc/msg-crowd.jpg",
+    imagePosition: "object-[50%_40%]",
     startingPrice: 118,
   },
   {
@@ -312,7 +312,7 @@ const RAW_EVENTS: RawEvent[] = [
     venue: "United Center",
     city: "Chicago, IL",
     category: "Sports",
-    image: "/bgtwo.jpg",
+    image: "/venue.jpg",
     imagePosition: "object-[85%_40%]",
     startingPrice: 45,
   },  {
@@ -335,7 +335,7 @@ const RAW_EVENTS: RawEvent[] = [
     venue: "The Rooftop at Pier 17",
     city: "New York, NY",
     category: "Music",
-    image: "/hero-poster.jpg",
+    image: "/nyc/skyline-brooklyn-bridge.jpg",
     imagePosition: "object-[50%_50%]",
     startingPrice: 72,
   },
@@ -347,8 +347,8 @@ const RAW_EVENTS: RawEvent[] = [
     venue: "Radio City Music Hall",
     city: "New York, NY",
     category: "Concerts",
-    image: "/intro-bg.jpg",
-    imagePosition: "object-[40%_50%]",
+    image: "/nyc/marquee-radio-city.jpg",
+    imagePosition: "object-[45%_40%]",
     startingPrice: 84,
   },
   {
@@ -359,8 +359,8 @@ const RAW_EVENTS: RawEvent[] = [
     venue: "Blue Note",
     city: "New York, NY",
     category: "Music",
-    image: "/conference.jpg",
-    imagePosition: "object-[50%_40%]",
+    image: "/nyc/jazz-sax.jpg",
+    imagePosition: "object-[50%_35%]",
     startingPrice: 48,
   },
   {
@@ -383,8 +383,8 @@ const RAW_EVENTS: RawEvent[] = [
     venue: "Metropolitan Opera House",
     city: "New York, NY",
     category: "Theater",
-    image: "/bgone.jpg",
-    imagePosition: "object-[50%_45%]",
+    image: "/nyc/met-opera-exterior.jpg",
+    imagePosition: "object-[50%_50%]",
     startingPrice: 110,
   },
   {
@@ -395,8 +395,8 @@ const RAW_EVENTS: RawEvent[] = [
     venue: "Majestic Theatre",
     city: "New York, NY",
     category: "Theater",
-    image: "/bgre.jpg",
-    imagePosition: "object-[50%_30%]",
+    image: "/nyc/met-opera-balcony.jpg",
+    imagePosition: "object-[50%_40%]",
     startingPrice: 99,
   },
   {
@@ -407,8 +407,8 @@ const RAW_EVENTS: RawEvent[] = [
     venue: "Madison Square Garden",
     city: "New York, NY",
     category: "Sports",
-    image: "/giannis.jpg",
-    imagePosition: "object-[50%_25%]",
+    image: "/nyc/msg-basketball.jpg",
+    imagePosition: "object-[50%_40%]",
     startingPrice: 96,
   },
   {
@@ -419,8 +419,8 @@ const RAW_EVENTS: RawEvent[] = [
     venue: "MetLife Stadium",
     city: "East Rutherford, NJ",
     category: "Sports",
-    image: "/CHASE.jpg",
-    imagePosition: "object-[50%_25%]",
+    image: "/nyc/stadium-football.jpg",
+    imagePosition: "object-[50%_60%]",
     startingPrice: 135,
   },
   {
@@ -431,8 +431,8 @@ const RAW_EVENTS: RawEvent[] = [
     venue: "United Center",
     city: "Chicago, IL",
     category: "Sports",
-    image: "/gianni.jpg",
-    imagePosition: "object-[50%_30%]",
+    image: "/venue.jpg",
+    imagePosition: "object-[60%_50%]",
     startingPrice: 64,
   },
   {
@@ -443,8 +443,8 @@ const RAW_EVENTS: RawEvent[] = [
     venue: "Barclays Center",
     city: "Brooklyn, NY",
     category: "Sports",
-    image: "/venue.jpg",
-    imagePosition: "object-[50%_50%]",
+    image: "/nyc/msg-hockey.jpg",
+    imagePosition: "object-[50%_55%]",
     startingPrice: 55,
   },
 ];
@@ -468,7 +468,7 @@ export const eventRails: EventRail[] = [
     id: "popular-concerts",
     title: "Popular Concerts",
     slugs: [
-      "the-weeknd-live-in-nyc",
+      "garden-nights-live",
       "summer-nights-live",
       "summer-fields-festival",
       "afrobeats-after-dark",
@@ -530,29 +530,29 @@ export const eventRails: EventRail[] = [
       "summer-nights-live",
       "brooklyn-block-party",
       "harbor-lights-live",
-      "the-weeknd-live-in-nyc",
+      "garden-nights-live",
       "summer-fields-festival",
     ],
   },
 ];
 
 /**
- * "Check out your Faves": artists, players, teams, and shows, each linking to
- * their event page. `position` frames the subject in a circle cropped from
- * the listing artwork.
+ * "Popular in New York": the shows, teams and rooms people ask for most, each
+ * linking to an event page. No artist or athlete portraits — the venue is the
+ * draw here, and it's the one image we can stand behind. `position` frames
+ * the subject in a circle cropped from the listing artwork.
  */
 export const faves = [
-  { name: "Drake", image: "/DRAKE.jpg", position: "object-[50%_32%]", href: "/ticket-resale/summer-nights-live" },
-  { name: "Kendrick", image: "/kendrick.jpg", position: "object-[50%_78%]", href: "/ticket-resale/afrobeats-after-dark" },
-  { name: "The Weeknd", image: "/weekend.jpg", position: "object-[50%_45%]", href: "/ticket-resale/the-weeknd-live-in-nyc" },
-  { name: "BTS", image: "/bts.jpg", position: "object-[50%_85%]", href: "/ticket-resale/rb-soul-sessions" },
-  { name: "Ja'Marr Chase", image: "/CHASE.jpg", position: "object-[50%_22%]", href: "/ticket-resale/bengals-vs-jets" },
-  { name: "Giannis", image: "/giannis.jpg", position: "object-[50%_28%]", href: "/ticket-resale/bucks-vs-knicks" },
-  { name: "Hamilton", image: "/bgd.png", position: "object-[50%_35%]", href: "/ticket-resale/hamilton" },
+  { name: "Hamilton", image: "/nyc/marquee-hamilton.jpg", position: "object-[75%_30%]", href: "/ticket-resale/hamilton" },
+  { name: "Knicks", image: "/nyc/msg-basketball.jpg", position: "object-[50%_55%]", href: "/ticket-resale/knicks-home-game" },
+  { name: "Radio City", image: "/nyc/marquee-radio-city.jpg", position: "object-[35%_40%]", href: "/ticket-resale/radio-city-late-show" },
+  { name: "The Met Opera", image: "/nyc/met-opera-exterior.jpg", position: "object-[50%_50%]", href: "/ticket-resale/la-boheme" },
+  { name: "Jets", image: "/nyc/stadium-football.jpg", position: "object-[50%_60%]", href: "/ticket-resale/bengals-vs-jets" },
+  { name: "Jazz", image: "/nyc/jazz-sax.jpg", position: "object-[50%_30%]", href: "/ticket-resale/midnight-jazz-sessions" },
+  { name: "Broadway", image: "/nyc/times-square.jpg", position: "object-[50%_40%]", href: "/ticket-resale/broadway-nights" },
+  { name: "Pier 17", image: "/nyc/skyline-brooklyn-bridge.jpg", position: "object-[30%_50%]", href: "/ticket-resale/harbor-lights-live" },
+  { name: "Afrobeats", image: "/nyc/concert-red.jpg", position: "object-[55%_45%]", href: "/ticket-resale/afrobeats-after-dark" },
   { name: "Summer Fields", image: "/day.jpg", position: "object-[50%_50%]", href: "/ticket-resale/summer-fields-festival" },
-  { name: "La Bohème", image: "/bgone.jpg", position: "object-[50%_45%]", href: "/ticket-resale/la-boheme" },
-  { name: "Knicks", image: "/venue.jpg", position: "object-[50%_50%]", href: "/ticket-resale/knicks-home-game" },
-  { name: "Midnight Jazz", image: "/conference.jpg", position: "object-[50%_40%]", href: "/ticket-resale/midnight-jazz-sessions" },
   { name: "The Great Gatsby", image: "/bgre.jpg", position: "object-[50%_30%]", href: "/ticket-resale/the-great-gatsby" },
 ];
 

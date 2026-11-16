@@ -5,29 +5,24 @@ export const site = {
   eyebrow: ["New York", "Live Events", "Ticketing", "Resale", "Private Access"],
   credibility: "10+ years producing live events, based in New York.",
   description:
-    "Ticket Producer runs the systems behind live events ",
+    "Ticket Producer plans and runs live events for the people putting them on, and sells verified tickets to the people going to them. New York.",
   contact: {
     phone: "1-800-809-0443",
     phoneHref: "tel:+18008090443",
     email: "Admin@ticketproducer.com",
     addressLines: ["1650 Broadway, Suite 1010", "New York, NY 10019"],
   },
+  /** The landing page's own links: the two doors, then the company sections that live on `/`. */
   nav: [
     { label: "Event Management", href: "/event-management" },
-    { label: "Ticket Resale", href: "/ticket-resale" },
-    { label: "TP Elite", href: "/services#tp-elite" },
-    { label: "FAQs", href: "/services#faq" },
-    { label: "Contact", href: "/services#contact" },
-  ],
-  /** The three core services, standalone — the desktop navbar and the footer's Services column both point here rather than filtering the full nav each time. */
-  services: [
-    { label: "Event Management", href: "/event-management" },
-    { label: "Ticket Resale", href: "/ticket-resale" },
-    { label: "TP Elite", href: "/services#tp-elite" },
+    { label: "Tickets", href: "/ticket-resale" },
+    { label: "About", href: "/#about" },
+    { label: "Contact", href: "/#contact" },
   ],
   company: [
-    { label: "FAQs", href: "/services#faq" },
-    { label: "Contact", href: "/services#contact" },
+    { label: "About", href: "/#about" },
+    { label: "FAQs", href: "/#faq" },
+    { label: "Contact", href: "/#contact" },
     { label: "Sign In", href: "/sign-in" },
   ],
   legal: [
@@ -46,6 +41,71 @@ export const site = {
     { label: "LinkedIn", href: "#" },
   ],
 } as const;
+
+export type SideKey = "events" | "tickets";
+
+export type Side = {
+  key: SideKey;
+  /** Full name, as the landing page and footer print it. */
+  label: string;
+  /** The tag that sits beside the logo once a visitor is inside this side. */
+  tag: string;
+  href: string;
+  /** Who this side is for, in one line. */
+  audience: string;
+  /** In-page links for this side's own nav. */
+  links: readonly { label: string; href: string }[];
+  /** The one action this side exists to get. */
+  cta: { label: string; href: string };
+  /** The way across to the other side, always one click away. */
+  crossover: { label: string; href: string };
+};
+
+/**
+ * The site is two businesses under one name: event management sells to the
+ * people putting an event on, the ticket side sells to the people going to
+ * one. Each gets its own section, nav, call to action and FAQ; the landing
+ * page at `/` explains both and lets the visitor pick. Every route under a
+ * side's `href` wears that side's nav.
+ */
+export const sides: Record<SideKey, Side> = {
+  events: {
+    key: "events",
+    label: "Event Management",
+    tag: "Events",
+    href: "/event-management",
+    audience: "For producers, venues and companies",
+    links: [
+      { label: "Services", href: "/event-management#em-services" },
+      { label: "Budget", href: "/event-management#budget-calculator" },
+      { label: "Event Types", href: "/event-management#event-guide" },
+      { label: "FAQs", href: "/event-management#em-faq" },
+    ],
+    cta: { label: "Plan Your Event", href: "/event-management#event-guide" },
+    crossover: { label: "Looking for tickets?", href: "/ticket-resale" },
+  },
+  tickets: {
+    key: "tickets",
+    label: "Tickets",
+    tag: "Tickets",
+    href: "/ticket-resale",
+    audience: "For fans and ticket buyers",
+    links: [
+      { label: "Browse Events", href: "/ticket-resale#suggested" },
+      { label: "TP Elite", href: "/ticket-resale#tp-elite" },
+      { label: "FAQs", href: "/ticket-resale#tr-faq" },
+    ],
+    cta: { label: "Find Tickets", href: "/ticket-resale#suggested" },
+    crossover: { label: "Planning an event?", href: "/event-management" },
+  },
+};
+
+/** Which side a pathname belongs to, or `null` for the landing page and shared routes. */
+export function sideFor(pathname: string): SideKey | null {
+  if (pathname.startsWith(sides.events.href)) return "events";
+  if (pathname.startsWith(sides.tickets.href)) return "tickets";
+  return null;
+}
 
 export type ServiceItem = {
   title: string;
@@ -108,9 +168,9 @@ export const eventManagement = {
 
 export const ticketResale = {
   index: "02",
-  headline: "Ticket Resale Services",
+  headline: "Tickets",
   description:
-    "One platform for primary and secondary market resale, backed by real strategy.",
+    "Verified seats for concerts, sports and Broadway, on one platform built for the primary and secondary markets.",
   items: [
     {
       title: "Resale Platform",
@@ -121,7 +181,7 @@ export const ticketResale = {
       body: "Pricing, inventory, and resale strategy from people who've run the market.",
     },
   ] satisfies ServiceItem[],
-  cta: "Explore Ticket Resale",
+  cta: "Find Tickets",
   href: "/ticket-resale",
 };
 
@@ -156,112 +216,6 @@ export const tpElite = {
 
 export const pullQuote = "Every seat has a story. We make sure it gets told right.";
 
-/** The five posters that gather into a fan over the pull quote, left to right. */
-export const pullQuotePosters = [
-  "/DRAKE.jpg",
-  "/kendrick.jpg",
-  "/CHASE.jpg",
-  "/giannis.jpg",
-  "/bts.jpg",
-] as const;
-
-/**
- * NOTE: Placeholder figures for layout — every number here needs to be
- * swapped for the real one before this goes live.
- */
-export const stats = [
-  { value: 500, suffix: "+", label: "Events Produced" },
-  { value: 50, suffix: "K+", label: "Tickets Moved" },
-  { value: 10, suffix: "+", label: "Years in Business" },
-  { value: 98, suffix: "%", label: "Client Retention" },
-] as const;
-
-export type Stat = (typeof stats)[number];
-
-export type Partner = {
-  name: string;
-  src: string;
-  /** Intrinsic size of the asset in public/logos, for a stable aspect box. */
-  width: number;
-  height: number;
-  /**
-   * Rendered mark height, relative to the plate's own font size so one
-   * breakpoint knob scales the whole row. Tuned per logo rather than shared:
-   * a stacked lockup or a boxed mark needs more height than a single-line
-   * wordmark to carry the same optical weight.
-   */
-  em: number;
-  /**
-   * The artwork carries its own dark plate with light lettering. On the dark
-   * band these are knocked out by brightness — plate dropped, lettering kept —
-   * where the rest, dark marks on transparency, are simply turned white.
-   */
-  knockout?: boolean;
-};
-
-/**
- * Marketplaces the resale desk lists and moves inventory across, shown as
- * their own marks. Each `src` is a cleaned, tight-cropped copy of the supplied
- * brand file — see the NOTE in components/site/trusted-partners.tsx for what
- * was done to each one and why. AXS and TickPick are absent deliberately:
- * there is no asset for either, and a typeset stand-in next to six real marks
- * reads as a missing image rather than a design choice.
- */
-export const trustedPartners: readonly Partner[] = [
-  { name: "StubHub", src: "/logos/stubhub-mark.png", width: 793, height: 361, em: 2.375, knockout: true },
-  { name: "Ticketmaster", src: "/logos/ticketmaster-mark.png", width: 794, height: 114, em: 1.125 },
-  { name: "SeatGeek", src: "/logos/seatgeek-mark.png", width: 550, height: 390, em: 2.125 },
-  { name: "Vivid Seats", src: "/logos/vivid-seats-mark.png", width: 540, height: 102, em: 1.1875 },
-  { name: "Eventbrite", src: "/logos/eventbrite-mark.png", width: 534, height: 94, em: 1.1875 },
-  { name: "Gametime", src: "/logos/gametime-mark.png", width: 495, height: 128, em: 2, knockout: true },
-];
-
-export const whatWeDo = {
-  label: "What We Do",
-  headline: "What Ticket-Producer Handles",
-  description:
-    "",
-};
-
-export type ServiceBox = {
-  index: string;
-  title: string;
-  description: string;
-  image: string;
-  cta: string;
-  href: string;
-  /** TP Elite only — flags the invite-only treatment instead of a normal CTA. */
-  invite?: boolean;
-};
-
-export const serviceBoxes: ServiceBox[] = [
-  {
-    index: eventManagement.index,
-    title: eventManagement.headline,
-    description: eventManagement.description,
-    image: "/event.png",
-    cta: eventManagement.cta,
-    href: eventManagement.href,
-  },
-  {
-    index: ticketResale.index,
-    title: ticketResale.headline,
-    description: ticketResale.description,
-    image: "/resale.jpg",
-    cta: ticketResale.cta,
-    href: ticketResale.href,
-  },
-  {
-    index: tpElite.index,
-    title: tpElite.headline,
-    description: tpElite.boxDescription,
-    image: "/reserved.jpg",
-    cta: "Discover TP Elite",
-    href: "#tp-elite",
-    invite: true,
-  },
-];
-
 export const whyChoose = {
   label: "Why Ticket Producer",
   headline: "Built for the details others overlook.",
@@ -279,86 +233,18 @@ export const whyChoose = {
   ],
 };
 
-export type Testimonial = {
-  quote: string;
-  name: string;
-  role: string;
-  /**
-   * Client portrait in public/reviews. Optional: the featured carousel only
-   * cycles testimonials that have one, and the scrolling column falls back to
-   * an initials avatar — so a quote never has to borrow someone else's face.
-   */
-  image?: string;
-  /**
-   * Cover crop for the wide featured card. Each portrait is framed by hand:
-   * the quote sits over a scrim along the bottom edge, so the face has to ride
-   * high in the frame.
-   */
-  imageClass?: string;
-  /**
-   * Head crop for the 48px round avatar. These are half-body frames, so a
-   * plain cover fit leaves the face tiny and high in the circle — the zoom and
-   * offset pull it back to the middle.
-   */
-  avatarClass?: string;
-};
-
-/**
- * NOTE: Illustrative placeholder testimonials for layout — replace with real,
- * attributed client quotes (and real photography) before this goes live.
- * Names are initials-style and organizations are generic on purpose, so
- * nothing here reads as a claim about a specific real person or company.
- * Images reuse the venue photography already sitting in /public.
- */
-export const testimonials: Testimonial[] = [
-  {
-    quote:
-      "They mapped the room before they mapped the seats. Doors were clean, load-out was clean — nobody upstairs ever knew how close it came to going sideways.",
-    name: "R. Whitfield",
-    role: "Talent Buyer, Independent Promotion",
-    image: "/reviews/reviews1.jpg",
-    imageClass: "object-[48%_24%]",
-    avatarClass: "object-[48%_12%] scale-[1.6]",
-  },
-  {
-    quote:
-      "We handed them the resale side and stopped thinking about it. Volume went up, disputes went down, and the pricing calls were always right.",
-    name: "M. Alvarez",
-    role: "Venue Operations Director",
-    image: "/reviews/reviews2.jpg",
-    imageClass: "object-[48%_50%]",
-    avatarClass: "object-[46%_50%] scale-[1.75] translate-y-[36%]",
-  },
-  {
-    quote:
-      "TP Elite got us into a room that was supposedly full an hour before doors. One call. That's the whole pitch, and it's true.",
-    name: "S. Lindqvist",
-    role: "Private Client, TP Elite",
-    image: "/reviews/reviews3.jpg",
-    imageClass: "object-[50%_40%]",
-    avatarClass: "object-[50%_38%] scale-[1.95]",
-  },
-  {
-    quote:
-      "Consulting wasn't a deck. It was people who've actually run a box office telling us what would break in week three.",
-    name: "J. Okafor",
-    role: "Producer, Touring Production",
-  },
-  {
-    quote:
-      "Custom platform, custom seating chart, no templated nonsense. It looked like our venue because it was built for our venue.",
-    name: "D. Marsh",
-    role: "General Manager, Concert Hall",
-  },
-];
-
 export type FaqItem = { question: string; answer: string };
 
 export const faq: FaqItem[] = [
   {
     question: "What does Ticket Producer do?",
     answer:
-      "We run three disciplines for live events: event management (staffing, venue mapping, and a custom ticketing platform), ticket resale services across the primary and secondary markets, and TP Elite, a private concierge line for priority access.",
+      "Two things. Event management for the people putting an event on — staffing, venue mapping, a custom ticketing platform and consulting. And tickets for the people going — verified resale seats for concerts, sports and Broadway, plus TP Elite, a private concierge line.",
+  },
+  {
+    question: "Which side of the site is for me?",
+    answer:
+      "If you are producing, hosting or running an event, start with Event Management. If you want a seat at one, start with Tickets. Each has its own pages, FAQs and contact path, and you can switch between them from the menu at any time.",
   },
   {
     question: "What is included in Event Management?",
@@ -366,21 +252,13 @@ export const faq: FaqItem[] = [
       "Event staffing from doors through load-out, venue mapping with a ticketing platform built around the room, and consulting for producers who want a second set of expert eyes.",
   },
   {
-    question: "How does Ticket Resale Services work?",
+    question: "How does buying tickets work?",
     answer:
-      "One platform covers primary and secondary market resale, paired with consulting on pricing, inventory, and resale strategy from people who've run the market.",
+      "Find the event, pick a seat tier, and check out. Every listing is verified before it goes live and again before transfer, so what you buy is what gets scanned at the door.",
   },
- 
-  
   {
     question: "How does someone request TP Elite access?",
     answer:
-      "By phone. Introductions and requests are taken directly on the line below — there is no online checkout for TP Elite.",
+      "By phone. Introductions and requests are taken directly on our line — there is no online checkout for TP Elite.",
   },
-  {
-    question: "Does Ticket Producer work with producers and venues?",
-    answer:
-      "Yes. Event management and resale consulting are both built for producers and venues directly, alongside the individual clients TP Elite serves.",
-  },
- 
 ];

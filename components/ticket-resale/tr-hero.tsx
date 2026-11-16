@@ -28,10 +28,10 @@ const EASE = [0.16, 0.84, 0.28, 1] as const;
  * node would be overwritten the moment the entrance animation runs.
  */
 const PANELS = {
-  /** Proscenium and curtain — the source is already portrait, so cover barely crops. */
-  front: { src: "/gianni.jpg", position: "object-[50%_40%]" },
-  /** Marquee and tower, centred; a portrait crop of a landscape frame. */
-  back: { src: "/CHASE.jpg", position: "object-[50%_45%]" },
+  /** The Hamilton marquee at the Richard Rodgers — a portrait crop held on the lit sign. */
+  front: { src: "/nyc/marquee-hamilton.jpg", position: "object-[74%_40%]" },
+  /** Times Square at night, the theater district's front door. */
+  back: { src: "/nyc/times-square.jpg", position: "object-[45%_45%]" },
 };
 
 /**

@@ -53,6 +53,8 @@ export default function Page() {
             headingLight="Event Management"
             headingBold="Questions"
             body=""
+            contactLabel="Request a Proposal"
+            contactHref="#event-guide"
           />
           <EmFinalCta />
         </main>

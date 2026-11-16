@@ -144,7 +144,7 @@ export function SignInForm() {
 
       <p className="pt-1 text-center text-[0.8125rem] text-canvas-text-muted">
         <Link
-          href="/services#contact"
+          href="/#contact"
           className="link-underline text-canvas-text hover:text-champagne"
         >
           Forgotten your password?

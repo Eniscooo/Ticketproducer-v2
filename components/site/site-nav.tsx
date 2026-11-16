@@ -4,31 +4,28 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Mail, Menu, User, X } from "lucide-react";
+import { ArrowUpRight, Mail, Menu, User, X } from "lucide-react";
 import { Logo } from "@/components/brand/logo";
 import { ThemeToggle } from "@/components/site/theme-toggle";
 import { IconSwap } from "@/components/ui/primitives";
 import { clsx } from "@/lib/clsx";
-import { site } from "@/lib/site";
+import { sideFor, sides, site } from "@/lib/site";
 import { useMediaQuery } from "@/lib/use-media-query";
 import { useReducedMotionSafe } from "@/lib/use-reduced-motion-safe";
 
 const EASE = [0.16, 0.84, 0.28, 1] as const;
 
-const NAV_LINKS = site.nav;
-
-/** The always-visible desktop bar stays to the three services — FAQs and Contact live in the drawer and footer instead. */
-const DESKTOP_LINKS = site.services;
-
-const DRAWER_LINKS = [...NAV_LINKS, { label: "Sign In", href: "/sign-in" }];
+type NavLink = { label: string; href: string };
 
 /** Where the always-visible link row exists, and so where a section tracker has something to mark. */
 const DESKTOP = "(min-width: 1024px)";
 
+/** Routes whose hero is a full-bleed dark image — the nav starts see-through over them. */
+const TRANSPARENT_HERO_ROUTES = new Set(["/", "/event-management"]);
+
 /** Only the hash-anchored links have a section to observe; whole-route links are matched on pathname instead. */
-const SECTION_IDS = NAV_LINKS.map((link) => link.href.split("#")[1]).filter(
-  (id): id is string => Boolean(id),
-);
+const sectionIdsOf = (links: readonly NavLink[]) =>
+  links.map((link) => link.href.split("#")[1]).filter((id): id is string => Boolean(id));
 
 /**
  * A nav link is current either because its in-page section owns the viewport,
@@ -50,13 +47,13 @@ function isCurrent(href: string, pathname: string, active: string | null) {
  * leaves `isCurrent` matching on pathname alone: the current *route* still
  * marks itself, the current *section* no longer chases.
  */
-function useActiveSection(enabled: boolean) {
+function useActiveSection(enabled: boolean, ids: string) {
   const [active, setActive] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled || !ids) return;
 
-    const sections = SECTION_IDS.map((id) =>
+    const sections = ids.split(",").map((id) =>
       document.getElementById(id),
     ).filter((el): el is HTMLElement => el !== null);
 
@@ -74,7 +71,7 @@ function useActiveSection(enabled: boolean) {
 
     sections.forEach((section) => observer.observe(section));
     return () => observer.disconnect();
-  }, [enabled]);
+  }, [enabled, ids]);
 
   /* Derived, not stored — clearing state in an effect would cost a second render. */
   return enabled ? active : null;
@@ -84,7 +81,27 @@ export function SiteNav() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
-  const active = useActiveSection(useMediaQuery(DESKTOP));
+
+  /*
+   * The nav belongs to whichever side the visitor is on. Inside Event
+   * Management or Tickets it carries that side's own links, a tag beside the
+   * logo, and one crossover link to the other side; on the landing page it
+   * carries the two doors plus the company links.
+   */
+  const side = sideFor(pathname);
+  const current = side ? sides[side] : null;
+  const links: readonly NavLink[] = current ? current.links : site.nav;
+  const drawerLinks: readonly NavLink[] = current
+    ? [
+        ...current.links,
+        current.crossover,
+        { label: "Ticket Producer Home", href: "/" },
+        { label: "Sign In", href: "/sign-in" },
+      ]
+    : [...site.nav, { label: "Sign In", href: "/sign-in" }];
+
+  /* Joined to a string so the observer effect only re-subscribes when the set actually changes. */
+  const active = useActiveSection(useMediaQuery(DESKTOP), sectionIdsOf(links).join(","));
   const reduceMotion = useReducedMotionSafe();
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -95,8 +112,8 @@ export function SiteNav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  /** Only the video hero on `/event-management` gets a see-through nav — everywhere else keeps the glass pill so it reads over ordinary page content. */
-  const transparentHero = pathname === "/event-management" && !scrolled;
+  /** Only the full-bleed dark heroes get a see-through nav — everywhere else keeps the glass pill so it reads over ordinary page content. */
+  const transparentHero = TRANSPARENT_HERO_ROUTES.has(pathname) && !scrolled;
 
   /**
    * Close the drawer whenever the route changes.
@@ -176,17 +193,28 @@ export function SiteNav() {
       >
         <nav className="w-full px-4 sm:px-6" aria-label="Main">
           <div className="flex h-12 items-center justify-between gap-4 sm:h-14">
-            <Link
-              href="/services#top"
-              className="shrink-0 transition-opacity duration-300 ease-ui hover:opacity-70"
-              aria-label={`${site.name} — top of page`}
-            >
-              <Logo variant="compact" />
-            </Link>
+            <div className="flex shrink-0 items-center gap-3">
+              <Link
+                href="/"
+                className="shrink-0 transition-opacity duration-300 ease-ui hover:opacity-70"
+                aria-label={`${site.name} — home`}
+              >
+                <Logo variant="compact" />
+              </Link>
+              {/* Which side you're on, said once and quietly — and a way back to its top */}
+              {current ? (
+                <Link
+                  href={current.href}
+                  className="label rounded-full border border-brass/40 px-2.5 py-1 text-brass-light transition-colors duration-300 ease-ui hover:border-brass hover:text-bone"
+                >
+                  {current.tag}
+                </Link>
+              ) : null}
+            </div>
 
             {/* Desktop: links sit between the mark and the icons */}
             <div className="hidden items-center gap-7 lg:flex">
-              {DESKTOP_LINKS.map((link) => {
+              {links.map((link) => {
                 const isActive = isCurrent(link.href, pathname, active);
                 return (
                   <Link
@@ -206,11 +234,23 @@ export function SiteNav() {
               })}
             </div>
 
-            {/* Desktop actions: theme toggle, a message icon back to Contact, and account access */}
+            {/* Desktop actions: the crossover to the other side, theme toggle, contact, and account access */}
             <div className="hidden items-center gap-1.5 lg:flex">
+              {current ? (
+                <Link
+                  href={current.crossover.href}
+                  className="group label mr-3 inline-flex items-center gap-1.5 whitespace-nowrap text-bone/60 transition-colors duration-300 ease-ui hover:text-brass-light"
+                >
+                  {current.crossover.label}
+                  <ArrowUpRight
+                    aria-hidden
+                    className="h-3.5 w-3.5 transition-transform duration-300 ease-ui group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  />
+                </Link>
+              ) : null}
               <ThemeToggle />
               <Link
-                href="/services#contact"
+                href="/#contact"
                 aria-label="Contact"
                 className="pressable flex h-9 w-9 items-center justify-center rounded-full text-bone/75 hover:bg-bone/8 hover:text-bone"
               >
@@ -269,7 +309,7 @@ export function SiteNav() {
               />
 
               <nav className="relative flex flex-col px-5 py-2" aria-label="Site">
-                {DRAWER_LINKS.map((link, i) => {
+                {drawerLinks.map((link, i) => {
                   const isActive = isCurrent(link.href, pathname, active);
                   return (
                     <motion.div

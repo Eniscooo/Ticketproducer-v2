@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { SiteNav } from "@/components/site/site-nav";
 import { SiteFooter } from "@/components/site/site-footer";
 import { Faq } from "@/components/site/faq";
-import { TrustedPartners } from "@/components/site/trusted-partners";
+import { TPElite } from "@/components/site/tp-elite";
 import { TicketResaleNav } from "@/components/ticket-resale/ticket-resale-nav";
 import { TrDiscovery } from "@/components/ticket-resale/tr-discovery";
 import { TrFaves } from "@/components/ticket-resale/tr-faves";
@@ -12,18 +12,16 @@ import { TrFinalCta } from "@/components/ticket-resale/tr-final-cta";
 import { eventRails, resaleEvents, trFaq, type ResaleEvent } from "@/lib/ticket-resale-page";
 
 export const metadata: Metadata = {
-  title: "Ticket Resale",
+  title: "Tickets",
   description:
-    "Verified resale tickets for concerts, sports, theater, and live experiences — New York, Chicago, and beyond.",
+    "Verified tickets for concerts, sports and Broadway in New York and beyond, plus TP Elite, a private concierge line for hard-to-get seats.",
 };
 
 /**
- * Order of the page: hero, then the partner row as the proof line directly
- * under it, then the filter bar and results, then the faves row as a shortcut
- * into the acts on the rails. `TrustedPartners` is passed to `TrDiscovery` as
- * children rather than rendered here, because it has to land between the hero
- * and the results that share the discovery component's state — passing it
- * down keeps it server-rendered.
+ * The ticket side of the site — everything here is for the person buying a
+ * seat. Order: hero and search, the filter bar and results, the row of
+ * popular picks as a shortcut into the rails, the rails themselves, then TP
+ * Elite for the buyers who want someone to handle it for them.
  *
  * Cards link to /ticket-resale/[slug] now, so there is no shared dialog
  * provider to wrap the tree in.
@@ -45,9 +43,7 @@ export default function Page() {
       <SiteNav />
 
       <main className="flex-1">
-        <TrDiscovery>
-          <TrustedPartners tone="light" />
-        </TrDiscovery>
+        <TrDiscovery />
 
         <TrFaves />
 
@@ -70,13 +66,18 @@ export default function Page() {
           );
         })}
 
+        {/* The concierge line belongs to the buyer side: a seat, handled for you */}
+        <div className="bg-paper px-3 py-10 sm:px-6 sm:py-14">
+          <TPElite />
+        </div>
+
         <TrSubscribe />
 
         <Faq
           compact
           items={trFaq}
           id="tr-faq"
-          headingLight="Ticket Resale"
+          headingLight="Ticket"
           headingBold="Questions"
           body=""
         />

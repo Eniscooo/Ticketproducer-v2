@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Logo } from "@/components/brand/logo";
 import { InstagramGlyph, LinkedInGlyph, XGlyph } from "@/components/brand/social-icons";
-import { site } from "@/lib/site";
+import { sides, site } from "@/lib/site";
 import { FooterWordmark } from "./footer-wordmark";
 
 const SOCIAL_GLYPHS = {
@@ -14,11 +14,11 @@ export function SiteFooter() {
   return (
     <footer className="relative -mt-8 overflow-hidden rounded-t-[2rem] bg-ink-deep pt-16 shadow-[0_-24px_50px_-35px_rgba(0,0,0,0.7)] sm:pt-20">
       <div className="mx-auto w-full max-w-[84rem] px-6 sm:px-10">
-        <div className="grid gap-14 sm:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1.1fr] lg:gap-10">
+        <div className="grid gap-14 sm:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr_1.1fr] lg:gap-10">
           {/* Brand */}
           <div>
             <Link
-              href="/services#top"
+              href="/"
               className="inline-block transition-opacity duration-500 hover:opacity-70"
             >
               <Logo variant="compact" />
@@ -28,22 +28,29 @@ export function SiteFooter() {
             </p>
           </div>
 
-          {/* Services */}
-          <div>
-            <p className="label text-stone-dim">Services</p>
-            <ul className="mt-5 space-y-6 sm:space-y-3">
-              {site.services.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="label link-underline tap-pad text-stone transition-colors duration-500 hover:text-bone"
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {/* One column per side — the same split the rest of the site makes */}
+          {[sides.events, sides.tickets].map((side) => (
+            <div key={side.key}>
+              <Link
+                href={side.href}
+                className="label link-underline text-stone-dim transition-colors duration-500 hover:text-bone"
+              >
+                {side.label}
+              </Link>
+              <ul className="mt-5 space-y-6 sm:space-y-3">
+                {side.links.map((item) => (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      className="label link-underline tap-pad text-stone transition-colors duration-500 hover:text-bone"
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
 
           {/* Company */}
           <div>

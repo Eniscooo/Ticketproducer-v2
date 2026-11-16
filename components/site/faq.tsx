@@ -17,8 +17,9 @@ const EASE = [0.16, 0.84, 0.28, 1] as const;
  * accordion, and it follows design.md — rounded containers, subtle fill
  * instead of shadow, compact internal density.
  *
- * Shared by /services and /event-management; defaults reproduce the site-wide
- * content and the `#faq` anchor the nav links to.
+ * Shared by the landing page and both sides; defaults reproduce the site-wide
+ * content and the `#faq` anchor the nav links to. `contactLabel`/`contactHref`
+ * let each side point the button at its own next step.
  */
 export function Faq({
   items = faq,
@@ -27,6 +28,8 @@ export function Faq({
   headingBold = "Asked Questions",
   body = "",
   compact = false,
+  contactLabel = "Contact Us",
+  contactHref = "/#contact",
 }: {
   items?: readonly FaqItem[];
   id?: string;
@@ -35,6 +38,8 @@ export function Faq({
   body?: string;
   /** Tighter vertical rhythm, for routes that run their sections closer together. */
   compact?: boolean;
+  contactLabel?: string;
+  contactHref?: string;
 } = {}) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const reduceMotion = useReducedMotionSafe();
@@ -59,10 +64,10 @@ export function Faq({
               </h2>
               <p className="ds-body mt-5 max-w-sm text-canvas-text-muted">{body}</p>
               <Link
-                href="/services#contact"
+                href={contactHref}
                 className="ds-btn-primary mt-8 rounded-control"
               >
-                Contact Us
+                {contactLabel}
               </Link>
             </Reveal>
           </div>

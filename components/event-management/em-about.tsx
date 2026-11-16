@@ -58,7 +58,7 @@ export function EmAbout() {
         </div>
       </div>
 
-      {/* The wall — rooms and the people who run them, three across */}
+      {/* The wall — the rooms we work in, three across */}
       <Reveal delay={0.1} className="mt-4">
         <div className="mx-auto w-full max-w-[75rem] px-6 sm:px-10">
           <div className="rounded-card bg-ink p-2 sm:p-3 lg:p-4">
