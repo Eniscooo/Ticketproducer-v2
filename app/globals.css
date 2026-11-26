@@ -12,16 +12,16 @@
   --color-charcoal-soft: #1b1b1f;
 
   /* Light */
-  --color-bone: #f2eee6;
-  --color-ivory: #faf7f1;
+  --color-bone: #ffffff;
+  --color-ivory: #ffffff;
   --color-stone: #b6afa4;
   /* Lifted from #7d766c so micro-labels on ink clear WCAG AA (4.4:1 → 4.9:1) */
   --color-stone-dim: #857e73;
 
   /* Accent — brushed brass, never bright gold */
-  --color-brass: #a4855a;
-  --color-brass-light: #c0a479;
-  --color-brass-dim: #6d5940;
+  --color-brass: #e6e6e6;
+  --color-brass-light: #ffffff;
+  --color-brass-dim: #6b6b6b;
 
   /* Deep support */
   --color-burgundy: #43191f;
@@ -32,21 +32,21 @@
    * the FAQ and closing contact section. Warm light grounds, dark readable
    * text; never white-on-white.
    */
-  --color-paper: #f8f7f3;
-  --color-linen: #f1ede4;
+  --color-paper: #ffffff;
+  --color-linen: #f5f5f5;
   --color-graphite: #171716;
   /* Buttons dim rather than turning gold on hover — graphite lifted toward bone */
   --color-graphite-dim: #3a3937;
   --color-slate: #55534e;
   /* Darkened from #817b70: taupe carries 11px labels, which measured 3.6:1 on linen. Now 5:1. */
   --color-taupe: #6a645a;
-  --color-champagne: #b08d57;
+  --color-champagne: #8c8c8c;
   /*
    * Champagne as *text*. The accent itself is 2.9:1 on paper — fine for rules,
    * icons, and fills, too faint for an 11px index numeral. Theme-reactive: on
    * the dark canvas the plain accent already reads at 6:1.
    */
-  --color-champagne-ink: #80633a;
+  --color-champagne-ink: #3a3a3a;
 
   /*
    * Theme-reactive canvas roles — kept separate from the four tokens above
@@ -55,7 +55,7 @@
    * never invert. Only these five respond to light/dark mode; light-mode
    * values match the editorial tokens they stand in for.
    */
-  --color-canvas-alt: #f1ede4;
+  --color-canvas-alt: #ffffff;
   --color-canvas-text: #171716;
   --color-canvas-text-muted: #55534e;
   --color-canvas-border: color-mix(in srgb, var(--color-canvas-text) 12%, transparent);
@@ -65,8 +65,8 @@
   --color-elite-void: #0d0b0a;
   --color-elite-umber: #1b1311;
   --color-elite-burgundy: #4a1b28;
-  --color-elite-gold: #d4af7a;
-  --color-elite-ivory: #f5ede0;
+  --color-elite-gold: #ffffff;
+  --color-elite-ivory: #f5f5f5;
 
   /*
    * ── design.md ────────────────────────────────────────────────────────────
@@ -182,10 +182,10 @@
     :root:not([data-theme="light"]) {
       --color-paper: #131316;
       --color-canvas-alt: #1b1b1f;
-      --color-canvas-text: #f2eee6;
+      --color-canvas-text: #ffffff;
       --color-canvas-text-muted: #b6afa4;
       --color-taupe: #888176;
-      --color-champagne-ink: #b08d57;
+      --color-champagne-ink: #ffffff;
       --color-burgundy: #c98a90;
       --color-surface: #1b1b1f;
       --color-curtain-ink: #e39aa4;
@@ -196,10 +196,10 @@
   :root[data-theme="dark"] {
     --color-paper: #131316;
     --color-canvas-alt: #1b1b1f;
-    --color-canvas-text: #f2eee6;
+    --color-canvas-text: #ffffff;
     --color-canvas-text-muted: #b6afa4;
     --color-taupe: #888176;
-    --color-champagne-ink: #b08d57;
+    --color-champagne-ink: #ffffff;
     --color-burgundy: #c98a90;
     --color-surface: #1b1b1f;
     --color-curtain-ink: #e39aa4;
@@ -1019,6 +1019,292 @@
   @media (prefers-reduced-motion: reduce), (scripting: none) {
     .ink {
       stroke-dashoffset: 0;
+    }
+  }
+}
+
+/*
+ * Landing hero 3D scene — the floating glass layers around the digital ticket.
+ * Everything here is compositor-only (translate, scale, opacity, stroke offset)
+ * and every loop stops for readers who ask for reduced motion.
+ */
+@layer components {
+  /* Each floating card bobs on its own clock, so the layers never move in step. */
+  .tp-float {
+    animation: tp-float var(--float-dur, 7s) cubic-bezier(0.45, 0, 0.55, 1) var(--float-delay, 0s) infinite;
+  }
+  @keyframes tp-float {
+    0%,
+    100% {
+      translate: 0 0;
+    }
+    50% {
+      translate: 0 var(--float-y, -10px);
+    }
+  }
+
+  /* The scan line passing over the ticket's QR code. */
+  .tp-scan {
+    animation: tp-scan 2.8s var(--ease-in-out) 1.6s infinite;
+  }
+  @keyframes tp-scan {
+    0%,
+    100% {
+      translate: 0 0;
+      opacity: 0;
+    }
+    8%,
+    92% {
+      opacity: 1;
+    }
+    50% {
+      translate: 0 var(--scan-travel, 5rem);
+    }
+  }
+
+  /* The "live" dot's ring. */
+  .tp-live-ring {
+    animation: tp-live 1.8s var(--ease-ui) infinite;
+  }
+  @keyframes tp-live {
+    0% {
+      scale: 1;
+      opacity: 0.55;
+    }
+    100% {
+      scale: 2.6;
+      opacity: 0;
+    }
+  }
+
+  /* Purchase confirmation: the ring draws, the tick follows, then the steps land one by one. */
+  .tp-success-ring {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: tp-draw 900ms var(--ease-in-out) var(--d, 1.4s) forwards;
+  }
+  .tp-success-tick {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: tp-draw 420ms var(--ease-ui) var(--d, 2.1s) forwards;
+  }
+  @keyframes tp-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  .tp-step {
+    opacity: 0;
+    translate: 0 4px;
+    animation: tp-step 500ms var(--ease-ui) var(--d, 2.2s) forwards;
+  }
+  @keyframes tp-step {
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+
+  /*
+   * A real ticket's perforation: two half-circle notches cut out of the edges
+   * where the stub tears off. Cut with a mask rather than painted on, so the
+   * grid behind shows through them in either theme. Portrait on phones (notches
+   * left and right), landscape from `sm` (notches top and bottom).
+   */
+  .tp-ticket-cut {
+    --notch: 13px;
+    mask:
+      radial-gradient(circle var(--notch) at 0 var(--cut-y), #0000 97%, #000) left / 51% 100% no-repeat,
+      radial-gradient(circle var(--notch) at 100% var(--cut-y), #0000 97%, #000) right / 51% 100% no-repeat;
+    --cut-y: calc(100% - 9.5rem);
+  }
+  @media (min-width: 640px) {
+    .tp-ticket-cut {
+      mask:
+        radial-gradient(circle var(--notch) at var(--cut-x) 0, #0000 97%, #000) top / 100% 51% no-repeat,
+        radial-gradient(circle var(--notch) at var(--cut-x) 100%, #0000 97%, #000) bottom / 100% 51% no-repeat;
+      --cut-x: calc(100% - 11.5rem);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tp-float,
+    .tp-scan,
+    .tp-live-ring {
+      animation: none;
+    }
+    .tp-scan {
+      opacity: 0;
+    }
+    .tp-success-ring,
+    .tp-success-tick {
+      animation: none;
+      stroke-dashoffset: 0;
+    }
+    .tp-step {
+      animation: none;
+      opacity: 1;
+      translate: none;
+    }
+  }
+}
+
+/*
+ * About section: the phone and the Gatsby hologram rising out of its screen.
+ * Triggered by InView's `data-in` on the scene wrapper. Compositor-only
+ * properties throughout (translate, rotate, scale, opacity, clip-path), and
+ * every loop stops for reduced motion — the hologram is then simply there.
+ */
+@layer components {
+  /* The phone drifts and sways a little, as if resting on a cushion of air. */
+  .tp-phone-float {
+    animation: tp-phone-float 9s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  }
+  @keyframes tp-phone-float {
+    0%,
+    100% {
+      translate: 0 0;
+      rotate: 0deg;
+    }
+    50% {
+      translate: 0 -10px;
+      rotate: 1.2deg;
+    }
+  }
+
+  /* Each hologram layer rises out of the screen: grows up from its base and fades in. */
+  .tp-holo-rise {
+    transform-origin: 50% 100%;
+    scale: 1 0;
+    opacity: 0;
+  }
+  [data-in] .tp-holo-rise {
+    animation: tp-holo-rise 1.6s var(--ease-editorial) var(--d, 0.3s) forwards;
+  }
+  @keyframes tp-holo-rise {
+    to {
+      scale: 1 1;
+      opacity: 1;
+    }
+  }
+
+  /* The stage picture is drawn upward, bottom line first, like light filling a volume. */
+  .tp-holo-reveal {
+    clip-path: inset(100% 0 0 0);
+  }
+  [data-in] .tp-holo-reveal {
+    animation: tp-holo-reveal 1.8s var(--ease-editorial) var(--d, 0.6s) forwards;
+  }
+  @keyframes tp-holo-reveal {
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  /* A projection is never quite steady: a slow, shallow breathing of its light. */
+  .tp-holo-shimmer {
+    animation: tp-holo-shimmer 5.5s ease-in-out infinite;
+  }
+  @keyframes tp-holo-shimmer {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    40% {
+      opacity: 0.86;
+    }
+    44% {
+      opacity: 0.94;
+    }
+    70% {
+      opacity: 0.9;
+    }
+  }
+
+  /* Scan lines drifting up through the projection. */
+  .tp-holo-scan {
+    animation: tp-holo-scan 7s linear infinite;
+  }
+  @keyframes tp-holo-scan {
+    from {
+      translate: 0 0;
+    }
+    to {
+      translate: 0 -24px;
+    }
+  }
+
+  /* Motes of light rising through the beam. */
+  .tp-holo-mote {
+    opacity: 0;
+    animation: tp-holo-mote var(--dur, 4.5s) ease-out var(--d, 0s) infinite;
+  }
+  @keyframes tp-holo-mote {
+    0% {
+      translate: 0 0;
+      opacity: 0;
+    }
+    20% {
+      opacity: 0.9;
+    }
+    100% {
+      translate: var(--dx, 0px) -120px;
+      opacity: 0;
+    }
+  }
+
+  /* The emitter on the screen, and the stage light around the phone: slow swells. */
+  .tp-glow-breathe {
+    animation: tp-glow-breathe 6s ease-in-out infinite;
+  }
+  @keyframes tp-glow-breathe {
+    0%,
+    100% {
+      opacity: 0.75;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce), (scripting: none) {
+    .tp-phone-float,
+    .tp-holo-shimmer,
+    .tp-holo-scan,
+    .tp-glow-breathe {
+      animation: none;
+    }
+    .tp-holo-mote {
+      display: none;
+    }
+    .tp-holo-rise,
+    [data-in] .tp-holo-rise {
+      animation: none;
+      scale: none;
+      opacity: 1;
+    }
+    .tp-holo-reveal,
+    [data-in] .tp-holo-reveal {
+      animation: none;
+      clip-path: none;
+    }
+  }
+}
+
+/* Tickets hero: the ticket's details fade up into place each time the show changes. */
+@layer components {
+  .tp-swap-in {
+    animation: tp-swap-in 600ms var(--ease-ui) both;
+  }
+  @keyframes tp-swap-in {
+    from {
+      opacity: 0;
+      translate: 0 6px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tp-swap-in {
+      animation: none;
     }
   }
 }

@@ -4,10 +4,19 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, Mail, Menu, User, X } from "lucide-react";
-import { Logo } from "@/components/brand/logo";
+import { ArrowUpRight } from "lucide-react";
 import { ThemeToggle } from "@/components/site/theme-toggle";
-import { IconSwap } from "@/components/ui/primitives";
+import {
+  MobileNav,
+  MobileNavHeader,
+  MobileNavMenu,
+  MobileNavToggle,
+  NavBody,
+  NavItems,
+  Navbar,
+  NavbarButton,
+  NavbarLogo,
+} from "@/components/ui/resizable-navbar";
 import { clsx } from "@/lib/clsx";
 import { sideFor, sides, site } from "@/lib/site";
 import { useMediaQuery } from "@/lib/use-media-query";
@@ -20,8 +29,11 @@ type NavLink = { label: string; href: string };
 /** Where the always-visible link row exists, and so where a section tracker has something to mark. */
 const DESKTOP = "(min-width: 1024px)";
 
-/** Routes whose hero is a full-bleed dark video — the nav starts see-through over it. The landing hero is cream, so it keeps the pill. */
+/** Routes whose hero is a full-bleed dark video — the nav starts see-through over it. */
 const TRANSPARENT_HERO_ROUTES = new Set(["/event-management"]);
+
+/** On the landing page, the primary button goes to the side most visitors want. */
+const LANDING_CTA = sides.tickets.cta;
 
 /** Only the hash-anchored links have a section to observe; whole-route links are matched on pathname instead. */
 const sectionIdsOf = (links: readonly NavLink[]) =>
@@ -38,14 +50,8 @@ function isCurrent(href: string, pathname: string, active: string | null) {
 }
 
 /**
- * Tracks which section owns the upper third of the viewport.
- *
- * Only runs when `enabled`. Below `lg` the desktop link row is not rendered, so
- * the only thing the tracker could mark is a drawer the reader has to open to
- * see — meanwhile it re-rendered the whole nav on every scroll and moved the
- * highlight under them between openings. It reports `null` there instead, which
- * leaves `isCurrent` matching on pathname alone: the current *route* still
- * marks itself, the current *section* no longer chases.
+ * Tracks which section owns the upper third of the viewport. Only runs on
+ * desktop, where the link row it marks is actually on screen.
  */
 function useActiveSection(enabled: boolean, ids: string) {
   const [active, setActive] = useState<string | null>(null);
@@ -53,9 +59,10 @@ function useActiveSection(enabled: boolean, ids: string) {
   useEffect(() => {
     if (!enabled || !ids) return;
 
-    const sections = ids.split(",").map((id) =>
-      document.getElementById(id),
-    ).filter((el): el is HTMLElement => el !== null);
+    const sections = ids
+      .split(",")
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
 
     if (sections.length === 0) return;
 
@@ -73,75 +80,53 @@ function useActiveSection(enabled: boolean, ids: string) {
     return () => observer.disconnect();
   }, [enabled, ids]);
 
-  /* Derived, not stored — clearing state in an effect would cost a second render. */
   return enabled ? active : null;
 }
 
+/**
+ * The site nav, built on the resizable navbar: a full-width glass bar at the
+ * top that draws in to a floating pill on scroll.
+ *
+ * It belongs to whichever side the visitor is on. Inside Event Management or
+ * Tickets it carries that side's links, a tag beside the logo, one crossover
+ * link to the other side and that side's call to action; on the landing page
+ * it carries the two doors plus the company links.
+ */
 export function SiteNav() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
-
-  /*
-   * The nav belongs to whichever side the visitor is on. Inside Event
-   * Management or Tickets it carries that side's own links, a tag beside the
-   * logo, and one crossover link to the other side; on the landing page it
-   * carries the two doors plus the company links.
-   */
-  const side = sideFor(pathname);
-  const current = side ? sides[side] : null;
-  const links: readonly NavLink[] = current ? current.links : site.nav;
-  const drawerLinks: readonly NavLink[] = current
-    ? [
-        ...current.links,
-        current.crossover,
-        { label: "Ticket Producer Home", href: "/" },
-        { label: "Sign In", href: "/sign-in" },
-      ]
-    : [...site.nav, { label: "Sign In", href: "/sign-in" }];
-
-  /* Joined to a string so the observer effect only re-subscribes when the set actually changes. */
-  const tracked = useActiveSection(useMediaQuery(DESKTOP), sectionIdsOf(links).join(","));
   const reduceMotion = useReducedMotionSafe();
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
+  const side = sideFor(pathname);
+  const current = side ? sides[side] : null;
+  const links: readonly NavLink[] = current ? current.links : site.nav;
+  const cta = current ? current.cta : LANDING_CTA;
+  const drawerLinks: readonly NavLink[] = current
+    ? [...current.links, current.crossover, { label: "Ticket Producer Home", href: "/" }]
+    : site.nav;
+
+  /* Joined to a string so the observer effect only re-subscribes when the set actually changes. */
+  const tracked = useActiveSection(useMediaQuery(DESKTOP), sectionIdsOf(links).join(","));
+
+  /* Section highlighting waits until the page has moved — at the very top no section owns the viewport. */
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  /*
-   * Back at the top, no section owns the viewport — but the tracker only hears
-   * about sections it watches, so it would keep marking whichever was last.
-   */
   const active = scrolled ? tracked : null;
 
-  /** Only the full-bleed dark heroes get a see-through nav — everywhere else keeps the glass pill so it reads over ordinary page content. */
-  const transparentHero = TRANSPARENT_HERO_ROUTES.has(pathname) && !scrolled;
-
-  /**
-   * Close the drawer whenever the route changes.
-   *
-   * Covers every navigation — including browser back/forward — rather than
-   * relying on each link remembering to close it. Adjusted during render
-   * rather than in an effect, so the drawer never paints over the new route.
-   */
+  /** Close the menu on every navigation, including back/forward — adjusted during render so it never paints over the new route. */
   const [lastPathname, setLastPathname] = useState(pathname);
   if (pathname !== lastPathname) {
     setLastPathname(pathname);
     setIsOpen(false);
   }
 
-  /**
-   * Scroll lock + Escape while the drawer is open.
-   *
-   * The original `overflow` value is preserved and restored rather than reset
-   * to "", so a lock owned by another component is never clobbered. Escape
-   * satisfies WCAG 2.1.2 — an overlay that takes the screen must be
-   * dismissible from the keyboard.
-   */
+  /** Scroll lock and Escape while the menu is open; the previous overflow is restored, not reset. */
   useEffect(() => {
     if (!isOpen) return;
 
@@ -159,225 +144,158 @@ export function SiteNav() {
     };
   }, [isOpen]);
 
-  /**
-   * Focus stays on the trigger while the menu is open — the panel sits right
-   * after it in the DOM, so Tab walks straight into the links — and comes back
-   * to the trigger if a link inside took it and the menu then closed.
-   */
+  /** Focus comes back to the toggle if a link inside the menu took it and the menu then closed. */
   useEffect(() => {
     if (!isOpen && document.activeElement === document.body) {
       menuButtonRef.current?.focus();
     }
   }, [isOpen]);
 
-  const duration = (seconds: number) => (reduceMotion ? 0.01 : seconds);
+  const close = () => setIsOpen(false);
+
+  const tag = current ? (
+    <Link
+      href={current.href}
+      className="label rounded-full border border-brass/40 px-2.5 py-1 text-brass-light transition-colors duration-300 ease-ui hover:border-brass hover:text-bone"
+    >
+      {current.tag}
+    </Link>
+  ) : null;
 
   return (
     <>
-      <motion.header
-        data-reveal
-        initial={{ y: -96 }}
-        animate={{ y: 0 }}
-        transition={{ duration: duration(0.9), ease: EASE }}
-        className={clsx(
-          "fixed z-50 rounded-4xl transition-[top,width,max-width,background-color,border-color,box-shadow] duration-500 ease-editorial",
-          "left-4 right-4 sm:left-1/2 sm:right-auto sm:-translate-x-1/2",
-          transparentHero
-            ? // Genuinely transparent — the video's own scrim carries contrast here.
-              "top-3 max-w-7xl border border-transparent bg-transparent sm:top-5 sm:w-[calc(100vw-4rem)]"
-            : // Glassy and light-catching rather than architectural — a thin
-              // inner highlight along the top edge is what sells "glass".
-              //
-              // The pill stays substantially opaque once scrolled or off the
-              // video hero: it floats over light grounds (/sign-in, the legal
-              // routes) as well as dark ones, and at low opacity its
-              // bone-toned labels dropped to ~1:1 contrast against a pale canvas.
-              scrolled
-              ? "top-3 max-w-6xl border border-bone/12 bg-ink/80 backdrop-blur-2xl backdrop-saturate-150 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_18px_50px_-30px_rgba(0,0,0,0.9)] sm:top-4 sm:w-[calc(100vw-3rem)]"
-              : "top-3 max-w-7xl border border-bone/10 bg-ink/85 backdrop-blur-2xl backdrop-saturate-150 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] sm:top-5 sm:w-[calc(100vw-4rem)]",
-        )}
-      >
-        <nav className="w-full px-4 sm:px-6" aria-label="Main">
-          <div className="flex h-12 items-center justify-between gap-4 sm:h-14">
-            <div className="flex shrink-0 items-center gap-3">
-              <Link
-                href="/"
-                className="shrink-0 transition-opacity duration-300 ease-ui hover:opacity-70"
-                aria-label={`${site.name} — home`}
-              >
-                <Logo variant="compact" />
-              </Link>
-              {/* Which side you're on, said once and quietly — and a way back to its top */}
-              {current ? (
-                <Link
-                  href={current.href}
-                  className="label rounded-full border border-brass/40 px-2.5 py-1 text-brass-light transition-colors duration-300 ease-ui hover:border-brass hover:text-bone"
-                >
-                  {current.tag}
-                </Link>
-              ) : null}
-            </div>
+      <Navbar transparent={TRANSPARENT_HERO_ROUTES.has(pathname)}>
+        {/* Desktop */}
+        <NavBody>
+          <div className="flex shrink-0 items-center gap-3">
+            <NavbarLogo />
+            {tag}
+          </div>
 
-            {/* Desktop: links sit between the mark and the icons */}
-            <div className="hidden items-center gap-7 lg:flex">
-              {links.map((link) => {
+          <NavItems
+            items={links.map((link) => ({
+              name: link.label,
+              link: link.href,
+              active: isCurrent(link.href, pathname, active),
+            }))}
+          />
+
+          <div className="flex shrink-0 items-center gap-1.5">
+            {current ? (
+              <Link
+                href={current.crossover.href}
+                className="group label mr-2 hidden items-center gap-1.5 whitespace-nowrap text-bone/60 transition-colors duration-300 ease-ui hover:text-brass-light xl:inline-flex"
+              >
+                {current.crossover.label}
+                <ArrowUpRight
+                  aria-hidden
+                  className="h-3.5 w-3.5 transition-transform duration-300 ease-ui group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                />
+              </Link>
+            ) : null}
+            <ThemeToggle />
+            <NavbarButton variant="secondary" href="/sign-in">
+              Sign In
+            </NavbarButton>
+            <NavbarButton variant="primary" href={cta.href}>
+              {cta.label}
+            </NavbarButton>
+          </div>
+        </NavBody>
+
+        {/* Mobile */}
+        <MobileNav>
+          <MobileNavHeader>
+            <div className="flex min-w-0 items-center gap-3">
+              <NavbarLogo />
+              {tag}
+            </div>
+            <div className="flex items-center gap-0.5">
+              <ThemeToggle className="text-stone hover:text-bone" />
+              <MobileNavToggle
+                ref={menuButtonRef}
+                isOpen={isOpen}
+                onClick={() => setIsOpen((open) => !open)}
+                controls="tp-site-drawer"
+              />
+            </div>
+          </MobileNavHeader>
+
+          <MobileNavMenu id="tp-site-drawer" isOpen={isOpen} onClose={close}>
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_60%_at_100%_0%,rgba(255,255,255,0.12),transparent_60%)]"
+            />
+
+            <nav className="relative flex flex-col px-5 py-2" aria-label="Site">
+              {drawerLinks.map((link, i) => {
                 const isActive = isCurrent(link.href, pathname, active);
                 return (
-                  <Link
+                  <motion.div
                     key={link.href}
-                    href={link.href}
-                    aria-current={isActive ? "true" : undefined}
-                    className={clsx(
-                      "label link-underline transition-colors duration-300 ease-ui",
-                      isActive
-                        ? "text-brass-light"
-                        : "text-bone/75 hover:text-bone",
-                    )}
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      duration: reduceMotion ? 0.01 : 0.4,
+                      delay: reduceMotion ? 0 : 0.06 + i * 0.035,
+                      ease: EASE,
+                    }}
+                    className="border-b border-bone/10 last:border-b-0"
                   >
-                    {link.label}
-                  </Link>
+                    <Link
+                      href={link.href}
+                      onClick={close}
+                      aria-current={isActive ? "true" : undefined}
+                      className={clsx(
+                        "block py-3 text-[1.0625rem] leading-snug transition-colors duration-300 ease-ui",
+                        isActive ? "text-brass-light" : "text-bone hover:text-brass-light",
+                      )}
+                    >
+                      {link.label}
+                    </Link>
+                  </motion.div>
                 );
               })}
+            </nav>
+
+            <div className="relative flex flex-col gap-2 px-5 pb-4 pt-1 sm:flex-row">
+              <NavbarButton variant="dark" href="/sign-in" onClick={close} className="h-11 w-full sm:flex-1">
+                Sign In
+              </NavbarButton>
+              <NavbarButton variant="primary" href={cta.href} onClick={close} className="h-11 w-full sm:flex-1">
+                {cta.label}
+              </NavbarButton>
             </div>
 
-            {/* Desktop actions: the crossover to the other side, theme toggle, contact, and account access */}
-            <div className="hidden items-center gap-1.5 lg:flex">
-              {current ? (
-                <Link
-                  href={current.crossover.href}
-                  className="group label mr-3 inline-flex items-center gap-1.5 whitespace-nowrap text-bone/60 transition-colors duration-300 ease-ui hover:text-brass-light"
-                >
-                  {current.crossover.label}
-                  <ArrowUpRight
-                    aria-hidden
-                    className="h-3.5 w-3.5 transition-transform duration-300 ease-ui group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                  />
-                </Link>
-              ) : null}
-              <ThemeToggle />
-              <Link
-                href="/#contact"
-                aria-label="Contact"
-                className="pressable flex h-9 w-9 items-center justify-center rounded-full text-bone/75 hover:bg-bone/8 hover:text-bone"
+            {/* The line, plainly stated */}
+            <div className="relative border-t border-bone/10 px-5 py-4">
+              <span className="label block text-stone-dim">Direct line</span>
+              <a
+                href={site.contact.phoneHref}
+                className="mt-1.5 block text-[1.0625rem] leading-none tracking-wide text-bone transition-colors duration-300 ease-ui hover:text-brass-light"
               >
-                <Mail className="h-[1.05rem] w-[1.05rem]" aria-hidden />
-              </Link>
-              <Link
-                href="/sign-in"
-                aria-label="Sign in or sign up"
-                className="group pressable relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-full border border-bone/20 text-bone hover:border-brass/70"
+                {site.contact.phone}
+              </a>
+              <a
+                href={`mailto:${site.contact.email}`}
+                className="label link-underline mt-3 inline-block break-anywhere text-stone transition-colors duration-500 hover:text-bone"
               >
-                <span
-                  aria-hidden
-                  className="pointer-events-none absolute inset-0 origin-bottom scale-y-0 bg-brass/15 transition-transform duration-500 ease-editorial group-hover:scale-y-100"
-                />
-                <User className="relative z-10 h-[1.05rem] w-[1.05rem]" aria-hidden />
-              </Link>
+                {site.contact.email}
+              </a>
             </div>
+          </MobileNavMenu>
+        </MobileNav>
+      </Navbar>
 
-            <div className="flex items-center gap-0.5 lg:hidden">
-              <ThemeToggle className="text-stone hover:text-bone" />
-
-              <button
-                ref={menuButtonRef}
-                type="button"
-                onClick={() => setIsOpen((open) => !open)}
-                aria-expanded={isOpen}
-                aria-controls="tp-site-drawer"
-                aria-label={isOpen ? "Close menu" : "Open menu"}
-                className="pressable -mr-2 flex h-11 w-11 items-center justify-center rounded-full text-stone hover:text-bone"
-              >
-                <IconSwap
-                  active={isOpen}
-                  off={<Menu className="h-5 w-5" />}
-                  on={<X className="h-5 w-5" />}
-                />
-              </button>
-            </div>
-          </div>
-        </nav>
-
-        {/* Drops from under the pill rather than sliding in as a full-height sheet */}
-        <AnimatePresence>
-          {isOpen ? (
-            <motion.div
-              id="tp-site-drawer"
-              initial={{ opacity: 0, y: -10, scaleY: 0.97 }}
-              animate={{ opacity: 1, y: 0, scaleY: 1 }}
-              exit={{ opacity: 0, y: -10, scaleY: 0.97 }}
-              transition={{ duration: duration(0.32), ease: EASE }}
-              style={{ transformOrigin: "top" }}
-              className="grain absolute left-0 right-0 top-full mt-2 origin-top overflow-hidden rounded-3xl border border-brass/25 bg-ink-deep/97 text-bone shadow-[0_30px_60px_-25px_rgba(0,0,0,0.85)] backdrop-blur-2xl lg:hidden"
-            >
-              <div
-                aria-hidden
-                className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_60%_at_100%_0%,rgba(164,133,90,0.12),transparent_60%)]"
-              />
-
-              <nav className="relative flex flex-col px-5 py-2" aria-label="Site">
-                {drawerLinks.map((link, i) => {
-                  const isActive = isCurrent(link.href, pathname, active);
-                  return (
-                    <motion.div
-                      key={link.href}
-                      initial={{ opacity: 0, y: -6 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{
-                        duration: duration(0.4),
-                        delay: reduceMotion ? 0 : 0.06 + i * 0.035,
-                        ease: EASE,
-                      }}
-                      className="border-b border-bone/10 last:border-b-0"
-                    >
-                      <Link
-                        href={link.href}
-                        onClick={() => setIsOpen(false)}
-                        aria-current={isActive ? "true" : undefined}
-                        className={clsx(
-                          "block py-3 text-[1.0625rem] leading-snug transition-colors duration-300 ease-ui",
-                          isActive ? "text-brass-light" : "text-bone hover:text-brass-light",
-                        )}
-                      >
-                        {link.label}
-                      </Link>
-                    </motion.div>
-                  );
-                })}
-              </nav>
-
-              {/* The line, plainly stated */}
-              <div className="relative border-t border-bone/10 px-5 py-4">
-                <span className="label block text-stone-dim">Direct line</span>
-                <a
-                  href={site.contact.phoneHref}
-                  className="mt-1.5 block text-[1.0625rem] leading-none tracking-wide text-bone transition-colors duration-300 ease-ui hover:text-brass-light"
-                >
-                  {site.contact.phone}
-                </a>
-                <a
-                  href={`mailto:${site.contact.email}`}
-                  className="label link-underline mt-3 inline-block break-anywhere text-stone transition-colors duration-500 hover:text-bone"
-                >
-                  {site.contact.email}
-                </a>
-              </div>
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
-      </motion.header>
-
-      {/*
-       * Tapping outside closes it. The scrim sits below the header's own z-50 so
-       * the dropdown — which hangs off the header — paints over it.
-       */}
+      {/* Tapping outside closes the menu. It sits below the header's z-50 so the menu paints over it. */}
       <AnimatePresence>
         {isOpen ? (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: duration(0.3), ease: EASE }}
-            onClick={() => setIsOpen(false)}
+            transition={{ duration: reduceMotion ? 0.01 : 0.3, ease: EASE }}
+            onClick={close}
             className="fixed inset-0 z-40 bg-ink-deep/60 backdrop-blur-sm lg:hidden"
             aria-hidden
           />

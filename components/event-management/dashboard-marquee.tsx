@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { GridPulse } from "@/components/ui/grid-pulse";
 import { Reveal } from "@/components/ui/reveal";
 import { clsx } from "@/lib/clsx";
+import { EmSectionHeader } from "./em-section-header";
 import {
   ActivityWidget,
   BudgetWidget,
@@ -73,23 +75,36 @@ export function DashboardMarquee() {
   }, []);
 
   return (
-    <section className="relative overflow-hidden bg-paper py-20">
-      <div className="mx-auto w-full max-w-[75rem] px-6 sm:px-10">
-        <Reveal className="mx-auto max-w-2xl text-center">
-          <h2 className="ds-display text-[clamp(2rem,4.4vw,2.75rem)] text-canvas-text">
-            <span className="font-light">Every detail of your event, </span>
-            <span className="font-semibold">in one dashboard</span>
-          </h2>
-          <p className="ds-body mx-auto mt-5 max-w-xl text-canvas-text-muted">
-            Budget, guests, vendors and the run of show, live in one place from first brief to last call.
-          </p>
-        </Reveal>
+    <section className="relative isolate overflow-hidden bg-paper py-24">
+      {/* The pointer lights the grid behind the wall, as on the landing hero */}
+      <GridPulse className="-z-10" />
 
-        <div
-          ref={wallRef}
-          data-offscreen
-          className="dash-wall mt-14 grid h-[600px] grid-cols-1 gap-4 overflow-hidden md:grid-cols-2 lg:grid-cols-3"
-        >
+      <div className="mx-auto w-full max-w-[75rem] px-6 sm:px-10">
+        <EmSectionHeader
+          center
+          eyebrow="Live dashboard"
+          light="Every detail of your event,"
+          bold="in one dashboard"
+          body={
+            <span data-grid-avoid>
+              Budget, guests, vendors and the run of show, live in one place from first brief to last call.
+            </span>
+          }
+        />
+
+        {/*
+         * The wall lies back in 3D, like a live screen seen from just above it,
+         * and fades out at the top and bottom edges so the columns read as
+         * endless. The tilt is a static transform on a wrapper — the scrolling
+         * itself stays the same compositor-only keyframe.
+         */}
+        <Reveal delay={0.1} className="mt-14 [perspective:2200px]">
+          <div className="origin-top [transform:rotateX(18deg)] [mask-image:linear-gradient(to_bottom,transparent,#000_12%,#000_80%,transparent)] motion-reduce:[transform:none]">
+            <div
+              ref={wallRef}
+              data-offscreen
+              className="dash-wall grid h-[640px] grid-cols-1 gap-4 overflow-hidden rounded-card md:grid-cols-2 lg:grid-cols-3"
+            >
           {COLUMNS.map((column, c) => (
             <div key={c} className={clsx("dash-col min-w-0", column.hide)}>
               <div
@@ -113,7 +128,9 @@ export function DashboardMarquee() {
               </div>
             </div>
           ))}
-        </div>
+            </div>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

@@ -34,7 +34,7 @@ export function TrFinalCta() {
           {/* A brass lift in the lower corner — the page's one warm note, kept quiet */}
           <div
             aria-hidden
-            className="absolute inset-0 -z-10 bg-[radial-gradient(70%_50%_at_50%_100%,rgba(176,141,87,0.16),transparent_72%)]"
+            className="absolute inset-0 -z-10 bg-[radial-gradient(70%_50%_at_50%_100%,rgba(255,255,255,0.16),transparent_72%)]"
           />
 
           <Reveal>

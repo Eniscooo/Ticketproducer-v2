@@ -1,12 +1,15 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { eventDateKey, resaleEvents } from "@/lib/ticket-resale-page";
+import { eventDateKey, popularSlugs, resaleEvents, type ResaleEvent } from "@/lib/ticket-resale-page";
 import { TrHero } from "./tr-hero";
 import { LocationDateBar, TypeChips, ALL, type EventFilterState } from "./event-filters";
 import { EventSection } from "./event-section";
 
-const RESULT_COUNT = 10;
+/** The unfiltered row: the shows named in `popularSlugs`, in that order. */
+const POPULAR: ResaleEvent[] = popularSlugs
+  .map((slug) => resaleEvents.find((event) => event.slug === slug))
+  .filter((event): event is ResaleEvent => Boolean(event));
 
 /**
  * Owns everything the discovery half of the page shares: the hero's search box,
@@ -70,7 +73,7 @@ export function TrDiscovery({ children }: { children?: React.ReactNode }) {
     filters.date !== ALL ||
     filters.type !== ALL;
 
-  const events = isNarrowed ? matches : matches.slice(0, RESULT_COUNT);
+  const events = isNarrowed ? matches : POPULAR;
 
   const title = normalized
     ? `Results for "${query.trim()}"`

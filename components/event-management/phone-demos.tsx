@@ -109,13 +109,13 @@ function SeatsDemo() {
           rx="14"
           pathLength={1}
           fill="none"
-          stroke="#b08d57"
+          stroke="#d9d9d9"
           strokeWidth="2"
           className="fx-draw"
           data-at={0}
         />
         <g className="fx-pop" data-at={1}>
-          <rect x="40" y="22" width="80" height="22" rx="4" fill="#b08d57" />
+          <rect x="40" y="22" width="80" height="22" rx="4" fill="#d9d9d9" />
           <text x="80" y="36.5" textAnchor="middle" fontSize="7" letterSpacing="2" fill="#171716" fontWeight="600">
             STAGE
           </text>
@@ -127,7 +127,7 @@ function SeatsDemo() {
           height="26"
           rx="3"
           fill="none"
-          stroke="#f2eee6"
+          stroke="#ffffff"
           strokeOpacity="0.35"
           strokeDasharray="3 3"
           className="fx-pop"
@@ -143,11 +143,11 @@ function SeatsDemo() {
                   cx={+(x + Math.cos(a) * 12).toFixed(2)}
                   cy={+(y + Math.sin(a) * 12).toFixed(2)}
                   r="2.6"
-                  fill="#d4af7a"
+                  fill="#ffffff"
                 />
               );
             })}
-            <circle cx={x} cy={y} r="7.5" fill="#2a2622" stroke="#b08d57" strokeWidth="1" />
+            <circle cx={x} cy={y} r="7.5" fill="#2a2622" stroke="#d9d9d9" strokeWidth="1" />
           </g>
         ))}
       </svg>
@@ -176,7 +176,7 @@ function Finder({ x, y }: { x: number; y: number }) {
   return (
     <g>
       <rect x={x} y={y} width="5" height="5" fill="#171716" />
-      <rect x={x + 1} y={y + 1} width="3" height="3" fill="#f2eee6" />
+      <rect x={x + 1} y={y + 1} width="3" height="3" fill="#ffffff" />
       <rect x={x + 1.75} y={y + 1.75} width="1.5" height="1.5" fill="#171716" />
     </g>
   );
@@ -229,10 +229,10 @@ function TicketsDemo() {
 }
 
 const POSTS = [
-  { post: "Entrance", initials: "JR", tone: "bg-[#b08d57]" },
+  { post: "Entrance", initials: "JR", tone: "bg-[#d9d9d9]" },
   { post: "Bar", initials: "AL", tone: "bg-[#8f3b4f]" },
   { post: "Stage", initials: "MK", tone: "bg-[#55534e]" },
-  { post: "VIP", initials: "SD", tone: "bg-[#d4af7a]" },
+  { post: "VIP", initials: "SD", tone: "bg-[#ffffff]" },
 ];
 
 /** 04 — crew slide into their posts and confirm. */

@@ -1,21 +1,23 @@
-import {
-  Drama,
-  Goal,
-  Guitar,
-  Music,
-  MoreHorizontal,
-  Volleyball,
-  type LucideIcon,
-} from "lucide-react";
+import { Drama, Hourglass, Music, Users, type LucideIcon } from "lucide-react";
 
 /**
- * NOTE: Every event below is illustrative sample data for laying out the
- * marketplace — names, dates, prices, and tiers are not real inventory. Swap
- * `resaleEvents` for a real catalog/API response before this goes live; every
- * component here reads from this shape so that's the only file that needs to
- * change. Card imagery is real New York venue photography (Unsplash License —
- * see PHOTO-CREDITS.md), matched to each event's venue or genre; swap in
- * official event artwork once a real catalog is connected.
+ * The ticket catalogue: Broadway only, every show real and verified as playing
+ * in New York (Playbill's "Now on Broadway" list, cross-checked with
+ * Broadway.com and each show's site, late November 2026 — sources per show are
+ * in the research notes, and the official site is linked on each event page).
+ *
+ * What is real: the show, its theatre and address, its kind, its weekly
+ * performance schedule, running time, age guidance and run dates. Each listing's
+ * date and curtain time is a real performance taken from that schedule.
+ *
+ * What is NOT real yet: prices and tiers. `startingPrice` and the tier prices
+ * are sample figures until a live inventory feed replaces them — resale prices
+ * can only come from real listings. Swap `resaleEvents` for the feed; every
+ * component reads this shape.
+ *
+ * Images are openly licensed photographs of each show's marquee or house
+ * (credited in PHOTO-CREDITS.md and on /credits) — never official key art,
+ * which belongs to the productions.
  */
 
 export const formatUsd = (value: number) =>
@@ -27,8 +29,8 @@ export const formatUsd = (value: number) =>
 
 export const trHero = {
   headline: "Find your next event.",
-  body: "Verified tickets for concerts, sports, and theater — without the markup games.",
-  searchPlaceholder: "Search events, artists, teams or venues",
+  body: "Verified tickets for every show on Broadway — without the markup games.",
+  searchPlaceholder: "Search shows or theatres",
 };
 
 export type NavCategory = {
@@ -40,47 +42,10 @@ export type NavCategory = {
 };
 
 export const navCategories: NavCategory[] = [
-  {
-    key: "basketball",
-    label: "Basketball",
-    icon: Volleyball,
-    href: "#sports",
-    subcategories: ["NBA", "NCAA", "WNBA", "Other Basketball"],
-  },
-  {
-    key: "football",
-    label: "Football",
-    icon: Goal,
-    href: "#sports",
-    subcategories: ["NFL", "College Football", "International"],
-  },
-  {
-    key: "concerts",
-    label: "Concerts",
-    icon: Music,
-    href: "#popular-concerts",
-    subcategories: ["Pop", "Hip-Hop", "R&B", "Afrobeats", "Rock", "Other Concerts"],
-  },
-  {
-    key: "music",
-    label: "Music",
-    icon: Guitar,
-    href: "#music",
-  },
-  {
-    key: "theater",
-    label: "Theater",
-    icon: Drama,
-    href: "#theater",
-    subcategories: ["Broadway", "Musicals", "Plays", "Family Shows"],
-  },
-  {
-    key: "more",
-    label: "More",
-    icon: MoreHorizontal,
-    href: "#suggested",
-    subcategories: ["Comedy", "Festivals", "Family"],
-  },
+  { key: "musicals", label: "Musicals", icon: Music, href: "#musicals" },
+  { key: "plays", label: "Plays", icon: Drama, href: "#plays" },
+  { key: "family", label: "Family", icon: Users, href: "#family" },
+  { key: "last-chance", label: "Last chance", icon: Hourglass, href: "#last-chance" },
 ];
 
 export type TicketTier = {
@@ -89,370 +54,361 @@ export type TicketTier = {
   availability: "Available" | "Limited" | "Almost gone";
 };
 
+export type ShowKind = "Musical" | "Play" | "Holiday";
+
 export type ResaleEvent = {
   slug: string;
   name: string;
+  /** One real performance from the show's schedule, e.g. "Fri, Dec 4, 2026". */
   date: string;
+  /** Curtain time of that performance. */
   time: string;
   venue: string;
+  /** Street address of the theatre. */
+  address: string;
   city: string;
-  category: string;
+  category: ShowKind;
   image: string;
   imagePosition: string;
+  /** SAMPLE until a live inventory feed is connected. */
   startingPrice: number;
   tiers: TicketTier[];
+  /** The published weekly schedule. */
+  schedule: string;
+  runningTime: string;
+  ageGuidance: string;
+  description: string;
+  /** Closing date or limited-run note, when there is one. */
+  runNote?: string;
+  officialUrl?: string;
 };
 
 type TierPreset = { name: string; multiplier: number; availability: TicketTier["availability"] }[];
 
-const CONCERT_TIERS: TierPreset = [
-  { name: "General Admission", multiplier: 1, availability: "Available" },
-  { name: "Reserved Seating", multiplier: 1.55, availability: "Limited" },
-  { name: "VIP Package", multiplier: 2.6, availability: "Almost gone" },
-];
-
-const THEATER_TIERS: TierPreset = [
+const BROADWAY_TIERS: TierPreset = [
   { name: "Rear Mezzanine", multiplier: 1, availability: "Available" },
   { name: "Orchestra", multiplier: 1.7, availability: "Limited" },
   { name: "Front Row Orchestra", multiplier: 2.8, availability: "Almost gone" },
 ];
 
-const SPORTS_TIERS: TierPreset = [
-  { name: "Upper Level", multiplier: 1, availability: "Available" },
-  { name: "Lower Level", multiplier: 1.8, availability: "Limited" },
-  { name: "Courtside Club", multiplier: 3.4, availability: "Almost gone" },
+/* Radio City's own seating names. */
+const RADIO_CITY_TIERS: TierPreset = [
+  { name: "Third Mezzanine", multiplier: 1, availability: "Available" },
+  { name: "First Mezzanine", multiplier: 1.6, availability: "Limited" },
+  { name: "Orchestra", multiplier: 2.3, availability: "Almost gone" },
 ];
 
-function tiersFor(category: string, startingPrice: number): TicketTier[] {
-  const preset =
-    category === "Theater" ? THEATER_TIERS : category === "Sports" ? SPORTS_TIERS : CONCERT_TIERS;
+function tiersFor(category: ShowKind, startingPrice: number): TicketTier[] {
+  const preset = category === "Holiday" ? RADIO_CITY_TIERS : BROADWAY_TIERS;
   return preset.map((tier) => ({
     name: tier.name,
-    price: Math.round((startingPrice * tier.multiplier) / 1) ,
+    price: Math.round(startingPrice * tier.multiplier),
     availability: tier.availability,
   }));
 }
 
-type RawEvent = Omit<ResaleEvent, "tiers">;
+/**
+ * Listing artwork, in one place so HD replacements land here and nowhere else.
+ * Every file is openly licensed and credited (PHOTO-CREDITS.md, /credits).
+ */
+const IMAGES: Record<string, { src: string; position: string }> = {
+  chicago: { src: "/broadway/chicago.jpg", position: "object-[50%_35%]" },
+  "the-great-gatsby": { src: "/bgre.jpg", position: "object-[50%_40%]" },
+  "radio-city-christmas-spectacular": { src: "/nyc/marquee-radio-city.jpg", position: "object-[35%_40%]" },
+  "oh-mary": { src: "/nyc/times-square.jpg", position: "object-[50%_40%]" },
+  wicked: { src: "/broadway/wicked.jpg", position: "object-[50%_35%]" },
+  hamilton: { src: "/nyc/marquee-hamilton.jpg", position: "object-[72%_35%]" },
+  "the-lion-king": { src: "/broadway/lion-king.jpg", position: "object-[50%_35%]" },
+  aladdin: { src: "/broadway/aladdin.jpg", position: "object-[50%_35%]" },
+  hadestown: { src: "/broadway/hadestown.jpg", position: "object-[50%_35%]" },
+  "the-book-of-mormon": { src: "/broadway/book-of-mormon.jpg", position: "object-[50%_35%]" },
+  "mj-the-musical": { src: "/nyc/times-square.jpg", position: "object-[30%_45%]" },
+  "harry-potter-and-the-cursed-child": { src: "/nyc/met-opera-interior.jpg", position: "object-[50%_50%]" },
+  "maybe-happy-ending": { src: "/nyc/skyline-midtown.jpg", position: "object-[50%_50%]" },
+  "the-outsiders": { src: "/broadway/richard-rodgers.jpg", position: "object-[50%_40%]" },
+  "just-in-time": { src: "/nyc/met-opera-balcony.jpg", position: "object-[50%_50%]" },
+  "operation-mincemeat": { src: "/broadway/times-square.jpg", position: "object-[50%_40%]" },
+  six: { src: "/broadway/hadestown-stage.jpg", position: "object-[50%_45%]" },
+};
+
+type RawEvent = Omit<ResaleEvent, "tiers" | "image" | "imagePosition" | "city">;
+
+const NY = "New York, NY";
 
 const RAW_EVENTS: RawEvent[] = [
   {
-    slug: "summer-nights-live",
-    name: "Summer Nights Live",
-    date: "Sat, Jun 13, 2026",
-    time: "7:30 PM",
-    venue: "Central Park SummerStage",
-    city: "New York, NY",
-    category: "Concerts",
-    image: "/nyc/concert-blue.jpg",
-    imagePosition: "object-[50%_35%]",
-    startingPrice: 68,
-  },
-  {
-    slug: "afrobeats-after-dark",
-    name: "Afrobeats After Dark",
-    date: "Fri, Jul 10, 2026",
+    slug: "chicago",
+    name: "Chicago",
+    date: "Fri, Dec 4, 2026",
     time: "8:00 PM",
-    venue: "Terminal 5",
-    city: "New York, NY",
-    category: "Music",
-    image: "/nyc/concert-red.jpg",
-    imagePosition: "object-[55%_45%]",
-    startingPrice: 54,
-  },
-  {
-    slug: "garden-nights-live",
-    name: "Garden Nights — Live in NYC",
-    date: "Thu, Sep 3, 2026",
-    time: "8:30 PM",
-    venue: "Madison Square Garden",
-    city: "New York, NY",
-    category: "Concerts",
-    image: "/nyc/concert-mono.jpg",
-    imagePosition: "object-[50%_40%]",
-    startingPrice: 129,
-  },
-  {
-    slug: "rb-soul-sessions",
-    name: "R&B Soul Sessions",
-    date: "Sat, Aug 8, 2026",
-    time: "7:00 PM",
-    venue: "Kings Theatre",
-    city: "Brooklyn, NY",
-    category: "Music",
-    image: "/bgtwo.jpg",
-    imagePosition: "object-[50%_35%]",
-    startingPrice: 61,
-  },
-  {
-    slug: "broadway-nights",
-    name: "Broadway Nights",
-    date: "Fri, May 22, 2026",
-    time: "7:30 PM",
-    venue: "Shubert Theatre",
-    city: "New York, NY",
-    category: "Theater",
-    image: "/nyc/times-square.jpg",
-    imagePosition: "object-[50%_40%]",
+    venue: "Ambassador Theatre",
+    address: "219 West 49th Street, New York, NY 10019",
+    category: "Musical",
     startingPrice: 89,
+    schedule: "Mon, Tue & Thu 7pm · Fri 8pm · Sat 2:30pm & 8pm · Sun 2pm & 7pm",
+    runningTime: "2h 30m, one intermission",
+    ageGuidance: "May be inappropriate for 12 and under; under 4 not admitted",
+    description: "Kander and Ebb's jazz-age musical about two murderesses in 1920s Chicago who turn their crimes into tabloid fame.",
+    officialUrl: "https://chicagothemusical.com/",
   },
   {
     slug: "the-great-gatsby",
     name: "The Great Gatsby",
-    date: "Sat, Jun 6, 2026",
+    date: "Sat, Dec 5, 2026",
     time: "8:00 PM",
     venue: "Broadway Theatre",
-    city: "New York, NY",
-    category: "Theater",
-    image: "/bgre.jpg",
-    imagePosition: "object-[50%_10%]",
-    startingPrice: 95,
+    address: "1681 Broadway, New York, NY 10019",
+    category: "Musical",
+    startingPrice: 99,
+    schedule: "Mon & Wed 7pm · Thu 2pm & 8pm · Fri 7pm · Sat 2pm & 8pm · Sun 3pm",
+    runningTime: "About 2h 30m, one intermission",
+    ageGuidance: "Recommended 10+; under 4 not admitted",
+    description: "A musical of F. Scott Fitzgerald's novel about the mysterious Jay Gatsby and his longing for Daisy Buchanan on 1920s Long Island.",
+  },
+  {
+    slug: "radio-city-christmas-spectacular",
+    name: "Christmas Spectacular Starring the Radio City Rockettes",
+    date: "Sat, Dec 12, 2026",
+    time: "Several shows daily",
+    venue: "Radio City Music Hall",
+    address: "1260 Avenue of the Americas, New York, NY 10020",
+    category: "Holiday",
+    startingPrice: 79,
+    schedule: "Daily, up to four shows a day through the season — exact times on the Rockettes calendar",
+    runningTime: "90 minutes, no intermission",
+    ageGuidance: "All ages; under 2 free on a guardian's lap",
+    description: "Radio City's annual holiday revue with the Rockettes — ten Rockettes numbers this season, including a new one.",
+    runNote: "Season runs Nov 4, 2026 – Jan 4, 2027",
+    officialUrl: "https://www.rockettes.com/christmas/",
+  },
+  {
+    slug: "oh-mary",
+    name: "Oh, Mary!",
+    date: "Fri, Dec 11, 2026",
+    time: "7:30 PM",
+    venue: "Lyceum Theatre",
+    address: "149 West 45th Street, New York, NY 10036",
+    category: "Play",
+    startingPrice: 109,
+    schedule: "Tue–Fri 7:30pm · Sat 5pm & 8:30pm · Sun 3pm & 6:30pm",
+    runningTime: "80 minutes, no intermission",
+    ageGuidance: "Recommended 14+; under 4 not admitted",
+    description: "Cole Escola's comedy imagining Mary Todd Lincoln as a frustrated would-be cabaret star in the days before Lincoln's assassination.",
+    runNote: "Playing through July 10, 2027",
+    officialUrl: "https://www.ohmaryplay.com/",
+  },
+  {
+    slug: "wicked",
+    name: "Wicked",
+    date: "Sat, Dec 12, 2026",
+    time: "2:00 PM",
+    venue: "Gershwin Theatre",
+    address: "222 West 51st Street, New York, NY 10019",
+    category: "Musical",
+    startingPrice: 119,
+    schedule: "Tue–Fri 7pm · Sat 2pm & 8pm · Sun 2pm & 7pm",
+    runningTime: "2h 45m, one intermission",
+    ageGuidance: "Recommended 8+; under 5 not admitted",
+    description: "The untold story of the witches of Oz, following the unlikely friendship between green-skinned Elphaba and popular Glinda.",
+    officialUrl: "https://wickedthemusical.com/",
   },
   {
     slug: "hamilton",
     name: "Hamilton",
-    date: "Wed, Jun 24, 2026",
+    date: "Fri, Dec 18, 2026",
     time: "7:00 PM",
     venue: "Richard Rodgers Theatre",
-    city: "New York, NY",
-    category: "Theater",
-    image: "/nyc/marquee-hamilton.jpg",
-    imagePosition: "object-[72%_35%]",
-    startingPrice: 149,
+    address: "226 West 46th Street, New York, NY 10036",
+    category: "Musical",
+    startingPrice: 159,
+    schedule: "Tue–Fri 7pm · Sat 1pm & 7pm · Sun 1pm & 7pm",
+    runningTime: "2h 45m, one intermission",
+    ageGuidance: "Recommended 10+",
+    description: "Lin-Manuel Miranda's hip-hop-infused musical biography of founding father Alexander Hamilton.",
+    officialUrl: "https://hamiltonmusical.com/new-york/",
   },
   {
-    slug: "new-york-comedy-night",
-    name: "New York Comedy Night",
-    date: "Fri, Jul 17, 2026",
-    time: "9:30 PM",
-    venue: "Gotham Comedy Club",
-    city: "New York, NY",
-    category: "Comedy",
-    image: "/bgre.jpg",
-    imagePosition: "object-[50%_70%]",
-    startingPrice: 39,
-  },
-  {
-    slug: "chicago-summer-concert",
-    name: "Chicago Summer Concert",
-    date: "Sat, Jul 25, 2026",
-    time: "6:00 PM",
-    venue: "Grant Park",
-    city: "Chicago, IL",
-    category: "Concerts",
-    image: "/bgtwo.jpg",
-    imagePosition: "object-[10%_60%]",
-    startingPrice: 58,
-  },
-  {
-    slug: "united-center-live",
-    name: "United Center Live",
-    date: "Fri, Nov 6, 2026",
-    time: "7:00 PM",
-    venue: "United Center",
-    city: "Chicago, IL",
-    category: "Sports",
-    image: "/venue.jpg",
-    imagePosition: "object-[30%_50%]",
-    startingPrice: 74,
-  },
-  {
-    slug: "chicago-theater-night",
-    name: "Chicago Theater Night",
-    date: "Sat, Oct 3, 2026",
-    time: "7:30 PM",
-    venue: "Chicago Theatre",
-    city: "Chicago, IL",
-    category: "Theater",
-    image: "/venues/chicago-theatre.jpg",
-    imagePosition: "object-[50%_70%]",
-    startingPrice: 82,
-  },
-  {
-    slug: "nba-night",
-    name: "NBA Night",
-    date: "Tue, Dec 1, 2026",
-    time: "7:30 PM",
-    venue: "Madison Square Garden",
-    city: "New York, NY",
-    category: "Sports",
-    image: "/nyc/msg-basketball.jpg",
-    imagePosition: "object-[50%_55%]",
-    startingPrice: 65,
-  },
-  {
-    slug: "knicks-home-game",
-    name: "Knicks Home Game",
-    date: "Fri, Jan 9, 2027",
-    time: "7:00 PM",
-    venue: "Madison Square Garden",
-    city: "New York, NY",
-    category: "Sports",
-    image: "/nyc/msg-basketball.jpg",
-    imagePosition: "object-[50%_70%]",
-    startingPrice: 72,
-  },
-  {
-    slug: "lakers-vs-knicks",
-    name: "Lakers vs Knicks",
-    date: "Sun, Feb 1, 2027",
-    time: "6:00 PM",
-    venue: "Madison Square Garden",
-    city: "New York, NY",
-    category: "Sports",
-    image: "/nyc/msg-crowd.jpg",
-    imagePosition: "object-[50%_40%]",
-    startingPrice: 118,
-  },
-  {
-    slug: "college-basketball-classic",
-    name: "College Basketball Classic",
-    date: "Sat, Mar 7, 2027",
-    time: "4:00 PM",
-    venue: "United Center",
-    city: "Chicago, IL",
-    category: "Sports",
-    image: "/venue.jpg",
-    imagePosition: "object-[85%_40%]",
-    startingPrice: 45,
-  },  {
-    slug: "summer-fields-festival",
-    name: "Summer Fields Festival",
-    date: "Sat, Jun 27, 2026",
-    time: "2:00 PM",
-    venue: "Randall's Island Park",
-    city: "New York, NY",
-    category: "Concerts",
-    image: "/day.jpg",
-    imagePosition: "object-[50%_40%]",
-    startingPrice: 89,
-  },
-  {
-    slug: "harbor-lights-live",
-    name: "Harbor Lights Live",
-    date: "Sat, Aug 22, 2026",
-    time: "7:00 PM",
-    venue: "The Rooftop at Pier 17",
-    city: "New York, NY",
-    category: "Music",
-    image: "/nyc/skyline-brooklyn-bridge.jpg",
-    imagePosition: "object-[50%_50%]",
-    startingPrice: 72,
-  },
-  {
-    slug: "radio-city-late-show",
-    name: "Radio City Late Show",
-    date: "Sat, Sep 19, 2026",
-    time: "10:00 PM",
-    venue: "Radio City Music Hall",
-    city: "New York, NY",
-    category: "Concerts",
-    image: "/nyc/marquee-radio-city.jpg",
-    imagePosition: "object-[45%_40%]",
-    startingPrice: 84,
-  },
-  {
-    slug: "midnight-jazz-sessions",
-    name: "Midnight Jazz Sessions",
-    date: "Fri, Jul 31, 2026",
-    time: "11:30 PM",
-    venue: "Blue Note",
-    city: "New York, NY",
-    category: "Music",
-    image: "/nyc/jazz-sax.jpg",
-    imagePosition: "object-[50%_35%]",
-    startingPrice: 48,
-  },
-  {
-    slug: "brooklyn-block-party",
-    name: "Brooklyn Block Party",
-    date: "Sat, Aug 15, 2026",
+    slug: "the-lion-king",
+    name: "The Lion King",
+    date: "Sun, Dec 6, 2026",
     time: "1:00 PM",
-    venue: "Prospect Park Bandshell",
-    city: "Brooklyn, NY",
-    category: "Music",
-    image: "/day.jpg",
-    imagePosition: "object-[20%_70%]",
-    startingPrice: 35,
+    venue: "Minskoff Theatre",
+    address: "200 West 45th Street, New York, NY 10036",
+    category: "Musical",
+    startingPrice: 129,
+    schedule: "Tue–Fri 7pm · Sat 2pm & 7:30pm · Sun 1pm & 6:30pm",
+    runningTime: "2h 30m, one intermission",
+    ageGuidance: "Recommended 6+; under 2 not admitted",
+    description: "Disney's stage adaptation of the animated film about the lion cub Simba's journey to claim his place as king.",
   },
   {
-    slug: "la-boheme",
-    name: "La Bohème",
-    date: "Fri, Oct 16, 2026",
-    time: "7:30 PM",
-    venue: "Metropolitan Opera House",
-    city: "New York, NY",
-    category: "Theater",
-    image: "/nyc/met-opera-exterior.jpg",
-    imagePosition: "object-[50%_50%]",
-    startingPrice: 110,
-  },
-  {
-    slug: "midnight-at-the-majestic",
-    name: "Midnight at the Majestic",
-    date: "Sat, Nov 14, 2026",
-    time: "8:00 PM",
-    venue: "Majestic Theatre",
-    city: "New York, NY",
-    category: "Theater",
-    image: "/nyc/met-opera-balcony.jpg",
-    imagePosition: "object-[50%_40%]",
+    slug: "aladdin",
+    name: "Aladdin",
+    date: "Wed, Dec 9, 2026",
+    time: "1:00 PM",
+    venue: "New Amsterdam Theatre",
+    address: "214 West 42nd Street, New York, NY 10036",
+    category: "Musical",
     startingPrice: 99,
+    schedule: "Tue 7pm · Wed 1pm · Thu & Fri 7pm · Sat 2pm & 7:30pm · Sun 1pm & 6:30pm",
+    runningTime: "2h 30m, one intermission",
+    ageGuidance: "Recommended 6+; everyone needs a ticket",
+    description: "Disney's musical about a street-smart young man in Agrabah whose life changes when he frees a wish-granting Genie.",
   },
   {
-    slug: "bucks-vs-knicks",
-    name: "Bucks vs Knicks",
-    date: "Sat, Dec 12, 2026",
+    slug: "hadestown",
+    name: "Hadestown",
+    date: "Sat, Dec 19, 2026",
     time: "7:30 PM",
-    venue: "Madison Square Garden",
-    city: "New York, NY",
-    category: "Sports",
-    image: "/nyc/msg-basketball.jpg",
-    imagePosition: "object-[50%_40%]",
-    startingPrice: 96,
+    venue: "Walter Kerr Theatre",
+    address: "219 West 48th Street, New York, NY 10036",
+    category: "Musical",
+    startingPrice: 109,
+    schedule: "Tue–Fri 7pm · Sat 2pm & 7:30pm · Sun 2pm & 7:30pm",
+    runningTime: "2h 30m, one intermission",
+    ageGuidance: "Recommended 8+; under 5 not admitted",
+    description: "Anaïs Mitchell's folk-and-jazz retelling of the myths of Orpheus and Eurydice, and of Hades and Persephone.",
+    officialUrl: "https://www.hadestown.com/",
   },
   {
-    slug: "bengals-vs-jets",
-    name: "Bengals vs Jets",
-    date: "Sun, Nov 29, 2026",
-    time: "1:00 PM",
-    venue: "MetLife Stadium",
-    city: "East Rutherford, NJ",
-    category: "Sports",
-    image: "/nyc/stadium-football.jpg",
-    imagePosition: "object-[50%_60%]",
-    startingPrice: 135,
-  },
-  {
-    slug: "bucks-vs-bulls",
-    name: "Bucks vs Bulls",
-    date: "Sun, Jan 17, 2027",
-    time: "6:00 PM",
-    venue: "United Center",
-    city: "Chicago, IL",
-    category: "Sports",
-    image: "/venue.jpg",
-    imagePosition: "object-[60%_50%]",
-    startingPrice: 64,
-  },
-  {
-    slug: "brooklyn-arena-showcase",
-    name: "Brooklyn Arena Showcase",
-    date: "Sat, Feb 20, 2027",
+    slug: "the-book-of-mormon",
+    name: "The Book of Mormon",
+    date: "Thu, Dec 10, 2026",
     time: "7:00 PM",
-    venue: "Barclays Center",
-    city: "Brooklyn, NY",
-    category: "Sports",
-    image: "/nyc/msg-hockey.jpg",
-    imagePosition: "object-[50%_55%]",
-    startingPrice: 55,
+    venue: "Eugene O'Neill Theatre",
+    address: "230 West 49th Street, New York, NY 10019",
+    category: "Musical",
+    startingPrice: 99,
+    schedule: "Tue–Fri 7pm · Sat 2pm & 7pm · Sun 2pm & 7pm",
+    runningTime: "About 2h 30m, one intermission",
+    ageGuidance: "Adult themes and explicit language; under 4 not admitted",
+    description: "The satirical musical comedy from the South Park creators and Robert Lopez about two young missionaries sent to Uganda.",
+    officialUrl: "https://bookofmormonbroadway.com/",
+  },
+  {
+    slug: "mj-the-musical",
+    name: "MJ the Musical",
+    date: "Wed, Dec 16, 2026",
+    time: "7:00 PM",
+    venue: "Neil Simon Theatre",
+    address: "250 West 52nd Street, New York, NY 10019",
+    category: "Musical",
+    startingPrice: 119,
+    schedule: "Tue 7pm · Wed 1pm & 7pm · Thu & Fri 7pm · Sat 2pm & 8pm · Sun 3pm",
+    runningTime: "2h 30m, one intermission",
+    ageGuidance: "Recommended 8+",
+    description: "A musical built around Michael Jackson's songs, following the making of his 1992 Dangerous world tour.",
+    officialUrl: "https://mjthemusical.com/",
+  },
+  {
+    slug: "harry-potter-and-the-cursed-child",
+    name: "Harry Potter and the Cursed Child",
+    date: "Sat, Dec 19, 2026",
+    time: "2:00 PM",
+    venue: "Lyric Theatre",
+    address: "214 West 43rd Street, New York, NY 10036",
+    category: "Play",
+    startingPrice: 89,
+    schedule: "Tue–Fri 7pm · Sat 2pm & 8pm · Sun 1pm & 7pm",
+    runningTime: "2h 55m, one intermission",
+    ageGuidance: "Recommended 8+; under 5 not admitted",
+    description: "The stage sequel set nineteen years after the final book, following an adult Harry Potter and his son Albus.",
+    officialUrl: "https://broadway.harrypottertheplay.com/",
+  },
+  {
+    slug: "maybe-happy-ending",
+    name: "Maybe Happy Ending",
+    date: "Sun, Dec 13, 2026",
+    time: "2:00 PM",
+    venue: "Belasco Theatre",
+    address: "111 West 44th Street, New York, NY 10036",
+    category: "Musical",
+    startingPrice: 99,
+    schedule: "Tue 7pm · Wed 2pm & 7pm · Thu & Fri 7pm · Sat 2pm & 7pm · Sun 2pm",
+    runningTime: "About 1h 40m, no intermission",
+    ageGuidance: "Recommended 8+; under 4 not admitted",
+    description: "The Tony-winning Best Musical about two retired helper robots in near-future Seoul who form an unexpected bond.",
+  },
+  {
+    slug: "the-outsiders",
+    name: "The Outsiders",
+    date: "Fri, Dec 11, 2026",
+    time: "7:00 PM",
+    venue: "Bernard B. Jacobs Theatre",
+    address: "242 West 45th Street, New York, NY 10036",
+    category: "Musical",
+    startingPrice: 89,
+    schedule: "Tue 7pm · Wed 2pm · Thu 1pm & 7pm · Fri 7pm · Sat 2pm & 8pm · Sun 3pm",
+    runningTime: "2h 25m, one intermission",
+    ageGuidance: "Recommended 10+; under 4 not admitted",
+    description: "The Tony-winning musical of S.E. Hinton's novel about rival teenage gangs, the Greasers and the Socs, in 1960s Tulsa.",
+    officialUrl: "https://www.outsidersmusical.com/",
+  },
+  {
+    slug: "just-in-time",
+    name: "Just in Time",
+    date: "Sat, Jan 9, 2027",
+    time: "8:00 PM",
+    venue: "Circle in the Square Theatre",
+    address: "235 West 50th Street, New York, NY 10019",
+    category: "Musical",
+    startingPrice: 109,
+    schedule: "Tue 7pm · Wed 2pm · Thu 1pm & 7pm · Fri 8pm · Sat 2pm & 8pm · Sun 3pm",
+    runningTime: "About 2h 15m, one intermission",
+    ageGuidance: "Recommended 10+",
+    description: "A nightclub-style musical about the life and music of 1950s and '60s pop singer Bobby Darin.",
+    officialUrl: "https://justintimebroadway.com/",
+  },
+  {
+    slug: "operation-mincemeat",
+    name: "Operation Mincemeat",
+    date: "Sun, Jan 10, 2027",
+    time: "2:00 PM",
+    venue: "John Golden Theatre",
+    address: "252 West 45th Street, New York, NY 10036",
+    category: "Musical",
+    startingPrice: 89,
+    schedule: "Tue 7pm · Wed 2pm · Thu 7pm · Fri 7:30pm · Sat 2pm & 7:30pm · Sun 2pm & 7:30pm",
+    runningTime: "About 2h 35m, one intermission",
+    ageGuidance: "Recommended 5+; under 4 not admitted",
+    description: "The Olivier-winning musical comedy about the real wartime plan to fool the Nazis with a corpse carrying fake invasion papers.",
+    runNote: "Limited run through July 4, 2027",
+    officialUrl: "https://operationbroadway.com/",
+  },
+  {
+    slug: "six",
+    name: "SIX: The Musical",
+    date: "Sun, Dec 20, 2026",
+    time: "7:00 PM",
+    venue: "Lena Horne Theatre",
+    address: "256 West 47th Street, New York, NY 10036",
+    category: "Musical",
+    startingPrice: 79,
+    schedule: "Mon 7pm · Wed–Fri 7pm · Sat 3pm & 8pm · Sun 2pm & 7pm",
+    runningTime: "80 minutes, no intermission",
+    ageGuidance: "Recommended 10+",
+    description: "A pop-concert musical in which the six wives of Henry VIII take the mic to retell their own stories.",
+    runNote: "Final performance Jan 3, 2027",
+    officialUrl: "https://www.sixonbroadway.com/",
   },
 ];
 
 export const resaleEvents: ResaleEvent[] = RAW_EVENTS.map((event) => ({
   ...event,
+  city: NY,
+  image: IMAGES[event.slug].src,
+  imagePosition: IMAGES[event.slug].position,
   tiers: tiersFor(event.category, event.startingPrice),
 }));
+
+/** "Popular events" — the row the Tickets page opens on, in this order. */
+export const popularSlugs = [
+  "chicago",
+  "the-great-gatsby",
+  "radio-city-christmas-spectacular",
+  "oh-mary",
+  "wicked",
+];
 
 export type EventRail = {
   id: string;
@@ -465,95 +421,68 @@ export type EventRail = {
 
 export const eventRails: EventRail[] = [
   {
-    id: "popular-concerts",
-    title: "Popular Concerts",
+    id: "musicals",
+    title: "Musicals",
     slugs: [
-      "garden-nights-live",
-      "summer-nights-live",
-      "summer-fields-festival",
-      "afrobeats-after-dark",
-      "radio-city-late-show",
-      "rb-soul-sessions",
-      "chicago-summer-concert",
-      "harbor-lights-live",
+      "wicked",
+      "hamilton",
+      "the-great-gatsby",
+      "chicago",
+      "the-lion-king",
+      "hadestown",
+      "mj-the-musical",
+      "maybe-happy-ending",
+      "the-outsiders",
+      "the-book-of-mormon",
+      "aladdin",
+      "just-in-time",
+      "operation-mincemeat",
+      "six",
     ],
   },
   {
-    id: "theater",
-    title: "Theater",
-    slugs: [
-      "hamilton",
-      "the-great-gatsby",
-      "la-boheme",
-      "broadway-nights",
-      "midnight-at-the-majestic",
-      "chicago-theater-night",
-    ],
+    id: "plays",
+    title: "Plays",
+    slugs: ["oh-mary", "harry-potter-and-the-cursed-child"],
     variant: "feature",
   },
   {
-    id: "nyc-shows",
-    title: "NYC Shows",
-    slugs: [
-      "broadway-nights",
-      "hamilton",
-      "radio-city-late-show",
-      "the-great-gatsby",
-      "midnight-jazz-sessions",
-      "la-boheme",
-      "new-york-comedy-night",
-      "midnight-at-the-majestic",
-    ],
+    id: "family",
+    title: "Family",
+    subtitle: "Recommended for ages 6 and up, or all ages.",
+    slugs: ["radio-city-christmas-spectacular", "the-lion-king", "aladdin", "operation-mincemeat"],
   },
   {
-    id: "sports",
-    title: "Sports",
-    slugs: [
-      "bucks-vs-knicks",
-      "nba-night",
-      "bengals-vs-jets",
-      "knicks-home-game",
-      "lakers-vs-knicks",
-      "brooklyn-arena-showcase",
-      "bucks-vs-bulls",
-      "college-basketball-classic",
-      "united-center-live",
-    ],
-  },
-  {
-    id: "music",
-    title: "Music",
-    slugs: [
-      "afrobeats-after-dark",
-      "rb-soul-sessions",
-      "midnight-jazz-sessions",
-      "summer-nights-live",
-      "brooklyn-block-party",
-      "harbor-lights-live",
-      "garden-nights-live",
-      "summer-fields-festival",
-    ],
+    id: "last-chance",
+    title: "Last chance",
+    subtitle: "Closing dates and limited runs.",
+    slugs: ["six", "radio-city-christmas-spectacular", "operation-mincemeat"],
   },
 ];
 
 /**
- * "Popular in New York": the shows, teams and rooms people ask for most, each
- * linking to an event page. No artist or athlete portraits — the venue is the
- * draw here, and it's the one image we can stand behind. `position` frames
- * the subject in a circle cropped from the listing artwork.
+ * "Popular on Broadway": quick links to the shows people ask for most, each
+ * cropped into a circle from its listing artwork.
  */
+const fave = (name: string, slug: string) => ({
+  name,
+  image: IMAGES[slug].src,
+  position: IMAGES[slug].position,
+  href: `/ticket-resale/${slug}`,
+});
+
 export const faves = [
-  { name: "Hamilton", image: "/nyc/marquee-hamilton.jpg", position: "object-[75%_30%]", href: "/ticket-resale/hamilton" },
-  { name: "Knicks", image: "/nyc/msg-basketball.jpg", position: "object-[50%_55%]", href: "/ticket-resale/knicks-home-game" },
-  { name: "Radio City", image: "/nyc/marquee-radio-city.jpg", position: "object-[35%_40%]", href: "/ticket-resale/radio-city-late-show" },
-  { name: "The Met Opera", image: "/nyc/met-opera-exterior.jpg", position: "object-[50%_50%]", href: "/ticket-resale/la-boheme" },
-  { name: "Jets", image: "/nyc/stadium-football.jpg", position: "object-[50%_60%]", href: "/ticket-resale/bengals-vs-jets" },
-  { name: "Jazz", image: "/nyc/jazz-sax.jpg", position: "object-[50%_30%]", href: "/ticket-resale/midnight-jazz-sessions" },
-  { name: "Broadway", image: "/nyc/times-square.jpg", position: "object-[50%_40%]", href: "/ticket-resale/broadway-nights" },
-  { name: "Pier 17", image: "/nyc/skyline-brooklyn-bridge.jpg", position: "object-[30%_50%]", href: "/ticket-resale/harbor-lights-live" },
-  { name: "Afrobeats", image: "/nyc/concert-red.jpg", position: "object-[55%_45%]", href: "/ticket-resale/afrobeats-after-dark" },
-  { name: "Summer Fields", image: "/day.jpg", position: "object-[50%_50%]", href: "/ticket-resale/summer-fields-festival" },
-  { name: "The Great Gatsby", image: "/bgre.jpg", position: "object-[50%_30%]", href: "/ticket-resale/the-great-gatsby" },
+  fave("Chicago", "chicago"),
+  fave("The Great Gatsby", "the-great-gatsby"),
+  fave("Rockettes", "radio-city-christmas-spectacular"),
+  fave("Oh, Mary!", "oh-mary"),
+  fave("Wicked", "wicked"),
+  fave("Hamilton", "hamilton"),
+  fave("The Lion King", "the-lion-king"),
+  fave("Hadestown", "hadestown"),
+  fave("MJ", "mj-the-musical"),
+  fave("Harry Potter", "harry-potter-and-the-cursed-child"),
+  fave("Aladdin", "aladdin"),
 ];
 
 export const trFaq = [
@@ -614,10 +543,14 @@ export const trFinalCta = {
 export const seatLayoutFor = (category: string): "arena" | "stage" =>
   category === "Sports" ? "arena" : "stage";
 
+/** "Musical" -> "Musicals", for headings like "More Musicals". */
+export const categoryPlural = (category: string) =>
+  category === "Holiday" ? "Holiday shows" : `${category}s`;
+
 export const trSubscribe = {
   label: "Stay in the loop",
   headline: "Know before it sells out.",
-  body: "One email when tickets drop for the artists, teams, and shows you follow — plus price moves on events you've viewed. No daily blasts.",
+  body: "One email when tickets drop for the shows you follow — plus price moves on events you've viewed. No daily blasts.",
   placeholder: "you@email.com",
   cta: "Subscribe",
   note: "Unsubscribe in one click. We never sell your address.",

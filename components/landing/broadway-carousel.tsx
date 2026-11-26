@@ -278,7 +278,7 @@ export function BroadwayCarousel({ cards, label }: { cards: ReelCard[]; label: s
        * stacked at the centre — and then rises in.
        */
       className={clsx(
-        "relative w-full touch-pan-y select-none overflow-clip [--card-w:clamp(6.5rem,10.4vw,10.5rem)]",
+        "relative w-full touch-pan-y select-none overflow-clip [--card-w:clamp(7.75rem,12.4vw,12.75rem)]",
         "h-[calc(var(--card-w)*1.278*1.62)]",
         "transition-[opacity,translate] duration-1000 ease-editorial",
         ready ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0",

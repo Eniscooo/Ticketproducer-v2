@@ -25,9 +25,16 @@ export function EmAbout() {
       <div className="mx-auto w-full max-w-[75rem] px-6 sm:px-10">
         <div className="grid gap-4 lg:grid-cols-12">
           <Reveal className="lg:col-span-5">
-            <div className="flex h-full flex-col justify-between rounded-card bg-graphite p-7 sm:p-9">
+            <div className="relative isolate flex h-full flex-col justify-between overflow-hidden rounded-card bg-graphite p-7 ring-1 ring-inset ring-white/10 sm:p-9">
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(90%_70%_at_0%_0%,rgba(255,255,255,0.12),transparent_70%)]"
+              />
               <div>
-                <h2 className="ds-display text-[clamp(1.85rem,3.6vw,2.5rem)] text-white">
+                <p className="inline-flex rounded-full bg-white/10 px-3 py-1 text-[0.75rem] font-semibold text-white">
+                  Why us
+                </p>
+                <h2 className="ds-display mt-5 text-[clamp(1.85rem,3.6vw,2.5rem)] text-white">
                   {emAbout.headline}
                 </h2>
                 <p className="ds-body mt-5 text-linen/70">{emAbout.body}</p>
@@ -36,14 +43,17 @@ export function EmAbout() {
           </Reveal>
 
           <Reveal delay={0.07} className="lg:col-span-7">
-            <div className="h-full rounded-card bg-slate p-7 sm:p-9">
-              <ul className="flex h-full flex-col justify-center gap-6">
+            <div className="relative isolate h-full overflow-hidden rounded-card bg-ink p-7 ring-1 ring-inset ring-white/10 sm:p-9">
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(80%_70%_at_100%_100%,rgba(255,255,255,0.08),transparent_70%)]"
+              />
+              <ul className="flex h-full flex-col justify-center divide-y divide-white/10">
                 {emAbout.points.map((point) => (
-                  <li key={point.title} className="flex gap-4">
-                    <ArrowRight
-                      aria-hidden
-                      className="mt-1 h-4 w-4 shrink-0 text-champagne"
-                    />
+                  <li key={point.title} className="flex gap-4 py-5 first:pt-0 last:pb-0">
+                    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-white/15 bg-white/8 backdrop-blur">
+                      <ArrowRight aria-hidden className="h-4 w-4 text-white" />
+                    </span>
                     <div>
                       <p className="text-[1.125rem] font-medium leading-snug text-white">
                         {point.title}

@@ -65,7 +65,7 @@ export function AuthLayout({
         />
         <div
           aria-hidden
-          className="absolute inset-0 -z-10 bg-[radial-gradient(75%_55%_at_15%_100%,rgba(164,133,90,0.24),transparent_72%)]"
+          className="absolute inset-0 -z-10 bg-[radial-gradient(75%_55%_at_15%_100%,rgba(255,255,255,0.24),transparent_72%)]"
         />
 
         <Link

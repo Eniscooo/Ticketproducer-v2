@@ -1,129 +1,56 @@
 "use client";
 
-import Image from "next/image";
-import { motion } from "framer-motion";
 import { Reveal } from "@/components/ui/reveal";
-import { useReducedMotionSafe } from "@/lib/use-reduced-motion-safe";
+import { HeroTicketScene } from "./hero-ticket-scene";
 import { trHero } from "@/lib/ticket-resale-page";
 import { EventSearch } from "./event-search";
 
-const EASE = [0.16, 0.84, 0.28, 1] as const;
-
 /*
- * Asymmetric composition: headline, body, and search hold the left column;
- * two large venue panels stack on the right — the front one bigger and
- * dropped to the baseline, the back one lifted, tilted, and half hidden
- * behind it. Read as one piece of hero artwork, not as two listing cards.
+ * Headline first, centred; then the product in 3D — a digital ticket standing
+ * in perspective and cycling through Broadway shows, with discovery, the live
+ * seat count, the purchase confirmation and the resale market floating around
+ * it in glass (see `HeroTicketScene`); then the search, directly under it.
  *
- * Both panels are placed in percentages inside one aspect box, so the overlap
- * keeps its proportions at every width and only the box's own width changes
- * across breakpoints. The box stays square at every width, which is what gives
- * the front panel its portrait proportion — 66% x 92% of a square is roughly the
- * 0.72 the reference composition uses — and it runs the full height of the hero
- * from the baseline up. The columns are centred, so the headline, body, and
- * search sit in the middle of that height rather than at its foot.
- *
- * The tilt lives on a plain wrapper rather than on the animated element:
- * Framer Motion writes `transform` inline, so a `-rotate-3` class on the same
- * node would be overwritten the moment the entrance animation runs.
- */
-const PANELS = {
-  /** The Hamilton marquee at the Richard Rodgers — a portrait crop held on the lit sign. */
-  front: { src: "/nyc/marquee-hamilton.jpg", position: "object-[74%_40%]" },
-  /** Times Square at night, the theater district's front door. */
-  back: { src: "/nyc/times-square.jpg", position: "object-[45%_45%]" },
-};
-
-/**
- * Imagery is the same venue photography the listing cards use — see the note
- * at the top of lib/ticket-resale-page.ts — cropped tighter for hero scale.
- * It is decorative: nothing here is a control, and every event in it is
- * reachable from the rails below.
+ * The scene is decorative and hidden from assistive tech; every event it
+ * hints at is reachable from the search and the rails below.
  */
 export function TrHero({ onSearch }: { onSearch: (query: string) => void }) {
-  const reduceMotion = useReducedMotionSafe();
-
-  /*
-   * One entrance for both panels, differing only in delay and travel. The
-   * `animate` target is always passed, never dropped for reduced motion:
-   * `useReducedMotionSafe` reports `false` on the server and corrects itself
-   * after hydration, and a motion node that loses its target mid-flight keeps
-   * whatever inline opacity it had reached — which leaves the panels blank.
-   */
-  const settle = (delay: number, distance: number) => ({
-    initial: reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: distance },
-    animate: { opacity: 1, y: 0 },
-    transition: reduceMotion ? { duration: 0 } : { duration: 1.4, delay, ease: EASE },
-  });
-
   return (
-    <section id="top" className="relative bg-paper pb-9 pt-20 sm:pb-8 sm:pt-30 lg:pb-10">
-      {/* The stack is tighter below `sm`: on a phone this is three things in a
-          column with the artwork under them, and the desktop gap left the copy
-          stranded at the top of the screen with a hole beneath it. */}
-      <div className="mx-auto grid w-full max-w-[75rem] items-center gap-y-9 px-6 sm:gap-y-16 sm:px-10 lg:grid-cols-12 lg:gap-x-10 xl:gap-x-14">
-        <div className="lg:col-span-6">
-          <Reveal>
-            {/* `text-balance` evens the two lines it wraps to on a phone, instead
-                of leaving one word alone on the second. */}
-            <h1 className="ds-display text-balance text-[clamp(2.25rem,5.6vw,3.5rem)] text-canvas-text">
-              {trHero.headline}
-            </h1>
-            <p className="ds-body mt-4 max-w-md text-pretty text-canvas-text-muted sm:mt-5 sm:max-w-lg">
-              {trHero.body}
-            </p>
-          </Reveal>
+    <section id="top" className="relative isolate overflow-hidden bg-paper pb-10 pt-24 sm:pb-12 sm:pt-32">
+      {/* Stage light: a warm pool behind the ticket, the way a spot falls on a curtain */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-[14rem] -z-10 h-[40rem] w-[min(76rem,130vw)] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--color-curtain)_13%,transparent),color-mix(in_srgb,var(--color-brass)_10%,transparent)_55%,transparent)] blur-2xl sm:top-[16rem]"
+      />
 
-          {/* The form centres itself inside whatever box it is given — the max-width
-              here is what keeps it flush with the headline on wide single-column
-              layouts instead of drifting to the middle of the column. */}
-          <Reveal delay={0.1} className="mt-7 max-w-xl sm:mt-8">
-            <EventSearch onSearch={onSearch} placeholder={trHero.searchPlaceholder} />
-          </Reveal>
-        </div>
+      <div className="mx-auto w-full max-w-[48rem] px-6 text-center sm:px-10">
+        <Reveal>
+          <p className="inline-flex items-center gap-2 rounded-full border border-canvas-border bg-surface/75 px-3.5 py-1.5 text-[0.8125rem] font-medium text-canvas-text-muted backdrop-blur">
+            <span aria-hidden className="relative flex h-2 w-2">
+              <span className="tp-live-ring absolute inset-0 rounded-full bg-confirm" />
+              <span className="relative h-2 w-2 rounded-full bg-confirm" />
+            </span>
+            Verified tickets &middot; Live availability
+          </p>
+          {/* `text-balance` evens the two lines it wraps to on a phone, instead
+              of leaving one word alone on the second. */}
+          <h1 className="ds-display mt-5 text-balance text-[clamp(2.25rem,5.6vw,3.75rem)] text-canvas-text">
+            {trHero.headline}
+          </h1>
+          <p className="ds-body mx-auto mt-4 max-w-lg text-pretty text-canvas-text-muted sm:mt-5">
+            {trHero.body}
+          </p>
+        </Reveal>
+      </div>
 
-        <div aria-hidden className="lg:col-span-6">
-          <div className="relative mx-auto aspect-square w-full max-w-[23rem] sm:max-w-[32rem] lg:mx-0 lg:max-w-none">
-            <div className="absolute left-0 top-0 h-[62%] w-[52%] -rotate-3">
-              <motion.div
-                {...settle(0.45, 26)}
-                data-reveal
-                className="relative h-full w-full overflow-hidden rounded-card"
-              >
-                <Image
-                  src={PANELS.back.src}
-                  alt=""
-                  fill
-                  loading="eager"
-                  sizes="(min-width: 640px) 18rem, 50vw"
-                  className={`object-cover ${PANELS.back.position}`}
-                />
-              </motion.div>
-            </div>
+      <HeroTicketScene className="mt-6 px-4 sm:mt-8 sm:px-6" />
 
-            <motion.div
-              {...settle(0.2, 44)}
-              data-reveal
-              className="absolute bottom-0 right-0 z-10 h-[92%] w-[66%] overflow-hidden rounded-card shadow-[0_40px_80px_-45px_rgba(23,23,22,0.45)]"
-            >
-              {/*
-               * Above the fold and the largest thing in it, so it is the LCP
-               * candidate: eager plus a high fetch priority. Next 16 deprecated
-               * `priority` in favour of `preload`, and the docs steer hero
-               * imagery to these two rather than a head-injected preload link.
-               */}
-              <Image
-                src={PANELS.front.src}
-                alt=""
-                fill
-                loading="eager"
-                fetchPriority="high"
-                sizes="(min-width: 1024px) 23rem, (min-width: 640px) 21rem, 62vw"
-                className={`object-cover ${PANELS.front.position}`}
-              />
-            </motion.div>
-          </div>
-        </div>
+      {/* Search sits under the ticket — the step after "this is what you get" is "find yours".
+          Lifted above the scene's layer so a floating card's shadow never sits over it. */}
+      <div className="relative z-10 mx-auto mt-4 w-full max-w-[48rem] px-6 sm:mt-6 sm:px-10">
+        <Reveal delay={0.1} className="mx-auto max-w-xl">
+          <EventSearch onSearch={onSearch} placeholder={trHero.searchPlaceholder} />
+        </Reveal>
       </div>
     </section>
   );

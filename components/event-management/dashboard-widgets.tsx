@@ -8,8 +8,8 @@ import { clsx } from "@/lib/clsx";
  * `uid` to keep ids unique across the two copies.
  */
 
-const GOLD = "#d4af7a";
-const CHAMPAGNE = "#b08d57";
+const GOLD = "#ffffff";
+const CHAMPAGNE = "#d9d9d9";
 const BURGUNDY = "#8f3b4f";
 
 function Widget({ title, aside, children }: { title: string; aside?: React.ReactNode; children: React.ReactNode }) {
@@ -48,7 +48,7 @@ export function BudgetWidget() {
         $82,400 <span className="text-[0.875rem] font-normal text-linen/55">spent</span>
       </p>
       <div className="mt-4 h-2 overflow-hidden rounded-full bg-white/10">
-        <div className="h-full w-[66%] rounded-full bg-[linear-gradient(90deg,#b08d57,#d4af7a)]" />
+        <div className="h-full w-[66%] rounded-full bg-[linear-gradient(90deg,#d9d9d9,#ffffff)]" />
       </div>
       <div className="mt-2.5 flex justify-between text-[0.6875rem] text-linen/50">
         <span>66% used</span>

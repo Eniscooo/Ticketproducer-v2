@@ -1,8 +1,13 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { GridPulse } from "@/components/ui/grid-pulse";
 import { broadwayReel } from "@/lib/broadway-reel";
 import { BroadwayCarousel } from "./broadway-carousel";
 import { InView } from "./motion";
+
+/** A halo in the hero's own cream, so lit grid cells never crowd the letters. */
+const GUARD =
+  "[text-shadow:0_0_6px_var(--color-canvas-alt),0_0_14px_var(--color-canvas-alt),0_0_30px_var(--color-canvas-alt)]";
 
 /** When the margin notes start writing themselves in — after the copy and the reel have landed. */
 const NOTES = 1100;
@@ -35,11 +40,15 @@ export function LandingHero() {
       id="top"
       className="relative isolate overflow-hidden bg-canvas-alt pb-24 pt-28 sm:pb-28 sm:pt-32"
     >
-      <div className="mx-auto w-full max-w-[64rem] px-6 text-center sm:px-10">
-       
+      {/* The pointer lights the grid behind everything; -z-10 keeps it inside this section's own stacking context */}
+      <GridPulse className="-z-10" />
 
+      <div className="mx-auto w-full max-w-[64rem] px-6 text-center sm:px-10">
         <InView immediate delay={60}>
-          <h1 className="mx-auto mt-5 text-balance font-display text-[clamp(2.25rem,4.7vw,4.4rem)] font-extrabold leading-[0.98] tracking-[-0.035em] text-canvas-text">
+          <h1
+            data-grid-avoid
+            className={`mx-auto mt-5 text-balance font-display text-[clamp(2.25rem,4.7vw,4.4rem)] font-extrabold leading-[0.98] tracking-[-0.035em] text-canvas-text ${GUARD}`}
+          >
             Find Your Seat for
             <br className="hidden sm:block" /> Broadway&rsquo;s Biggest Nights
           </h1>
@@ -48,7 +57,10 @@ export function LandingHero() {
         {/* The description carries the margin notes, so they track its edges at every width */}
         <div className="relative mx-auto mt-5 max-w-[27rem]">
           <InView immediate delay={120}>
-            <p className="text-pretty text-[0.9375rem] leading-[1.6] text-canvas-text-muted">
+            <p
+              data-grid-avoid
+              className={`text-pretty text-[0.9375rem] leading-[1.6] text-canvas-text-muted ${GUARD}`}
+            >
               Verified tickets for Hamilton, The Lion King, Wicked and every show in
               between &mdash; and the team that plans and runs live events across
               New York.

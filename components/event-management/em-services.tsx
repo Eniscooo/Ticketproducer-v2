@@ -1,35 +1,30 @@
 import { CardStack } from "@/components/ui/card-stack";
-import { Reveal } from "@/components/ui/reveal";
 import { clsx } from "@/lib/clsx";
 import { emSteps } from "@/lib/event-management-page";
 import { eventManagement } from "@/lib/site";
+import { EmSectionHeader, Tilt3D } from "./em-section-header";
 import { PhoneDemo } from "./phone-demos";
 
 /**
  * "How it works": the services as four numbered steps, each a stacking card
  * (`CardStack`) that pins while the next slides over it.
  *
- * Each card is a card sitting on the page rather than a band across it:
- * held to ~1100px and centred so the paper shows either side, 28px corners,
- * its own ground (alternating light and dark, in the page's light-card /
- * dark-block rhythm), a soft shadow on the top edge so the overlap reads, and
- * about three-quarters of the screen tall so the page shows above and below.
- * Copy sits on one side and a phone running that step's demo on the other,
- * swapping sides card to card; on phones the demo stacks under the copy.
+ * Cards alternate light and dark. The dark ones are lit, not flat: a soft pool
+ * of light from the top corner, a hairline rim and a faint grid, so they read
+ * as glass under a spot rather than a slab. Each step carries its number as a
+ * large outlined numeral, and its phone stands in 3D, turned toward the copy
+ * and floating, swapping sides card to card; on phones it stacks under the copy.
  */
 export function EmServices() {
   return (
-    <section id="em-services" className="relative scroll-mt-28 bg-paper py-20">
+    <section id="em-services" className="relative scroll-mt-28 bg-paper py-24">
       <div className="mx-auto w-full max-w-[75rem] px-6 sm:px-10">
-        <Reveal>
-          <h2 className="ds-display max-w-2xl text-[clamp(2rem,4.4vw,2.75rem)] text-canvas-text">
-            <span className="font-light">How it </span>
-            <span className="font-semibold">works</span>
-          </h2>
-          <p className="ds-body mt-5 max-w-xl text-canvas-text-muted">
-            {eventManagement.description}
-          </p>
-        </Reveal>
+        <EmSectionHeader
+          eyebrow="How it works"
+          light="Four steps,"
+          bold="one team"
+          body={eventManagement.description}
+        />
       </div>
 
       <CardStack
@@ -42,12 +37,51 @@ export function EmServices() {
             <li
               key={step.index}
               className={clsx(
-                "grid min-h-[72vh] items-center gap-8 rounded-feature p-7 shadow-[0_-22px_48px_-26px_rgba(23,23,22,0.32)] sm:gap-10 sm:p-10 md:grid-cols-2 lg:p-14",
-                dark ? "bg-graphite" : "border border-canvas-border bg-surface",
+                "relative isolate grid min-h-[72vh] items-center gap-10 overflow-hidden rounded-feature p-7 sm:p-10 md:grid-cols-2 lg:p-14",
+                "shadow-[0_-22px_48px_-26px_rgba(23,23,22,0.32)]",
+                dark
+                  ? "bg-graphite ring-1 ring-inset ring-white/10"
+                  : "bg-surface ring-1 ring-inset ring-canvas-border",
               )}
             >
-              <div className={clsx(dark && "md:order-last")}>
-                <span className={clsx("label", dark ? "text-champagne" : "text-champagne-ink")}>
+              {/* Light: a pool from the top corner, and a faint grid under it */}
+              <div
+                aria-hidden
+                className={clsx(
+                  "pointer-events-none absolute inset-0 -z-10",
+                  dark
+                    ? "bg-[radial-gradient(70%_60%_at_15%_0%,rgba(255,255,255,0.10),transparent_70%)]"
+                    : "bg-[radial-gradient(70%_60%_at_85%_0%,rgba(23,23,22,0.04),transparent_70%)]",
+                )}
+              />
+              <div
+                aria-hidden
+                className={clsx(
+                  "pointer-events-none absolute inset-0 -z-10 [background-size:32px_32px] [mask-image:radial-gradient(80%_70%_at_50%_40%,#000,transparent)]",
+                  dark
+                    ? "bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)]"
+                    : "bg-[linear-gradient(to_right,rgba(23,23,22,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(23,23,22,0.05)_1px,transparent_1px)]",
+                )}
+              />
+
+              <div className={clsx("relative", dark && "md:order-last")}>
+                {/* The step's number, large and drawn in outline */}
+                <span
+                  aria-hidden
+                  className={clsx(
+                    // Fill made transparent with text-fill-color (not `color`), so the stroke can use currentColor.
+                    "block font-display text-[clamp(4.5rem,9vw,7rem)] font-extrabold leading-[0.8] tracking-[-0.05em] [-webkit-text-fill-color:transparent] [-webkit-text-stroke:1.5px_currentColor]",
+                    dark ? "text-white/30" : "text-ink/20",
+                  )}
+                >
+                  {String(step.index).padStart(2, "0")}
+                </span>
+                <span
+                  className={clsx(
+                    "mt-6 inline-flex rounded-full px-3 py-1 text-[0.75rem] font-semibold",
+                    dark ? "bg-white/10 text-white" : "bg-ink/5 text-canvas-text",
+                  )}
+                >
                   Step {step.index}
                 </span>
                 <h3
@@ -67,8 +101,11 @@ export function EmServices() {
                   {step.body}
                 </p>
               </div>
-              <div className="flex justify-center">
-                <PhoneDemo demo={step.demo} />
+
+              <div className="flex justify-center py-6">
+                <Tilt3D side={dark ? "left" : "right"}>
+                  <PhoneDemo demo={step.demo} />
+                </Tilt3D>
               </div>
             </li>
           );

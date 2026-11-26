@@ -21,7 +21,7 @@ export function TPElite() {
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-[radial-gradient(85%_60%_at_18%_0%,rgba(74,27,40,0.55),transparent_62%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(70%_55%_at_88%_92%,rgba(27,19,17,0.92),transparent_60%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(45%_35%_at_50%_46%,rgba(212,175,122,0.09),transparent_70%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(45%_35%_at_50%_46%,rgba(255,255,255,0.09),transparent_70%)]" />
       </div>
 
       {/* Vertical standing label — plate on the door */}

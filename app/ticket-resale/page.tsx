@@ -14,7 +14,7 @@ import { eventRails, resaleEvents, trFaq, type ResaleEvent } from "@/lib/ticket-
 export const metadata: Metadata = {
   title: "Tickets",
   description:
-    "Verified tickets for concerts, sports and Broadway in New York and beyond, plus TP Elite, a private concierge line for hard-to-get seats.",
+    "Verified tickets for Broadway shows in New York, plus TP Elite, a private concierge line for hard-to-get seats.",
 };
 
 /**

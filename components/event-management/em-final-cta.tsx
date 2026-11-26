@@ -22,7 +22,7 @@ export function EmFinalCta() {
   return (
     <section className="relative bg-paper pb-20">
       <div className="mx-auto w-full max-w-[75rem] px-6 sm:px-10">
-        <div className="relative isolate overflow-hidden rounded-card bg-graphite px-7 py-16 text-center sm:px-12 sm:py-20">
+        <div className="relative isolate overflow-hidden rounded-card bg-graphite px-7 py-16 text-center ring-1 ring-inset ring-white/10 shadow-[0_50px_100px_-50px_rgba(10,10,11,0.7)] sm:px-12 sm:py-24">
           <Image
             src="/nyc/skyline-brooklyn-bridge.jpg"
             alt=""
@@ -37,10 +37,31 @@ export function EmFinalCta() {
           {/* A brass lift in the lower corner — the page's one warm note, kept quiet */}
           <div
             aria-hidden
-            className="absolute inset-0 -z-10 bg-[radial-gradient(70%_50%_at_50%_100%,rgba(176,141,87,0.16),transparent_72%)]"
+            className="absolute inset-0 -z-10 bg-[radial-gradient(70%_50%_at_50%_100%,rgba(255,255,255,0.16),transparent_72%)]"
+          />
+
+          {/* A faint grid falling away from the middle, and two soft lights */}
+          <div
+            aria-hidden
+            className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:40px_40px] [mask-image:radial-gradient(60%_60%_at_50%_50%,#000,transparent)]"
+          />
+          <div
+            aria-hidden
+            className="tp-glow-breathe absolute -left-24 -top-24 -z-10 h-72 w-72 rounded-full bg-white/10 blur-3xl"
+          />
+          <div
+            aria-hidden
+            className="tp-glow-breathe absolute -bottom-24 -right-24 -z-10 h-72 w-72 rounded-full bg-curtain/30 blur-3xl"
           />
 
           <Reveal>
+            <p className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-[0.8125rem] font-medium text-white/85 backdrop-blur">
+              <span aria-hidden className="relative flex h-2 w-2">
+                <span className="tp-live-ring absolute inset-0 rounded-full bg-confirm" />
+                <span className="relative h-2 w-2 rounded-full bg-confirm" />
+              </span>
+              Taking bookings now
+            </p>
             <h2 className="ds-display mx-auto max-w-3xl text-[clamp(2rem,4.8vw,3.25rem)] text-white">
               <span className="font-light">{emFinalCta.headlineTop} </span>
               <span className="font-semibold">{emFinalCta.headlineBottom}</span>
@@ -58,13 +79,13 @@ export function EmFinalCta() {
               <button
                 type="button"
                 onClick={() => open()}
-                className="ds-btn-ghost w-full sm:w-auto"
+                className="pressable inline-flex h-12 w-full items-center justify-center rounded-full bg-white px-7 text-[0.9375rem] font-semibold text-ink transition-colors duration-200 ease-ui hover:bg-linen sm:w-auto"
               >
                 {emFinalCta.primaryCta.label}
               </button>
               <a
                 href={site.contact.phoneHref}
-                className="ds-btn-neutral w-full border border-white/35 bg-white/10 text-linen hover:bg-white/20 sm:w-auto"
+                className="pressable inline-flex h-12 w-full items-center justify-center rounded-full border border-white/25 bg-white/10 px-7 text-[0.9375rem] font-semibold text-white backdrop-blur transition-colors duration-200 ease-ui hover:bg-white/20 sm:w-auto"
               >
                 Talk to Event Management
               </a>

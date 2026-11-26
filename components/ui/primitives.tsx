@@ -127,7 +127,7 @@ export function Action({
         className={clsx(
           "pointer-events-none absolute inset-x-0 bottom-0 h-full origin-bottom scale-y-0 transition-transform duration-500 ease-editorial group-hover:scale-y-100",
           tone === "solid"
-            ? "bg-brass-light/50"
+            ? "bg-ink/8"
             : tone === "brass"
               ? "bg-brass-light/70"
               : tone === "ink"

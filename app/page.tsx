@@ -12,7 +12,7 @@ import { Closing } from "@/components/landing/closing";
 export const metadata: Metadata = {
   title: { absolute: "Ticket Producer — Broadway tickets and live events, New York" },
   description:
-    "Verified tickets for Broadway, concerts and sports, and event management for producers, venues and companies. Based in New York.",
+    "Verified Broadway tickets, and event management for producers, venues and companies. Based in New York.",
 };
 
 /**

@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Calendar, Clock, MapPin, Ticket } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Calendar, CalendarDays, Clock, MapPin, Ticket, Users } from "lucide-react";
 import { SiteNav } from "@/components/site/site-nav";
 import { SiteFooter } from "@/components/site/site-footer";
 import { Reveal } from "@/components/ui/reveal";
 import { EventSection } from "@/components/ticket-resale/event-section";
 import { TicketPicker } from "@/components/ticket-resale/ticket-picker";
-import { formatUsd, resaleEvents } from "@/lib/ticket-resale-page";
+import { categoryPlural, formatUsd, resaleEvents, type ResaleEvent } from "@/lib/ticket-resale-page";
 
 /**
  * One page per event, replacing the dialog the cards used to open. The catalogue
@@ -36,25 +36,15 @@ export async function generateMetadata({
   };
 }
 
-/** The facts a buyer checks before they look at price. */
-function EventFacts({
-  date,
-  time,
-  venue,
-  city,
-  startingPrice,
-}: {
-  date: string;
-  time: string;
-  venue: string;
-  city: string;
-  startingPrice: number;
-}) {
+/** The facts a buyer checks before they look at price — all verified except the price. */
+function EventFacts({ event }: { event: ResaleEvent }) {
   const rows = [
-    { icon: Calendar, label: "Date", value: date },
-    { icon: Clock, label: "Doors", value: time },
-    { icon: MapPin, label: "Venue", value: `${venue}, ${city}` },
-    { icon: Ticket, label: "From", value: `${formatUsd(startingPrice)} per ticket` },
+    { icon: Calendar, label: "Performance", value: `${event.date} · ${event.time}` },
+    { icon: CalendarDays, label: "Weekly schedule", value: event.schedule },
+    { icon: Clock, label: "Running time", value: event.runningTime },
+    { icon: Users, label: "Age guidance", value: event.ageGuidance },
+    { icon: MapPin, label: "Theatre", value: `${event.venue}, ${event.address}` },
+    { icon: Ticket, label: "From", value: `${formatUsd(event.startingPrice)} per ticket` },
   ];
 
   return (
@@ -121,6 +111,9 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
                 <p className="ds-body mt-3 text-linen/80">
                   {event.date} · {event.time} · {event.venue}
                 </p>
+                {event.runNote ? (
+                  <p className="label mt-3 text-linen/70">{event.runNote}</p>
+                ) : null}
               </div>
             </div>
           </div>
@@ -136,15 +129,21 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             <Reveal delay={0.08} className="mt-10 sm:mt-12">
               <div className="grid gap-8 rounded-feature border border-canvas-border bg-canvas-alt/50 p-6 sm:p-8 lg:grid-cols-[1.1fr_1fr] lg:gap-12">
                 <div>
-                  <h2 className="ds-heading text-[1.375rem] text-canvas-text">Event details</h2>
-                  <div className="mt-6">
-                    <EventFacts
-                      date={event.date}
-                      time={event.time}
-                      venue={event.venue}
-                      city={event.city}
-                      startingPrice={event.startingPrice}
-                    />
+                  <h2 className="ds-heading text-[1.375rem] text-canvas-text">About the show</h2>
+                  <p className="ds-body mt-3 max-w-xl text-canvas-text-muted">{event.description}</p>
+                  {event.officialUrl ? (
+                    <a
+                      href={event.officialUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="label link-underline mt-3 inline-flex items-center gap-1.5 text-canvas-text"
+                    >
+                      Official show site
+                      <ArrowUpRight aria-hidden className="h-3.5 w-3.5" />
+                    </a>
+                  ) : null}
+                  <div className="mt-7">
+                    <EventFacts event={event} />
                   </div>
                 </div>
 
@@ -176,8 +175,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 
         <EventSection
           id="also-on"
-          title={`More ${event.category}`}
-          subtitle="Same category, different night."
+          title={`More ${categoryPlural(event.category)}`}
+          subtitle="More on Broadway."
           events={alsoOn}
           emptyMessage="Nothing else in this category right now."
         />

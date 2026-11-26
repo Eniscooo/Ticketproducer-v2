@@ -102,7 +102,7 @@ export function EmHero() {
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(60%_45%_at_50%_90%,rgba(176,141,87,0.18),transparent_74%)]"
+        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(60%_45%_at_50%_90%,rgba(255,255,255,0.18),transparent_74%)]"
       />
 
       <div className="relative z-10 mx-auto flex w-full max-w-[46rem] flex-col items-center px-6 text-center sm:px-10">

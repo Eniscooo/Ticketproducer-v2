@@ -13,6 +13,7 @@ import {
   GUEST_BOUNDS,
   type CalcSelection,
 } from "@/lib/event-management-page";
+import { EmSectionHeader } from "./em-section-header";
 import { useProposal } from "./proposal-context";
 
 const usd = new Intl.NumberFormat("en-US", {
@@ -56,16 +57,12 @@ export function BudgetCalculator() {
       className="relative scroll-mt-28 bg-canvas-alt py-20"
     >
       <div className="mx-auto w-full max-w-[75rem] px-6 sm:px-10">
-        <Reveal>
-          <h2 className="ds-display max-w-2xl text-[clamp(2rem,4.4vw,2.75rem)] text-canvas-text">
-            <span className="font-light"> </span>
-            <span className="font-semibold">Budget Calculator</span>
-          </h2>
-          <p className="ds-body mt-5 max-w-xl text-canvas-text-muted">
-            Adjust the inputs to see roughly where an event of this shape lands.
-            A planning estimate, not a quote.
-          </p>
-        </Reveal>
+        <EmSectionHeader
+          eyebrow="Budget"
+          light="See where your event"
+          bold="lands"
+          body="Adjust the inputs to see roughly where an event of this shape lands. A planning estimate, not a quote."
+        />
 
         <div className="mt-14 grid gap-4 lg:grid-cols-12">
           {/* Inputs */}
@@ -177,8 +174,13 @@ export function BudgetCalculator() {
 
           {/* Estimate — dark feature card */}
           <Reveal delay={0.12} className="lg:col-span-5">
-            <div className="flex h-full flex-col rounded-card bg-graphite p-7 sm:p-9 lg:sticky lg:top-28">
-              <span className="ds-badge ds-badge-accent uppercase tracking-[0.14em]">
+            <div className="relative isolate flex h-full flex-col overflow-hidden rounded-card bg-graphite p-7 ring-1 ring-inset ring-white/10 shadow-[0_40px_80px_-40px_rgba(10,10,11,0.6)] sm:p-9 lg:sticky lg:top-28">
+              {/* Lit glass, not a flat slab: a pool of light from the top corner */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(80%_60%_at_100%_0%,rgba(255,255,255,0.12),transparent_70%)]"
+              />
+              <span className="ds-badge ds-badge-accent self-start uppercase tracking-[0.14em]">
                 Planning Estimate
               </span>
 

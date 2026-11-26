@@ -171,7 +171,7 @@ export const ticketResale = {
   index: "02",
   headline: "Tickets",
   description:
-    "Verified seats for concerts, sports and Broadway, on one platform built for the primary and secondary markets.",
+    "Verified seats for Broadway shows in New York, on one platform built for the primary and secondary markets.",
   items: [
     {
       title: "Resale Platform",
@@ -240,7 +240,7 @@ export const faq: FaqItem[] = [
   {
     question: "What does Ticket Producer do?",
     answer:
-      "Two things. Event management for the people putting an event on — staffing, venue mapping, a custom ticketing platform and consulting. And tickets for the people going — verified resale seats for concerts, sports and Broadway, plus TP Elite, a private concierge line.",
+      "Two things. Event management for the people putting an event on — staffing, venue mapping, a custom ticketing platform and consulting. And tickets for the people going — verified resale seats for Broadway shows, plus TP Elite, a private concierge line.",
   },
   {
     question: "Which side of the site is for me?",

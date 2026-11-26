@@ -21,7 +21,7 @@ const money = new Intl.NumberFormat("en-US", {
  */
 const CARDS = [
   {
-    surface: "bg-[linear-gradient(135deg,#e3c08a,#a4855a)] text-elite-void",
+    surface: "bg-[linear-gradient(135deg,#e3c08a,#e6e6e6)] text-elite-void",
     chip: "bg-elite-void/25",
     last4: "2041",
     open: "-40%",
