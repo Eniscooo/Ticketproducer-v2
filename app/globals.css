@@ -98,6 +98,18 @@
   --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
   --font-tech: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  /* Margin notes only — see the Caveat note in app/layout.tsx. */
+  --font-hand: var(--font-caveat), "Segoe Print", cursive;
+
+  /*
+   * Curtain red — the landing hero's one strong colour: the Broadway call to
+   * action and the scribbled notes around the carousel. `curtain` is a fixed
+   * fill (white text sits on it in both themes); `curtain-ink` is the
+   * theme-reactive version for strokes and handwriting on the canvas.
+   */
+  --color-curtain: #7b1e2b;
+  --color-curtain-deep: #5e1520;
+  --color-curtain-ink: #7b1e2b;
 
   /* Editorial easing — slow out, no bounce */
   --ease-editorial: cubic-bezier(0.16, 0.84, 0.28, 1);
@@ -107,6 +119,8 @@
    * for things that arrive; this one is for things that respond.
    */
   --ease-ui: cubic-bezier(0.23, 1, 0.32, 1);
+  /* Strong ease-in-out, for things that move across the screen rather than arrive. */
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   /*
    * Overshoot-and-settle, for small pieces placed into a diagram (tables,
    * tags, ticks, wallet cards). Never for text or anything the reader reads
@@ -174,6 +188,7 @@
       --color-champagne-ink: #b08d57;
       --color-burgundy: #c98a90;
       --color-surface: #1b1b1f;
+      --color-curtain-ink: #e39aa4;
       color-scheme: dark;
     }
   }
@@ -187,6 +202,7 @@
     --color-champagne-ink: #b08d57;
     --color-burgundy: #c98a90;
     --color-surface: #1b1b1f;
+    --color-curtain-ink: #e39aa4;
     color-scheme: dark;
   }
 
@@ -886,5 +902,123 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/*
+ * ── Landing motion ─────────────────────────────────────────────────────────
+ * Driven by `components/landing/motion.tsx`, which flips `data-in` once an
+ * element scrolls into view. Pure CSS transitions on transform/opacity/filter/
+ * clip-path, so they run off the main thread while images decode.
+ *
+ * `[data-rise]`   — fades up 16px out of a slight blur. The blur bridges the
+ *                   gap between "not there" and "there" so it reads as one
+ *                   thing arriving, not two states swapping.
+ * `[data-unveil]` — a photograph uncovered top-down by clip-path, while the
+ *                   image inside settles from a slight zoom.
+ * `[data-draw]`   — a rule drawn left to right (scaleX).
+ *
+ * `--d` staggers siblings. Without script nothing is hidden.
+ */
+@layer components {
+  [data-rise] {
+    opacity: 0;
+    translate: 0 16px;
+    filter: blur(6px);
+    transition:
+      opacity 700ms var(--ease-ui) var(--d, 0ms),
+      translate 700ms var(--ease-ui) var(--d, 0ms),
+      filter 700ms var(--ease-ui) var(--d, 0ms);
+  }
+  [data-rise][data-in] {
+    opacity: 1;
+    translate: 0 0;
+    filter: blur(0);
+  }
+
+  [data-unveil] {
+    clip-path: inset(0 0 100% 0 round var(--unveil-radius, 0px));
+    transition: clip-path 1100ms var(--ease-in-out) var(--d, 0ms);
+  }
+  [data-unveil] > * {
+    scale: 1.08;
+    transition: scale 1600ms var(--ease-ui) var(--d, 0ms);
+  }
+  [data-unveil][data-in] {
+    clip-path: inset(0 0 0 0 round var(--unveil-radius, 0px));
+  }
+  [data-unveil][data-in] > * {
+    scale: 1;
+  }
+
+  [data-draw] {
+    scale: 0 1;
+    transform-origin: left center;
+    transition: scale 1200ms var(--ease-in-out) var(--d, 0ms);
+  }
+  [data-draw][data-in] {
+    scale: 1 1;
+  }
+
+  @media (scripting: none) {
+    [data-rise],
+    [data-unveil],
+    [data-unveil] > *,
+    [data-draw] {
+      opacity: 1;
+      translate: none;
+      filter: none;
+      clip-path: none;
+      scale: none;
+    }
+  }
+
+  /* Reduced motion keeps the fade — it aids reading — and drops every movement. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-rise] {
+      translate: none;
+      filter: none;
+    }
+    [data-unveil],
+    [data-unveil][data-in] {
+      clip-path: none;
+    }
+    [data-unveil] > * {
+      scale: none;
+    }
+    [data-draw] {
+      scale: 1 1;
+    }
+  }
+
+  /* Every pressable thing on the landing page answers the press. */
+  .press {
+    transition: scale 160ms var(--ease-ui);
+  }
+  .press:active {
+    scale: 0.97;
+  }
+  .press-soft {
+    transition: scale 200ms var(--ease-ui);
+  }
+  .press-soft:active {
+    scale: 0.99;
+  }
+}
+
+/* Hand-drawn strokes (the hero's margin notes) — drawn in by dashoffset once their wrapper is `data-in`. */
+@layer components {
+  .ink {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 700ms var(--ease-in-out) var(--d, 0ms);
+  }
+  [data-in] .ink {
+    stroke-dashoffset: 0;
+  }
+  @media (prefers-reduced-motion: reduce), (scripting: none) {
+    .ink {
+      stroke-dashoffset: 0;
+    }
   }
 }

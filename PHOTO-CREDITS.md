@@ -37,3 +37,26 @@ becomes available.
 | venues/chicago-theatre.jpg | The Chicago Theatre | mana5280 | https://unsplash.com/photos/RqDW1rBoqmU |
 
 Files in the root of `public/` are carried over from v1.
+
+## Broadway reel (`public/broadway/`)
+
+Cropped to 720×920 portrait frames for the landing-page carousel. The
+Wikimedia Commons photos are CC BY / CC BY-SA and **must stay credited** — the
+public list lives at `/credits` (source: `lib/photo-credits.ts`). Crops of
+CC BY-SA images are shared under the same licence.
+
+| File | Photographer | Licence | Source |
+| --- | --- | --- | --- |
+| broadway/lion-king.jpg | BroadwaySpain | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:The_Lion_King_at_Minskoff_Theatre_in_Broadway.jpg |
+| broadway/wicked.jpg | Ajay Suresh | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Gershwin_Theatre_-_Wicked_(54077363135).jpg |
+| broadway/moulin-rouge-stage.jpg | Epicgenius | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Al_Hirschfeld_Theatre_Nov_2025_17.jpg |
+| broadway/moulin-rouge.jpg | Corey Seeman | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Moulin_Rouge!_-_Al_Hirschfeld_Theatre_-_New_York_City,_September_28th,_2025.jpg |
+| broadway/phantom.jpg | Dennis Beck / Broadway Tour | CC BY-SA 2.0 | https://commons.wikimedia.org/wiki/File:Phantom_of_the_Opera_@_Majestic_Theatre_on_Broadway_(7645449960).jpg |
+| broadway/aladdin.jpg | BroadwaySpain | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Aladdin_at_New_Amsterdam_Theatre_in_Broadway.jpg |
+| broadway/hadestown-stage.jpg | Harp369 | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Stage_of_the_Walter_Kerr_Theatre_with_the_set_of_Hadestown.jpg |
+| broadway/hadestown.jpg | Ajay Suresh | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Walter_Kerr_Theatre_-_Hadestown_(48295952136).jpg |
+| broadway/chicago.jpg | Jim.henderson | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Ambassador_Theater_nite_2023_jeh.jpg |
+| broadway/chicago-banners.jpg | Broadway Tour | CC BY-SA 2.0 | https://commons.wikimedia.org/wiki/File:Chicago_the_Musical_Banners_on_Broadway_(6284881463).jpg |
+| broadway/book-of-mormon.jpg | Ajay Suresh | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Eugene_O%27Neill_Theatre_-_Book_of_Mormon_(48295951286).jpg |
+| broadway/hamilton.jpg, richard-rodgers.jpg, times-square.jpg | (Unsplash — see table above) | Unsplash | crops of nyc/ files |
+| broadway/radio-city-hall.jpg | carried over from v1 (`intro-bg.jpg`) | — | — |

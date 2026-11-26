@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque } from "next/font/google";
+import { Bricolage_Grotesque, Caveat } from "next/font/google";
 import Script from "next/script";
 import { SupportButton } from "@/components/site/support-button";
 import "./globals.css";
@@ -7,11 +7,22 @@ import "./globals.css";
 /** Runs before hydration so a stored theme choice applies before first paint — no stored choice means "follow the OS," handled entirely by CSS. */
 const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem('tp-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`;
 
-/** The one typeface for the whole site — hierarchy comes from weight and size, not from a second font. */
+/** The working typeface for the whole site — hierarchy comes from weight and size, not from a second font. */
 const bricolage = Bricolage_Grotesque({
   variable: "--font-bricolage",
   subsets: ["latin"],
   weight: "variable",
+  display: "swap",
+});
+
+/**
+ * A hand for margin notes only — the scribbled annotations around the landing
+ * hero's carousel. Never for anything a reader has to rely on.
+ */
+const caveat = Caveat({
+  variable: "--font-caveat",
+  subsets: ["latin"],
+  weight: ["500", "600"],
   display: "swap",
 });
 
@@ -64,7 +75,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       data-scroll-behavior="smooth"
       suppressHydrationWarning
-      className={`${bricolage.variable} h-full antialiased`}
+      className={`${bricolage.variable} ${caveat.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-ink text-bone">
         <Script id="theme-init" strategy="beforeInteractive">

@@ -20,8 +20,8 @@ type NavLink = { label: string; href: string };
 /** Where the always-visible link row exists, and so where a section tracker has something to mark. */
 const DESKTOP = "(min-width: 1024px)";
 
-/** Routes whose hero is a full-bleed dark image — the nav starts see-through over them. */
-const TRANSPARENT_HERO_ROUTES = new Set(["/", "/event-management"]);
+/** Routes whose hero is a full-bleed dark video — the nav starts see-through over it. The landing hero is cream, so it keeps the pill. */
+const TRANSPARENT_HERO_ROUTES = new Set(["/event-management"]);
 
 /** Only the hash-anchored links have a section to observe; whole-route links are matched on pathname instead. */
 const sectionIdsOf = (links: readonly NavLink[]) =>
@@ -101,7 +101,7 @@ export function SiteNav() {
     : [...site.nav, { label: "Sign In", href: "/sign-in" }];
 
   /* Joined to a string so the observer effect only re-subscribes when the set actually changes. */
-  const active = useActiveSection(useMediaQuery(DESKTOP), sectionIdsOf(links).join(","));
+  const tracked = useActiveSection(useMediaQuery(DESKTOP), sectionIdsOf(links).join(","));
   const reduceMotion = useReducedMotionSafe();
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -111,6 +111,12 @@ export function SiteNav() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  /*
+   * Back at the top, no section owns the viewport — but the tracker only hears
+   * about sections it watches, so it would keep marking whichever was last.
+   */
+  const active = scrolled ? tracked : null;
 
   /** Only the full-bleed dark heroes get a see-through nav — everywhere else keeps the glass pill so it reads over ordinary page content. */
   const transparentHero = TRANSPARENT_HERO_ROUTES.has(pathname) && !scrolled;
@@ -187,8 +193,8 @@ export function SiteNav() {
               // routes) as well as dark ones, and at low opacity its
               // bone-toned labels dropped to ~1:1 contrast against a pale canvas.
               scrolled
-              ? "top-3 max-w-6xl border border-bone/12 bg-ink/25 backdrop-blur-2xl backdrop-saturate-150 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_18px_50px_-30px_rgba(0,0,0,0.9)] sm:top-4 sm:w-[calc(100vw-3rem)]"
-              : "top-3 max-w-7xl border border-bone/10 bg-ink/20 backdrop-blur-2xl backdrop-saturate-150 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] sm:top-5 sm:w-[calc(100vw-4rem)]",
+              ? "top-3 max-w-6xl border border-bone/12 bg-ink/80 backdrop-blur-2xl backdrop-saturate-150 shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_18px_50px_-30px_rgba(0,0,0,0.9)] sm:top-4 sm:w-[calc(100vw-3rem)]"
+              : "top-3 max-w-7xl border border-bone/10 bg-ink/85 backdrop-blur-2xl backdrop-saturate-150 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] sm:top-5 sm:w-[calc(100vw-4rem)]",
         )}
       >
         <nav className="w-full px-4 sm:px-6" aria-label="Main">

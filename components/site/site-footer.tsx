@@ -14,7 +14,7 @@ export function SiteFooter() {
   return (
     <footer className="relative -mt-8 overflow-hidden rounded-t-[2rem] bg-ink-deep pt-16 shadow-[0_-24px_50px_-35px_rgba(0,0,0,0.7)] sm:pt-20">
       <div className="mx-auto w-full max-w-[84rem] px-6 sm:px-10">
-        <div className="grid gap-14 sm:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr_1.1fr] lg:gap-10">
+        <div className="grid gap-14 sm:grid-cols-2 lg:grid-cols-[1.15fr_1fr_0.85fr_0.8fr_1.45fr] lg:gap-10">
           {/* Brand */}
           <div>
             <Link
@@ -31,12 +31,15 @@ export function SiteFooter() {
           {/* One column per side — the same split the rest of the site makes */}
           {[sides.events, sides.tickets].map((side) => (
             <div key={side.key}>
-              <Link
-                href={side.href}
-                className="label link-underline text-stone-dim transition-colors duration-500 hover:text-bone"
-              >
-                {side.label}
-              </Link>
+              {/* A block, like the plain column headings beside it, so all five headings share a baseline */}
+              <p className="label text-stone-dim">
+                <Link
+                  href={side.href}
+                  className="link-underline transition-colors duration-500 hover:text-bone"
+                >
+                  {side.label}
+                </Link>
+              </p>
               <ul className="mt-5 space-y-6 sm:space-y-3">
                 {side.links.map((item) => (
                   <li key={item.href}>

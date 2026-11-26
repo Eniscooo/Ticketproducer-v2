@@ -1,124 +1,126 @@
-"use client";
-
-import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { ArrowDown, ArrowUpRight } from "lucide-react";
-import { useReducedMotionSafe } from "@/lib/use-reduced-motion-safe";
-import { sides, site } from "@/lib/site";
+import { ArrowRight } from "lucide-react";
+import { broadwayReel } from "@/lib/broadway-reel";
+import { BroadwayCarousel } from "./broadway-carousel";
+import { InView } from "./motion";
 
-const EASE = [0.16, 0.84, 0.28, 1] as const;
+/** When the margin notes start writing themselves in — after the copy and the reel have landed. */
+const NOTES = 1100;
 
-/** The two doors, in the order a visitor is most likely to need them. */
-const DOORS = [
-  { side: sides.events, prompt: "I'm planning an event" },
-  { side: sides.tickets, prompt: "I'm looking for tickets" },
-];
+/** A stroke that draws itself in; `at` is its start, in ms. */
+function Stroke({ d, at }: { d: string; at: number }) {
+  return (
+    <path
+      d={d}
+      pathLength={1}
+      className="ink"
+      style={{ ["--d" as string]: `${at}ms` }}
+    />
+  );
+}
 
 /**
- * The front door. Midtown at night does the scene-setting — the city is the
- * one thing both of our customers have in common — and the copy says plainly
- * what the company does. The two doors sit right in the hero for returning
- * visitors who already know which side they want; everyone else scrolls on
- * and gets the full picture before being asked again at the foot of the page.
+ * The front door. A cream stage, a short headline, and the Broadway reel
+ * curving across the full width under it. The two doors — tickets and events —
+ * sit under the pictures, so the page never pretends the company is only one
+ * of them; the tickets door carries the colour because that's who most
+ * visitors are.
  *
- * The photograph eases in from a slight zoom on load and then holds still.
- * Under reduced motion it is simply there.
+ * Entrances are one staggered rise (60ms apart), then the reel, then the
+ * margin notes write themselves in last — decoration arrives after content.
  */
 export function LandingHero() {
-  const reduceMotion = useReducedMotionSafe();
-
-  const rise = (delay: number) => ({
-    initial: reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 },
-    animate: { opacity: 1, y: 0 },
-    transition: reduceMotion ? { duration: 0 } : { duration: 1.1, delay, ease: EASE },
-  });
-
   return (
     <section
       id="top"
-      className="relative isolate flex min-h-dvh flex-col justify-end overflow-hidden bg-ink pb-12 pt-28 sm:pb-16 lg:pb-20"
+      className="relative isolate overflow-hidden bg-canvas-alt pb-24 pt-28 sm:pb-28 sm:pt-32"
     >
-      <motion.div
-        aria-hidden
-        className="absolute inset-0 -z-20"
-        initial={reduceMotion ? { scale: 1 } : { scale: 1.08 }}
-        animate={{ scale: 1 }}
-        transition={reduceMotion ? { duration: 0 } : { duration: 2.6, ease: EASE }}
-      >
-        <Image
-          src="/nyc/skyline-midtown.jpg"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-[50%_35%]"
-        />
-      </motion.div>
-      {/* Heaviest at the foot, where the type and the doors land */}
-      <div
-        aria-hidden
-        className="absolute inset-0 -z-10 bg-gradient-to-b from-ink/55 via-ink/25 to-ink/95"
-      />
-      <div
-        aria-hidden
-        className="absolute inset-0 -z-10 bg-gradient-to-r from-ink/70 via-ink/20 to-transparent"
-      />
+      <div className="mx-auto w-full max-w-[64rem] px-6 text-center sm:px-10">
+       
 
-      <div className="mx-auto w-full max-w-[80rem] px-6 sm:px-10">
-        <motion.p {...rise(0.15)} data-reveal className="label text-brass-light">
-          New York · Live Events · Tickets
-        </motion.p>
+        <InView immediate delay={60}>
+          <h1 className="mx-auto mt-5 text-balance font-display text-[clamp(2.25rem,4.7vw,4.4rem)] font-extrabold leading-[0.98] tracking-[-0.035em] text-canvas-text">
+            Find Your Seat for
+            <br className="hidden sm:block" /> Broadway&rsquo;s Biggest Nights
+          </h1>
+        </InView>
 
-        <motion.h1
-          {...rise(0.25)}
-          data-reveal
-          className="display-tech mt-5 max-w-4xl text-[clamp(2.6rem,7vw,6rem)] leading-[0.98] text-white [text-shadow:0_2px_24px_rgba(0,0,0,0.45)]"
-        >
-          Live events, <span className="text-brass-light">produced properly.</span>
-        </motion.h1>
+        {/* The description carries the margin notes, so they track its edges at every width */}
+        <div className="relative mx-auto mt-5 max-w-[27rem]">
+          <InView immediate delay={120}>
+            <p className="text-pretty text-[0.9375rem] leading-[1.6] text-canvas-text-muted">
+              Verified tickets for Hamilton, The Lion King, Wicked and every show in
+              between &mdash; and the team that plans and runs live events across
+              New York.
+            </p>
+          </InView>
 
-        <motion.p
-          {...rise(0.35)}
-          data-reveal
-          className="mt-6 max-w-xl text-[clamp(1.05rem,2.2vw,1.25rem)] leading-[1.6] text-bone/85"
-        >
-          {site.description}
-        </motion.p>
+          <InView
+            immediate
+            className="pointer-events-none absolute right-[calc(100%+2.5rem)] top-0 hidden text-curtain-ink lg:block"
+          >
+            <svg aria-hidden viewBox="0 0 36 28" className="h-7 w-9" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <Stroke d="M6 24 L16 5" at={NOTES} />
+              <Stroke d="M17 25 L27 6" at={NOTES + 120} />
+            </svg>
+          </InView>
 
-        <motion.div
-          {...rise(0.48)}
-          data-reveal
-          className="mt-10 grid max-w-3xl gap-3 sm:grid-cols-2"
-        >
-          {DOORS.map(({ side, prompt }) => (
+          <InView
+            immediate
+            delay={NOTES + 150}
+            className="pointer-events-none absolute left-[calc(100%+3.25rem)] -top-1 hidden text-left text-curtain-ink lg:block"
+          >
+            <span aria-hidden className="block -rotate-[9deg] font-hand text-[1.6rem] font-semibold leading-[0.95]">
+              Find your
+              <br />
+              next show
+            </span>
+            <svg aria-hidden viewBox="0 0 90 64" className="ml-1 mt-1 h-16 w-[5.5rem]" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <Stroke d="M10 6 C 30 20, 72 18, 74 52" at={NOTES + 400} />
+              <Stroke d="M65 44 L 74 54 L 82 43" at={NOTES + 1000} />
+            </svg>
+          </InView>
+        </div>
+      </div>
+
+      {/* The reel — full bleed, running off both edges */}
+      <div className="mt-6 sm:mt-8">
+        <BroadwayCarousel cards={broadwayReel} label="Now playing on Broadway" />
+      </div>
+
+      {/* The two doors */}
+      <div className="relative mx-auto mt-6 flex w-full max-w-[64rem] justify-center px-6 sm:mt-8 sm:px-10">
+        <div className="relative">
+          <InView
+            immediate
+            delay={NOTES + 500}
+            className="pointer-events-none absolute right-[calc(100%+1.25rem)] top-1/2 hidden -translate-y-1/2 items-center gap-1 text-curtain-ink md:flex"
+          >
+            <span aria-hidden className="block translate-y-3 -rotate-[10deg] whitespace-nowrap font-hand text-[1.45rem] font-semibold">
+              Experience it live
+            </span>
+            <svg aria-hidden viewBox="0 0 64 34" className="h-8 w-14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <Stroke d="M4 26 C 18 30, 36 26, 54 12" at={NOTES + 700} />
+              <Stroke d="M44 10 L 55 11 L 52 22" at={NOTES + 1150} />
+            </svg>
+          </InView>
+
+          <InView immediate delay={240} className="flex flex-col items-center gap-3 sm:flex-row">
             <Link
-              key={side.key}
-              href={side.href}
-              className="group pressable relative flex items-end justify-between gap-6 overflow-hidden rounded-[1.5rem] border border-bone/15 bg-ink/45 p-5 backdrop-blur-md [--press-scale:0.985] hover:border-brass/60 hover:bg-ink/60 sm:p-6"
+              href="/ticket-resale"
+              className="press group inline-flex h-12 items-center gap-2.5 rounded-full bg-curtain px-6 text-[0.9375rem] font-semibold text-white shadow-[0_0_0_4px_var(--color-canvas-alt),0_0_0_5px_color-mix(in_srgb,var(--color-curtain)_35%,transparent),0_14px_30px_-12px_rgba(123,30,43,0.55)] transition-[background-color,scale] duration-200 ease-ui hover:bg-curtain-deep"
             >
-              <span>
-                <span className="label block text-stone">{side.audience}</span>
-                <span className="mt-2 block font-display text-[1.375rem] font-semibold leading-tight text-white sm:text-[1.5rem]">
-                  {prompt}
-                </span>
-              </span>
-              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-brass text-ink transition-transform duration-300 ease-ui group-hover:-translate-y-0.5 group-hover:translate-x-0.5">
-                <ArrowUpRight aria-hidden className="h-4 w-4" />
-              </span>
+              Find tickets
+              <ArrowRight aria-hidden className="h-4 w-4 transition-transform duration-200 ease-ui group-hover:translate-x-0.5" />
             </Link>
-          ))}
-        </motion.div>
-
-        <motion.a
-          {...rise(0.6)}
-          data-reveal
-          href="#sides"
-          className="label mt-8 inline-flex items-center gap-2 text-stone transition-colors duration-300 ease-ui hover:text-bone"
-        >
-          Not sure yet? See what we do
-          <ArrowDown aria-hidden className="h-3.5 w-3.5" />
-        </motion.a>
+            <Link
+              href="/event-management"
+              className="press inline-flex h-12 items-center rounded-full border border-canvas-text/15 px-6 text-[0.9375rem] font-semibold text-canvas-text transition-[border-color,background-color,scale] duration-200 ease-ui hover:border-canvas-text/30 hover:bg-canvas-text/[0.04]"
+            >
+              Plan an event
+            </Link>
+          </InView>
+        </div>
       </div>
     </section>
   );

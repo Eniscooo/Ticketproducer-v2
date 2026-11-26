@@ -1,36 +1,35 @@
 import type { Metadata } from "next";
 import { SiteNav } from "@/components/site/site-nav";
 import { SiteFooter } from "@/components/site/site-footer";
-import { EventManagement } from "@/components/site/event-management";
-import { TicketResale } from "@/components/site/ticket-resale";
-import { WhyTicketProducer } from "@/components/site/why-ticket-producer";
 import { Faq } from "@/components/site/faq";
-import { Contact } from "@/components/site/contact";
-import { CardStack } from "@/components/ui/card-stack";
 import { LandingHero } from "@/components/landing/landing-hero";
-import { TwoSides } from "@/components/landing/two-sides";
-import { CityBand } from "@/components/landing/city-band";
-import { ChoosePath } from "@/components/landing/choose-path";
-import { pullQuote } from "@/lib/site";
+import { Doors } from "@/components/landing/doors";
+import { Playbill } from "@/components/landing/playbill";
+import { Process } from "@/components/landing/process";
+import { About } from "@/components/landing/about";
+import { Closing } from "@/components/landing/closing";
 
 export const metadata: Metadata = {
-  title: { absolute: "Ticket Producer — Live events, produced properly" },
+  title: { absolute: "Ticket Producer — Broadway tickets and live events, New York" },
   description:
-    "Event management for producers, venues and companies, and verified tickets for concerts, sports and Broadway. Based in New York.",
+    "Verified tickets for Broadway, concerts and sports, and event management for producers, venues and companies. Based in New York.",
 };
 
 /**
- * The landing page explains the whole company, then asks the visitor which
- * half they came for. Order: the two doors up front for people who already
- * know; the two sides side by side; each side's working demo in the stacking
- * cards; who we are; the city; then the question again, full size.
+ * The landing page, top to bottom: the Broadway reel and the two doors; the
+ * two sides, explained; the programme (the ticket side, shown); the process
+ * (the event side, shown); who we are; questions; and the close.
+ *
+ * Grounds alternate cream → paper → ink → paper → cream → paper → ink, each
+ * section lapping the one above with a rounded top, so the page reads as a
+ * stack of programme pages rather than one long scroll.
  */
 export default function Page() {
   return (
-    <div className="page-in flex min-h-dvh flex-col bg-ink">
+    <div className="page-in flex min-h-dvh flex-col bg-canvas-alt">
       <a
         href="#sides"
-        className="label sr-only focus:not-sr-only focus:fixed focus:left-6 focus:top-6 focus:z-[60] focus:bg-bone focus:px-5 focus:py-3 focus:text-ink"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-6 focus:top-6 focus:z-[60] focus:rounded-full focus:bg-canvas-text focus:px-5 focus:py-3 focus:text-paper"
       >
         Skip to content
       </a>
@@ -39,16 +38,12 @@ export default function Page() {
 
       <main className="flex-1">
         <LandingHero />
-        <TwoSides />
-        <CardStack className="bg-canvas-alt px-3 pb-24 pt-10 [--stack-rest-gap:1.5rem] sm:px-6 sm:pb-28">
-          <EventManagement />
-          <TicketResale />
-        </CardStack>
-        <WhyTicketProducer />
-        <CityBand quote={pullQuote} />
-        <ChoosePath />
+        <Doors />
+        <Playbill />
+        <Process />
+        <About />
         <Faq />
-        <Contact />
+        <Closing />
       </main>
 
       <SiteFooter />

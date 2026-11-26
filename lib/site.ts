@@ -29,6 +29,7 @@ export const site = {
     { label: "Terms of Service", href: "/terms" },
     { label: "Privacy Policy", href: "/privacy" },
     { label: "Cookie Policy", href: "/cookies" },
+    { label: "Photo Credits", href: "/credits" },
   ],
   /**
    * NOTE: No real social accounts exist yet — hrefs are "#" on purpose
