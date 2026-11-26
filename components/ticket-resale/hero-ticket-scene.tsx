@@ -50,7 +50,7 @@ type Show = {
 const SHOWS: Show[] = [
   { title: "Hamilton", venue: "Richard Rodgers Theatre", date: "Fri, Dec 18", time: "7:00 PM", runtime: "2h 45m", section: "Orchestra", row: "F", seat: "112", total: "$318", number: "TP-4821-0937", image: "/broadway/hamilton.jpg" },
   { title: "Wicked", venue: "Gershwin Theatre", date: "Sat, Dec 12", time: "2:00 PM", runtime: "2h 45m", section: "Mezzanine", row: "B", seat: "204", total: "$238", number: "TP-5174-2280", image: "/broadway/wicked.jpg" },
-  { title: "The Great Gatsby", venue: "Broadway Theatre", date: "Sat, Dec 5", time: "8:00 PM", runtime: "2h 30m", section: "Orchestra", row: "H", seat: "14", total: "$198", number: "TP-5502-7716", image: "/bgre.jpg" },
+  { title: "The Great Gatsby", venue: "Broadway Theatre", date: "Sat, Dec 5", time: "8:00 PM", runtime: "2h 30m", section: "Orchestra", row: "H", seat: "14", total: "$198", number: "TP-5502-7716", image: "/broadway/great-gatsby.jpg" },
   { title: "The Lion King", venue: "Minskoff Theatre", date: "Sun, Dec 6", time: "1:00 PM", runtime: "2h 30m", section: "Orchestra", row: "K", seat: "18", total: "$258", number: "TP-6032-1145", image: "/broadway/lion-king.jpg" },
   { title: "Chicago", venue: "Ambassador Theatre", date: "Fri, Dec 4", time: "8:00 PM", runtime: "2h 30m", section: "Orchestra", row: "M", seat: "21", total: "$178", number: "TP-6650-3391", image: "/broadway/chicago.jpg" },
   { title: "Aladdin", venue: "New Amsterdam Theatre", date: "Wed, Dec 9", time: "1:00 PM", runtime: "2h 30m", section: "Mezzanine", row: "A", seat: "107", total: "$198", number: "TP-7129-0458", image: "/broadway/aladdin.jpg" },
@@ -218,7 +218,7 @@ function DiscoveryCard() {
   return (
     <div className={cn(GLASS, "w-56 overflow-hidden p-2")}>
       <div className="relative h-28 overflow-hidden rounded-[0.9rem]">
-        <Image src="/nyc/times-square.jpg" alt="" fill sizes="224px" className="object-cover object-[50%_40%]" />
+        <Image src="/shows/oh-mary.jpg" alt="" fill sizes="224px" className="object-cover object-[50%_50%]" />
         <span className="absolute left-2 top-2 rounded-full bg-ink/65 px-2 py-0.5 text-[0.625rem] font-semibold text-bone backdrop-blur">
           Play
         </span>

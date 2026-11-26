@@ -21,6 +21,20 @@ export type ReelCard = {
 
 export const broadwayReel: ReelCard[] = [
   {
+    src: "/broadway/great-gatsby.jpg",
+    title: "The Great Gatsby",
+    place: "Broadway Theatre",
+    alt: "The Great Gatsby's stage lit in blue and green before the show, the audience in the foreground",
+    href: "/ticket-resale/the-great-gatsby",
+  },
+  {
+    src: "/broadway/oh-mary.jpg",
+    title: "Oh, Mary!",
+    place: "Lyceum Theatre",
+    alt: "The Lyceum Theatre's gilded proscenium framing the purple Oh, Mary! curtain",
+    href: "/ticket-resale/oh-mary",
+  },
+  {
     src: "/broadway/lion-king.jpg",
     title: "The Lion King",
     place: "Minskoff Theatre",
@@ -42,10 +56,10 @@ export const broadwayReel: ReelCard[] = [
     href: "/ticket-resale/wicked",
   },
   {
-    src: "/broadway/radio-city-hall.jpg",
-    title: "Radio City",
-    place: "Music Hall",
-    alt: "The golden arches and red seats of the Radio City Music Hall auditorium",
+    src: "/broadway/radio-city-christmas.jpg",
+    title: "Christmas Spectacular",
+    place: "Radio City Music Hall",
+    alt: "Radio City Music Hall's lit vertical sign and marquee at night, with the giant Christmas tree beside it",
     href: "/ticket-resale/radio-city-christmas-spectacular",
   },
   {
@@ -73,7 +87,7 @@ export const broadwayReel: ReelCard[] = [
     src: "/broadway/times-square.jpg",
     title: "Times Square",
     place: "The Theater District",
-    alt: "Times Square at night, billboards lit, crowds in motion",
+    alt: "Times Square at night, looking toward One Times Square, billboards lit",
     href: "/ticket-resale#musicals",
   },
   {

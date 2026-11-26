@@ -15,22 +15,20 @@ export type PlaybillShow = {
   href: string;
 };
 
-const THEATER = "/ticket-resale#theater";
-
 /**
  * The programme: Broadway's long-running anchors, in the order a visitor is
- * most likely to look for them. Confirm each is still running before launch —
- * the list is editorial, not pulled from live inventory.
+ * most likely to look for them — all verified as playing (November 2026), each
+ * linking to its own listing. Editorial, not pulled from live inventory.
  */
 export const playbill: PlaybillShow[] = [
   { title: "Hamilton", theatre: "Richard Rodgers Theatre", image: "/broadway/hamilton.jpg", href: "/ticket-resale/hamilton" },
-  { title: "The Lion King", theatre: "Minskoff Theatre", image: "/broadway/lion-king.jpg", href: THEATER },
-  { title: "Wicked", theatre: "Gershwin Theatre", image: "/broadway/wicked.jpg", href: THEATER },
-  { title: "Moulin Rouge!", theatre: "Al Hirschfeld Theatre", image: "/broadway/moulin-rouge-stage.jpg", href: THEATER },
-  { title: "Aladdin", theatre: "New Amsterdam Theatre", image: "/broadway/aladdin.jpg", href: THEATER },
-  { title: "Chicago", theatre: "Ambassador Theatre", image: "/broadway/chicago.jpg", href: THEATER },
-  { title: "Hadestown", theatre: "Walter Kerr Theatre", image: "/broadway/hadestown-stage.jpg", href: THEATER },
-  { title: "The Book of Mormon", theatre: "Eugene O'Neill Theatre", image: "/broadway/book-of-mormon.jpg", href: THEATER },
+  { title: "The Lion King", theatre: "Minskoff Theatre", image: "/broadway/lion-king.jpg", href: "/ticket-resale/the-lion-king" },
+  { title: "Wicked", theatre: "Gershwin Theatre", image: "/broadway/wicked.jpg", href: "/ticket-resale/wicked" },
+  { title: "The Great Gatsby", theatre: "Broadway Theatre", image: "/broadway/great-gatsby.jpg", href: "/ticket-resale/the-great-gatsby" },
+  { title: "Aladdin", theatre: "New Amsterdam Theatre", image: "/broadway/aladdin.jpg", href: "/ticket-resale/aladdin" },
+  { title: "Chicago", theatre: "Ambassador Theatre", image: "/broadway/chicago.jpg", href: "/ticket-resale/chicago" },
+  { title: "Hadestown", theatre: "Walter Kerr Theatre", image: "/broadway/hadestown-stage.jpg", href: "/ticket-resale/hadestown" },
+  { title: "The Book of Mormon", theatre: "Eugene O'Neill Theatre", image: "/broadway/book-of-mormon.jpg", href: "/ticket-resale/the-book-of-mormon" },
 ];
 
 export type Door = {

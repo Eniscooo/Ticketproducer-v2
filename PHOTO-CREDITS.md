@@ -38,25 +38,41 @@ becomes available.
 
 Files in the root of `public/` are carried over from v1.
 
-## Broadway reel (`public/broadway/`)
+## Broadway shows (`public/shows/`) and reel (`public/broadway/`)
 
-Cropped to 720×920 portrait frames for the landing-page carousel. The
-Wikimedia Commons photos are CC BY / CC BY-SA and **must stay credited** — the
-public list lives at `/credits` (source: `lib/photo-credits.ts`). Crops of
-CC BY-SA images are shared under the same licence.
+`public/shows/` holds one HD photograph per listing (long edge up to 2400px);
+`public/broadway/` holds the landing reel's portrait crops (720×920 frame,
+saved at up to 1440×1840). All are from Wikimedia Commons, downloaded as
+full-size originals; licences were read from each file page. CC BY and CC BY-SA
+images **must stay credited** — the public list lives at `/credits` (source:
+`lib/photo-credits.ts`). Resized and cropped copies of CC BY-SA images are
+shared under the same licence.
+
+Photos of marquees and signage also show each production's own artwork, which
+keeps its own copyright and trademarks; they appear as part of the New York
+streetscape, not as endorsements. Swap in licensed press photography when a
+production grants it.
 
 | File | Photographer | Licence | Source |
 | --- | --- | --- | --- |
-| broadway/lion-king.jpg | BroadwaySpain | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:The_Lion_King_at_Minskoff_Theatre_in_Broadway.jpg |
-| broadway/wicked.jpg | Ajay Suresh | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Gershwin_Theatre_-_Wicked_(54077363135).jpg |
-| broadway/moulin-rouge-stage.jpg | Epicgenius | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Al_Hirschfeld_Theatre_Nov_2025_17.jpg |
-| broadway/moulin-rouge.jpg | Corey Seeman | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Moulin_Rouge!_-_Al_Hirschfeld_Theatre_-_New_York_City,_September_28th,_2025.jpg |
-| broadway/phantom.jpg | Dennis Beck / Broadway Tour | CC BY-SA 2.0 | https://commons.wikimedia.org/wiki/File:Phantom_of_the_Opera_@_Majestic_Theatre_on_Broadway_(7645449960).jpg |
-| broadway/aladdin.jpg | BroadwaySpain | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Aladdin_at_New_Amsterdam_Theatre_in_Broadway.jpg |
-| broadway/hadestown-stage.jpg | Harp369 | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Stage_of_the_Walter_Kerr_Theatre_with_the_set_of_Hadestown.jpg |
-| broadway/hadestown.jpg | Ajay Suresh | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Walter_Kerr_Theatre_-_Hadestown_(48295952136).jpg |
-| broadway/chicago.jpg | Jim.henderson | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Ambassador_Theater_nite_2023_jeh.jpg |
+| shows/chicago.jpg, broadway/chicago.jpg | Jim.henderson | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Ambassador_Theater_nite_2023_jeh.jpg |
 | broadway/chicago-banners.jpg | Broadway Tour | CC BY-SA 2.0 | https://commons.wikimedia.org/wiki/File:Chicago_the_Musical_Banners_on_Broadway_(6284881463).jpg |
-| broadway/book-of-mormon.jpg | Ajay Suresh | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Eugene_O%27Neill_Theatre_-_Book_of_Mormon_(48295951286).jpg |
-| broadway/hamilton.jpg, richard-rodgers.jpg, times-square.jpg | (Unsplash — see table above) | Unsplash | crops of nyc/ files |
-| broadway/radio-city-hall.jpg | carried over from v1 (`intro-bg.jpg`) | — | — |
+| shows/the-great-gatsby.jpg, broadway/great-gatsby.jpg | Clyde Charles Brown | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:The_Great_Gatsby_at_Broadway_Theatre,_Manhattan,_New_York,_US.jpg |
+| shows/radio-city-christmas-spectacular.jpg, broadway/radio-city-christmas.jpg | Ethan Long | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Radio_City_Music_Hall,_Christmas_Tree_(55005844275).jpg |
+| shows/oh-mary.jpg, broadway/oh-mary.jpg | Epicgenius | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Lyceum_Theatre_NYC_Aug_2025_01.jpg |
+| shows/wicked.jpg, broadway/wicked.jpg | Ajay Suresh | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Gershwin_Theatre_-_Wicked_(54077363135).jpg |
+| shows/hamilton.jpg, broadway/hamilton.jpg | Epicgenius | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:W_46_St_Dec_2021_02.jpg |
+| shows/the-lion-king.jpg, broadway/lion-king.jpg | BroadwaySpain | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:The_Lion_King_at_Minskoff_Theatre_in_Broadway.jpg |
+| shows/aladdin.jpg, broadway/aladdin.jpg | BroadwaySpain | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Aladdin_at_New_Amsterdam_Theatre_in_Broadway.jpg |
+| shows/hadestown.jpg, broadway/hadestown.jpg | Ajay Suresh | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Walter_Kerr_Theatre_-_Hadestown_(48295952136).jpg |
+| broadway/hadestown-stage.jpg | Harp369 | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Stage_of_the_Walter_Kerr_Theatre_with_the_set_of_Hadestown.jpg |
+| shows/the-book-of-mormon.jpg, broadway/book-of-mormon.jpg | Ajay Suresh | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Eugene_O%27Neill_Theatre_-_Book_of_Mormon_(48295951286).jpg |
+| shows/mj-the-musical.jpg | Fishwish58 | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:MJ_the_musical_-_stage.jpg |
+| shows/harry-potter-and-the-cursed-child.jpg | Ajay Suresh | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Lyric_Theatre_-_Harry_Potter_and_the_Cursed_Child_(48193409386).jpg |
+| shows/maybe-happy-ending.jpg | Epicgenius | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Belasco_Theatre_May_2025_12.jpg |
+| shows/the-outsiders.jpg | Epicgenius | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Bernard_B_Jacobs_Theatre_Aug_2025_04.jpg |
+| shows/just-in-time.jpg | Casey "Poppins" Nedelka | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Circle_in_the_Square_Theatre_June_2026.jpg |
+| shows/operation-mincemeat.jpg | Engrigg22 | CC0 1.0 | https://commons.wikimedia.org/wiki/File:John_Golden_Theatre_Operation_Mincemeat_Marquis.jpg |
+| shows/six.jpg | Epicgenius | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Lena_Horne_Theatre_Sep_2025_39.jpg |
+| broadway/times-square.jpg | Paulinabial | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:1_times_square_night_2013_anonymized.jpg |
+| broadway/richard-rodgers.jpg | (Unsplash — see table above) | Unsplash | crop of nyc/marquee-richard-rodgers.jpg |

@@ -44,7 +44,7 @@ const SHOW = {
   section: "Orchestra",
   row: "C",
   seat: "8",
-  image: "/bgre.jpg",
+  image: "/shows/the-great-gatsby.jpg",
 };
 
 const d = (seconds: number) => ({ ["--d" as string]: `${seconds}s` }) as CSSProperties;
