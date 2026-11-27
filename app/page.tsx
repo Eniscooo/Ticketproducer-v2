@@ -3,7 +3,7 @@ import { SiteNav } from "@/components/site/site-nav";
 import { SiteFooter } from "@/components/site/site-footer";
 import { Faq } from "@/components/site/faq";
 import { LandingHero } from "@/components/landing/landing-hero";
-import { Doors } from "@/components/landing/doors";
+import { Services } from "@/components/landing/services";
 import { Playbill } from "@/components/landing/playbill";
 import { Process } from "@/components/landing/process";
 import { About } from "@/components/landing/about";
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 };
 
 /**
- * The landing page, top to bottom: the Broadway reel and the two doors; the
+ * The landing page, top to bottom: the Broadway reel and the hero's calls to action; the
  * two sides, explained; the programme (the ticket side, shown); the process
  * (the event side, shown); who we are; questions; and the close.
  *
@@ -28,7 +28,7 @@ export default function Page() {
   return (
     <div className="page-in flex min-h-dvh flex-col bg-canvas-alt">
       <a
-        href="#sides"
+        href="#services"
         className="sr-only focus:not-sr-only focus:fixed focus:left-6 focus:top-6 focus:z-[60] focus:rounded-full focus:bg-canvas-text focus:px-5 focus:py-3 focus:text-paper"
       >
         Skip to content
@@ -38,7 +38,7 @@ export default function Page() {
 
       <main className="flex-1">
         <LandingHero />
-        <Doors />
+        <Services />
         <Playbill />
         <Process />
         <About />

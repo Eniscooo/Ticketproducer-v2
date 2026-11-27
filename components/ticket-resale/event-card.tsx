@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Calendar, ChevronRight, Heart, MapPin } from "lucide-react";
 import { clsx } from "@/lib/clsx";
-import { formatUsd, type ResaleEvent } from "@/lib/ticket-resale-page";
+import { formatFromPrice, type ResaleEvent } from "@/lib/ticket-resale-page";
 
 export type EventCardVariant = "tile" | "feature" | "poster";
 
@@ -76,7 +76,7 @@ export function EventCard({
       <div className="group relative h-full w-full text-left">
         <Link
           href={`/ticket-resale/${event.slug}`}
-          className="pressable block overflow-hidden rounded-feature"
+          className="pressable tp-card-hover tp-img-skeleton block overflow-hidden rounded-feature"
         >
           <div className="relative aspect-[3/4] w-full">
             <Image
@@ -117,9 +117,9 @@ export function EventCard({
       <div className="group relative h-full w-full text-left">
         <Link
           href={`/ticket-resale/${event.slug}`}
-          className="pressable block h-full rounded-feature border border-canvas-border bg-surface p-3 [--press-scale:0.985] hover:border-canvas-text/25"
+          className="pressable tp-card-hover block h-full rounded-feature border border-canvas-border bg-surface p-3 [--press-scale:0.985]"
         >
-          <div className="relative aspect-[7/2] w-full overflow-hidden rounded-control">
+          <div className="tp-img-skeleton relative aspect-[7/2] w-full overflow-hidden rounded-control">
             <Image
               src={event.image}
               alt=""
@@ -138,7 +138,7 @@ export function EventCard({
                 {event.name}
               </h3>
               <p className="mt-1 line-clamp-1 text-[0.8125rem] text-canvas-text-muted">
-                {event.date} · {event.venue} · From {formatUsd(event.startingPrice)}
+                {event.date} · {event.venue} · {formatFromPrice(event.startingPrice)}
               </p>
             </div>
 
@@ -159,7 +159,7 @@ export function EventCard({
   return (
     <div className="group relative h-full w-full text-left">
       <Link href={`/ticket-resale/${event.slug}`} className="pressable block">
-        <div className="relative aspect-square w-full overflow-hidden rounded-feature">
+        <div className="tp-card-hover tp-img-skeleton relative aspect-square w-full overflow-hidden rounded-feature">
           <Image
             src={event.image}
             alt=""
@@ -186,7 +186,7 @@ export function EventCard({
           </span>
         </p>
         <p className="mt-1.5 text-[0.8125rem] font-medium text-canvas-text">
-          From {formatUsd(event.startingPrice)}
+          {formatFromPrice(event.startingPrice)}
         </p>
       </Link>
 

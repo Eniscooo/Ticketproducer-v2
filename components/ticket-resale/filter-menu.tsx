@@ -123,7 +123,8 @@ export function FilterMenu({
         type="button"
         aria-haspopup="listbox"
         aria-expanded={open}
-        aria-label={label}
+        // Starts with the visible text, so speech-input users can say what they see.
+        aria-label={`${value}, ${label.toLowerCase()}`}
         onClick={() => setOpen((current) => !current)}
         className={clsx(TRIGGER_CLASS, triggerTone(isAll))}
       >

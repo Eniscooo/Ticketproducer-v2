@@ -202,7 +202,7 @@ export function DateFilter({
         type="button"
         aria-haspopup="dialog"
         aria-expanded={open}
-        aria-label="Filter by date"
+        aria-label={`${isAll ? allLabel : formatDateKey(value)}, filter by date`}
         onClick={() => setOpen((current) => !current)}
         className={clsx(TRIGGER_CLASS, triggerTone(isAll))}
       >

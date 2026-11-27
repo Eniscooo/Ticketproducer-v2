@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { Check } from "lucide-react";
+import { Check, Search } from "lucide-react";
 import { clsx } from "@/lib/clsx";
 import { useStepLoop } from "@/lib/step-reveal";
 import type { EmStepDemo } from "@/lib/event-management-page";
@@ -162,54 +162,35 @@ function SeatsDemo() {
   );
 }
 
-/** A fixed QR-like pattern: three finder squares and a deterministic field. */
-const QR_SIZE = 17;
-const QR_CELLS = Array.from({ length: QR_SIZE * QR_SIZE }, (_, n) => {
-  const x = n % QR_SIZE;
-  const y = Math.floor(n / QR_SIZE);
-  const inFinder = (fx: number, fy: number) => x >= fx && x < fx + 5 && y >= fy && y < fy + 5;
-  if (inFinder(0, 0) || inFinder(QR_SIZE - 5, 0) || inFinder(0, QR_SIZE - 5)) return null;
-  return (x * 7 + y * 13 + x * y) % 5 < 2 ? [x, y] : null;
-}).filter((cell): cell is number[] => cell !== null);
-
-function Finder({ x, y }: { x: number; y: number }) {
-  return (
-    <g>
-      <rect x={x} y={y} width="5" height="5" fill="#171716" />
-      <rect x={x + 1} y={y + 1} width="3" height="3" fill="#ffffff" />
-      <rect x={x + 1.75} y={y + 1.75} width="1.5" height="1.5" fill="#171716" />
-    </g>
-  );
-}
-
-/** 03 — the ticket's code is framed, swept, and let in. */
+/**
+ * 03 — the door. The guest is found on the list by name, their seat comes up,
+ * and they're let in. No barcode or QR code — the brief rules those out as
+ * ticket clichés; a name on a list is how a well-run door actually feels.
+ */
 function TicketsDemo() {
   return (
-    <Screen title="Door scan">
+    <Screen title="Door check-in">
       <div className="rounded-xl bg-bone p-3 text-graphite">
-        <p className="text-[0.5rem] uppercase tracking-[0.14em] text-graphite/55">Spring Gala</p>
-        <p className="text-[0.7rem] font-semibold">GA · Row F · Seat 12</p>
-        <div className="relative mx-auto mt-2.5 w-[72%]">
-          <svg viewBox={`0 0 ${QR_SIZE} ${QR_SIZE}`} aria-hidden className="block w-full" shapeRendering="crispEdges">
-            {QR_CELLS.map(([x, y]) => (
-              <rect key={`${x}-${y}`} x={x} y={y} width="1" height="1" fill="#171716" />
-            ))}
-            <Finder x={0} y={0} />
-            <Finder x={QR_SIZE - 5} y={0} />
-            <Finder x={0} y={QR_SIZE - 5} />
-          </svg>
-          {/* Scanner frame and the sweeping line */}
-          <div data-at={0} className="fx-fade absolute -inset-2">
-            {["left-0 top-0 border-l-2 border-t-2", "right-0 top-0 border-r-2 border-t-2", "left-0 bottom-0 border-l-2 border-b-2", "right-0 bottom-0 border-r-2 border-b-2"].map(
-              (corner) => (
-                <span key={corner} className={clsx("absolute h-3 w-3 rounded-[2px] border-champagne", corner)} />
-              ),
-            )}
-          </div>
-          {/* Full-height carrier, so its 100% travel is the code's height */}
-          <span data-at={1} className="fx-scan absolute inset-0 [--scan-travel:97%]">
-            <span className="absolute inset-x-0 top-0 h-[3px] rounded-full bg-confirm shadow-[0_0_10px_2px_rgba(91,189,138,0.6)]" />
+        <p className="text-[0.5rem] uppercase tracking-[0.14em] text-graphite/75">Spring Gala · Guest list</p>
+        {/* The search, typed at the door */}
+        <div data-at={0} className="fx-fade mt-2 flex items-center gap-1.5 rounded-lg border border-graphite/15 bg-white px-2 py-1.5">
+          <Search aria-hidden className="h-3 w-3 shrink-0 text-graphite/60" />
+          <span className="text-[0.65rem] font-medium">Maya Ch</span>
+          <span className="h-3 w-px animate-pulse bg-graphite/70" />
+        </div>
+        {/* The match */}
+        <div data-at={1} className="fx-up mt-2 flex items-center gap-2 rounded-lg bg-graphite px-2 py-2 text-white">
+          <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-white text-[0.5rem] font-semibold text-graphite">
+            MC
           </span>
+          <span className="min-w-0">
+            <span className="block truncate text-[0.65rem] font-semibold">Maya Chen</span>
+            <span className="block text-[0.55rem] text-white/60">GA · Row F · Seat 12</span>
+          </span>
+        </div>
+        <div data-at={2} className="fx-up mt-1.5 flex items-center gap-2 rounded-lg px-2 py-1.5 text-graphite/45">
+          <span className="h-6 w-6 shrink-0 rounded-full bg-graphite/10" />
+          <span className="text-[0.6rem]">Maya Chowdhury · Row K</span>
         </div>
       </div>
       <div

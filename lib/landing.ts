@@ -21,51 +21,14 @@ export type PlaybillShow = {
  * linking to its own listing. Editorial, not pulled from live inventory.
  */
 export const playbill: PlaybillShow[] = [
-  { title: "Hamilton", theatre: "Richard Rodgers Theatre", image: "/broadway/hamilton.jpg", href: "/ticket-resale/hamilton" },
-  { title: "The Lion King", theatre: "Minskoff Theatre", image: "/broadway/lion-king.jpg", href: "/ticket-resale/the-lion-king" },
-  { title: "Wicked", theatre: "Gershwin Theatre", image: "/broadway/wicked.jpg", href: "/ticket-resale/wicked" },
-  { title: "The Great Gatsby", theatre: "Broadway Theatre", image: "/broadway/great-gatsby.jpg", href: "/ticket-resale/the-great-gatsby" },
-  { title: "Aladdin", theatre: "New Amsterdam Theatre", image: "/broadway/aladdin.jpg", href: "/ticket-resale/aladdin" },
-  { title: "Chicago", theatre: "Ambassador Theatre", image: "/broadway/chicago.jpg", href: "/ticket-resale/chicago" },
+  { title: "Hamilton", theatre: "Richard Rodgers Theatre", image: "/posters/hamilton.jpg", href: "/ticket-resale/hamilton" },
+  { title: "The Lion King", theatre: "Minskoff Theatre", image: "/posters/the-lion-king.jpg", href: "/ticket-resale/the-lion-king" },
+  { title: "Wicked", theatre: "Gershwin Theatre", image: "/posters/wicked.jpg", href: "/ticket-resale/wicked" },
+  { title: "The Great Gatsby", theatre: "Broadway Theatre", image: "/posters/the-great-gatsby.jpg", href: "/ticket-resale/the-great-gatsby" },
+  { title: "Aladdin", theatre: "New Amsterdam Theatre", image: "/posters/aladdin.png", href: "/ticket-resale/aladdin" },
+  { title: "Chicago", theatre: "Ambassador Theatre", image: "/posters/chicago.jpg", href: "/ticket-resale/chicago" },
   { title: "Hadestown", theatre: "Walter Kerr Theatre", image: "/broadway/hadestown-stage.jpg", href: "/ticket-resale/hadestown" },
-  { title: "The Book of Mormon", theatre: "Eugene O'Neill Theatre", image: "/broadway/book-of-mormon.jpg", href: "/ticket-resale/the-book-of-mormon" },
-];
-
-export type Door = {
-  key: "tickets" | "events";
-  audience: string;
-  title: string;
-  body: string;
-  points: string[];
-  cta: string;
-  href: string;
-  image: string;
-  imageAlt: string;
-};
-
-export const doors: Door[] = [
-  {
-    key: "tickets",
-    audience: "For fans and theatregoers",
-    title: "Get a seat.",
-    body: "Verified tickets for Broadway's musicals, plays and holiday shows — checked before they're listed and again before they reach you.",
-    points: ["Every show on Broadway", "Every listing verified twice", "TP Elite concierge for the hard-to-get"],
-    cta: "Find tickets",
-    href: "/ticket-resale",
-    image: "/nyc/marquee-richard-rodgers.jpg",
-    imageAlt: "The bulb-lit Richard Rodgers Theatre sign on West 46th Street",
-  },
-  {
-    key: "events",
-    audience: "For producers, venues and companies",
-    title: "Put on a show.",
-    body: "Staffing, venue mapping and a ticketing platform built around your room — run by people who've worked the door.",
-    points: ["Event staffing, doors to load-out", "Venue mapping and custom ticketing", "Consulting before you commit"],
-    cta: "Plan an event",
-    href: "/event-management",
-    image: "/nyc/met-opera-interior.jpg",
-    imageAlt: "The gold-and-red auditorium of the Metropolitan Opera House",
-  },
+  { title: "The Book of Mormon", theatre: "Eugene O'Neill Theatre", image: "/posters/the-book-of-mormon.jpg", href: "/ticket-resale/the-book-of-mormon" },
 ];
 
 /** The event-management process, in four beats. */

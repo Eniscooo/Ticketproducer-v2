@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { clsx } from "@/lib/clsx";
 import { useReducedMotionSafe } from "@/lib/use-reduced-motion-safe";
 import { emHero } from "@/lib/event-management-page";
+import { FlowButton } from "@/components/ui/flow-button";
+import { CalendarDays } from "lucide-react";
 
 const EASE = [0.16, 0.84, 0.28, 1] as const;
 
@@ -126,17 +127,14 @@ export function EmHero() {
         <motion.div
           {...rise(0.32)}
           data-reveal
-          className="mt-9 flex flex-col items-center gap-3 sm:flex-row"
+          className="mt-9 flex flex-row flex-wrap items-center justify-center gap-2.5 sm:gap-3"
         >
-          <Link href={emHero.primaryCta.href} className="ds-btn-ghost">
+          <FlowButton href={emHero.primaryCta.href} tone="light" icon={CalendarDays}>
             {emHero.primaryCta.label}
-          </Link>
-          <Link
-            href={emHero.secondaryCta.href}
-            className="ds-btn-neutral border border-white/35 bg-white/10 text-linen hover:bg-white/20"
-          >
+          </FlowButton>
+          <FlowButton href={emHero.secondaryCta.href} tone="light">
             {emHero.secondaryCta.label}
-          </Link>
+          </FlowButton>
         </motion.div>
       </div>
     </section>

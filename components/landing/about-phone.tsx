@@ -1,7 +1,6 @@
 import type { CSSProperties } from "react";
 import Image from "next/image";
-import { ScanLine } from "lucide-react";
-import { QrGlyph } from "@/components/ui/qr-glyph";
+import { BadgeCheck } from "lucide-react";
 import { InView } from "./motion";
 
 /**
@@ -107,8 +106,8 @@ function Screen() {
       </div>
 
       <div className="mt-auto flex items-center justify-center gap-1.5 rounded-full border border-elite-gold/30 bg-elite-gold/10 py-1.5 text-[0.5625rem] font-semibold text-elite-gold">
-        <ScanLine aria-hidden className="h-3 w-3" />
-        Entry pass projected
+        <BadgeCheck aria-hidden className="h-3 w-3" />
+        Seat confirmed
       </div>
       <span className="mx-auto mt-2 h-1 w-16 rounded-full bg-elite-ivory/50" />
 
@@ -219,9 +218,6 @@ function Hologram() {
         <p className="mt-0.5 whitespace-nowrap text-[0.625rem] font-semibold">
           {SHOW.section} · {SHOW.row}{SHOW.seat}
         </p>
-      </Chip>
-      <Chip className="bottom-[11.6rem] right-[-0.9rem] p-1.5" style={{ ...d(1.9), transform: "translateZ(62px)" }}>
-        <QrGlyph seed={1925} className="h-11 w-11 text-canvas-text/85" />
       </Chip>
     </div>
   );

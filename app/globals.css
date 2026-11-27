@@ -1,6 +1,24 @@
 @import "tailwindcss";
 
 /*
+ * `dark:` follows the site's own theme toggle, exactly like the colour tokens
+ * below: an explicit choice (data-theme on <html>, set by the toggle and the
+ * inline script in app/layout.tsx) always wins; with no choice stored, it
+ * follows the OS. Tailwind's default `dark:` only ever read the OS, so a few
+ * shadows and fills disagreed with the toggle.
+ */
+@custom-variant dark {
+  &:where([data-theme="dark"], [data-theme="dark"] *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme="light"]), :root:not([data-theme="light"]) *) {
+      @slot;
+    }
+  }
+}
+
+/*
  * Ticket Producer — design system
  * Restrained luxury palette. Typography and whitespace do the work.
  */
@@ -86,8 +104,14 @@
   --text-ds-heading-lg: 56px;
   --text-ds-display: 64px;
 
-  /* Three repeating radii: generous containers, controlled controls */
-  --radius-card: 36px;
+  /*
+   * One card radius across the whole site: `rounded-card` and
+   * `rounded-feature` are the same 28px, so every card, panel and photo frame
+   * on the landing, Tickets and Event Management pages turns the same corner.
+   * Controls (inputs, small tiles) keep their own tighter radius; buttons and
+   * chips are full pills.
+   */
+  --radius-card: 28px;
   --radius-feature: 28px;
   --radius-control: 14px;
   --radius-badge: 12px;
@@ -130,6 +154,14 @@
 
   /* Success state inside the product demos — check-ins, confirmations. */
   --color-confirm: #5bbd8a;
+
+  /*
+   * One elevation system: a resting card shadow and the deeper one it lifts to
+   * on hover. Everything that sits on the page as a card uses these two;
+   * only the floating 3D pieces carry their own, deeper shadows.
+   */
+  --shadow-card: 0 18px 40px -28px rgba(23, 23, 22, 0.45);
+  --shadow-card-hover: 0 30px 60px -30px rgba(23, 23, 22, 0.55);
 }
 
 @layer base {
@@ -227,10 +259,6 @@
   }
 
   /* Light-section label tones — muted taupe body, champagne used sparingly for accents */
-  .label-taupe {
-    color: var(--color-taupe);
-  }
-
   .label-champagne {
     color: var(--color-champagne-ink);
   }
@@ -241,15 +269,6 @@
     font-weight: 600;
     line-height: 1.02;
     letter-spacing: -0.02em;
-  }
-
-  /* Hero headline: wide geometric caps, set tight and architectural */
-  .display-tech {
-    font-family: var(--font-tech);
-    font-weight: 700;
-    line-height: 1.04;
-    letter-spacing: 0.005em;
-    text-transform: uppercase;
   }
 
   /*
@@ -285,97 +304,6 @@
     line-height: 1.45;
   }
 
-  /* Primary CTA — the system's most important interactive element */
-  .ds-btn-primary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 12px 16px;
-    border-radius: var(--radius-control);
-    background-color: var(--color-graphite);
-    color: #ffffff;
-    font-family: var(--font-sans);
-    font-size: 14px;
-    font-weight: 400;
-    /* design.md's inset-highlight recipe, retinted off the brand ink */
-    box-shadow:
-      inset 0 0.5px 0 0 rgba(255, 255, 255, 0.42),
-      inset 0 9px 14px -5px rgba(129, 123, 112, 0.35),
-      0 0 0 1.5px color-mix(in srgb, var(--color-graphite) 82%, white),
-      0 4px 6px 0 rgba(23, 23, 22, 0.14);
-    transition:
-      background-color 0.25s var(--ease-ui),
-      translate 0.25s var(--ease-ui),
-      scale 0.16s var(--ease-ui);
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .ds-btn-primary:hover {
-      background-color: var(--color-graphite-dim);
-      translate: 0 -1px;
-    }
-  }
-
-  /* Ghost action — white on dark, 36px pill */
-  .ds-btn-ghost {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 12px 20px;
-    border-radius: 36px;
-    border: 1px solid var(--color-slate);
-    background-color: #ffffff;
-    color: var(--color-slate);
-    font-family: var(--font-sans);
-    font-size: 14px;
-    font-weight: 400;
-    transition:
-      color 0.25s var(--ease-ui),
-      border-color 0.25s var(--ease-ui),
-      background-color 0.25s var(--ease-ui),
-      scale 0.16s var(--ease-ui);
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .ds-btn-ghost:hover {
-      border-color: var(--color-graphite);
-      color: var(--color-graphite);
-    }
-  }
-
-  /* Neutral action on light ground — no border, relies on tone */
-  .ds-btn-neutral {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 12px 16px;
-    border-radius: var(--radius-control);
-    background-color: var(--color-canvas-alt);
-    color: var(--color-canvas-text);
-    font-family: var(--font-sans);
-    font-size: 14px;
-    font-weight: 400;
-    transition:
-      background-color 0.25s var(--ease-ui),
-      scale 0.16s var(--ease-ui);
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .ds-btn-neutral:hover {
-      background-color: var(--color-canvas-border);
-    }
-  }
-
-  /* Every ds button acknowledges the press — the page heard you */
-  .ds-btn-primary:active:not(:disabled),
-  .ds-btn-ghost:active:not(:disabled),
-  .ds-btn-neutral:active:not(:disabled) {
-    scale: 0.97;
-  }
-
   /* Elevation is a hairline, not a shadow */
   .ds-card {
     border: 1px solid var(--color-canvas-border);
@@ -392,18 +320,6 @@
     font-size: 13px;
     font-weight: 400;
     line-height: 1.4;
-  }
-
-  /* Outlined tag — the quiet default */
-  .ds-badge-tag {
-    border: 1px solid var(--color-canvas-border);
-    color: var(--color-canvas-text);
-  }
-
-  /* Filled tag — for labels needing more weight */
-  .ds-badge-filled {
-    background-color: var(--color-slate);
-    color: var(--color-linen);
   }
 
   /*
@@ -486,9 +402,10 @@
    * hero entrances below carry the storytelling, so this only needs to take
    * the edge off the swap.
    */
+  /* Never from 0: every page wraps in this, and content first painted at opacity 0 is invisible to Chrome's LCP. */
   @keyframes tp-page-in {
     from {
-      opacity: 0;
+      opacity: 0.2;
     }
     to {
       opacity: 1;
@@ -500,32 +417,8 @@
   }
 
   /* Trusted-partners marquee — translates exactly one duplicated pass width */
-  @keyframes tp-marquee {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-50%);
-    }
-  }
-
-  .animate-tp-marquee {
-    animation: tp-marquee 36s linear infinite;
-  }
 
   /* Reviews marquee — same technique, slower so the overlaid quotes stay readable while they drift past */
-  @keyframes reviews-marquee {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-50%);
-    }
-  }
-
-  .animate-reviews-marquee {
-    animation: reviews-marquee 55s linear infinite;
-  }
 
   /*
    * The reviews column — vertical twin of the marquees above. CSS rather than
@@ -533,23 +426,6 @@
    * keyboard focus, and is stopped by the reduced-motion rule at the foot of
    * this file like every other ambient loop.
    */
-  @keyframes reviews-column {
-    from {
-      transform: translateY(0);
-    }
-    to {
-      transform: translateY(-50%);
-    }
-  }
-
-  .animate-reviews-column {
-    animation: reviews-column 44s linear infinite;
-  }
-
-  .animate-reviews-column:hover,
-  .animate-reviews-column:focus-within {
-    animation-play-state: paused;
-  }
 
   /* Film grain — warmth without imagery */
   .grain::after {
@@ -560,16 +436,6 @@
     opacity: 0.035;
     mix-blend-mode: overlay;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
-
-  .text-balance-tight {
-    text-wrap: balance;
-  }
-
-  /* Keep drawer content clear of notches and home indicators */
-  .safe-y {
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
   }
 
   /*
@@ -602,8 +468,8 @@
 }
 
 /*
- * Press feedback for anything tappable that isn't an `Action` or a `ds-btn-*`
- * (those carry their own). It owns the element's transition list — colors,
+ * Press feedback for anything tappable that isn't a FlowButton
+ * (that carries its own). It owns the element's transition list — colors,
  * the hover lift, and the press scale — so it replaces `transition-colors`
  * rather than sitting beside it. Tailwind v4's `translate-*` and `scale-*`
  * write the standalone `translate`/`scale` properties, which is why they are
@@ -655,8 +521,7 @@
 .fx-pop,
 .fx-drop,
 .fx-up,
-.fx-in-left,
-.fx-grow-x {
+.fx-in-left {
   transform-box: fill-box;
   transform-origin: center;
   transition:
@@ -688,13 +553,7 @@
   transform: translateX(-40px);
 }
 
-.fx-grow-x {
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition-timing-function: var(--ease-ui), var(--ease-editorial);
-}
-
-.on:is(.fx-fade, .fx-pop, .fx-drop, .fx-up, .fx-in-left, .fx-grow-x) {
+.on:is(.fx-fade, .fx-pop, .fx-drop, .fx-up, .fx-in-left) {
   opacity: 1;
   transform: none;
 }
@@ -711,53 +570,10 @@
 }
 
 /* One pass of a scanner line down its frame, each time it switches on. */
-@keyframes tp-scan-sweep {
-  0% {
-    transform: translateY(0);
-    opacity: 0;
-  }
-  12%,
-  88% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(var(--scan-travel, 100px));
-    opacity: 0;
-  }
-}
-
-.fx-scan {
-  opacity: 0;
-}
-
-.fx-scan.on {
-  animation: tp-scan-sweep 1.1s var(--ease-ui) both;
-}
 
 /* Check-in lane — the bar flashes as each ticket crosses it. */
-@keyframes tp-flash {
-  0% {
-    opacity: 0;
-  }
-  15% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
 
 /* Sales feed — a new order drops in at the top of the list. */
-@keyframes tp-drop-in {
-  from {
-    opacity: 0;
-    transform: translateY(-14px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
 
 /* A live indicator: breathing, not blinking. */
 @keyframes tp-live {
@@ -850,22 +666,6 @@
   );
 }
 
-/*
- * Gathering posters — see components/site/quote-gather.tsx. `--e` (0–1, eased)
- * is the only value script writes; this blends the scattered start (vw/vh from
- * centre, a 15–30° tilt, 0.75 scale) into the poster's slot in the fan.
- */
-.gather-poster {
-  --e: 0;
-  transform:
-    translate(
-      calc(var(--sx) * 1vw * (1 - var(--e)) + var(--fx) * var(--fan-step) * var(--e)),
-      calc(var(--sy) * 1vh * (1 - var(--e)) + var(--fy) * var(--e))
-    )
-    rotate(calc(var(--sr) * (1 - var(--e)) + var(--fr) * var(--e)))
-    scale(calc(0.75 + 0.25 * var(--e)));
-}
-
 /* Without scripting the reveal states never resolve — show everything. */
 @media (scripting: none) {
   [data-reveal] {
@@ -886,10 +686,6 @@
   /* Scroll-linked motion shows its finished state: a plain column, a set fan. */
   .card-stack > :not(:last-child) {
     margin-bottom: var(--stack-rest-gap, 0);
-  }
-
-  .gather-poster {
-    --e: 1 !important;
   }
 
   .dash-track {
@@ -998,12 +794,6 @@
   .press:active {
     scale: 0.97;
   }
-  .press-soft {
-    transition: scale 200ms var(--ease-ui);
-  }
-  .press-soft:active {
-    scale: 0.99;
-  }
 }
 
 /* Hand-drawn strokes (the hero's margin notes) — drawn in by dashoffset once their wrapper is `data-in`. */
@@ -1040,25 +830,6 @@
     }
     50% {
       translate: 0 var(--float-y, -10px);
-    }
-  }
-
-  /* The scan line passing over the ticket's QR code. */
-  .tp-scan {
-    animation: tp-scan 2.8s var(--ease-in-out) 1.6s infinite;
-  }
-  @keyframes tp-scan {
-    0%,
-    100% {
-      translate: 0 0;
-      opacity: 0;
-    }
-    8%,
-    92% {
-      opacity: 1;
-    }
-    50% {
-      translate: 0 var(--scan-travel, 5rem);
     }
   }
 
@@ -1105,36 +876,10 @@
     }
   }
 
-  /*
-   * A real ticket's perforation: two half-circle notches cut out of the edges
-   * where the stub tears off. Cut with a mask rather than painted on, so the
-   * grid behind shows through them in either theme. Portrait on phones (notches
-   * left and right), landscape from `sm` (notches top and bottom).
-   */
-  .tp-ticket-cut {
-    --notch: 13px;
-    mask:
-      radial-gradient(circle var(--notch) at 0 var(--cut-y), #0000 97%, #000) left / 51% 100% no-repeat,
-      radial-gradient(circle var(--notch) at 100% var(--cut-y), #0000 97%, #000) right / 51% 100% no-repeat;
-    --cut-y: calc(100% - 9.5rem);
-  }
-  @media (min-width: 640px) {
-    .tp-ticket-cut {
-      mask:
-        radial-gradient(circle var(--notch) at var(--cut-x) 0, #0000 97%, #000) top / 100% 51% no-repeat,
-        radial-gradient(circle var(--notch) at var(--cut-x) 100%, #0000 97%, #000) bottom / 100% 51% no-repeat;
-      --cut-x: calc(100% - 11.5rem);
-    }
-  }
-
   @media (prefers-reduced-motion: reduce) {
     .tp-float,
-    .tp-scan,
     .tp-live-ring {
       animation: none;
-    }
-    .tp-scan {
-      opacity: 0;
     }
     .tp-success-ring,
     .tp-success-tick {
@@ -1304,6 +1049,221 @@
   }
   @media (prefers-reduced-motion: reduce) {
     .tp-swap-in {
+      animation: none;
+    }
+  }
+}
+
+/*
+ * Shared card behaviour and image loading, so every card on every page lifts
+ * and loads the same way.
+ */
+@layer components {
+  /* One hover: a 4px lift onto the deeper card shadow. Fine pointers only, so a
+     tap never leaves a card stuck "lifted". */
+  .tp-card-hover {
+    box-shadow: var(--shadow-card);
+    /* Includes `scale`, so a press-soft/press class on the same card still animates its press. */
+    transition:
+      translate 0.5s var(--ease-editorial),
+      box-shadow 0.5s var(--ease-editorial),
+      scale 0.2s var(--ease-ui);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .tp-card-hover:hover {
+      translate: 0 -4px;
+      box-shadow: var(--shadow-card-hover);
+    }
+  }
+  .tp-card-hover:focus-visible {
+    translate: 0 -4px;
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  /* Loading placeholder: a soft shimmer on an image's frame, covered by the
+     photograph as soon as it decodes. */
+  /*
+   * The shimmer is a band of light slid across with `translate` (compositor
+   * only — no repaint per frame, unlike animating background-position), and it
+   * stops after a few passes: by then the photograph has long covered it, and an
+   * endless loop under every loaded image was pure cost.
+   */
+  .tp-img-skeleton {
+    position: relative;
+    overflow: hidden;
+    background-color: color-mix(in srgb, var(--color-canvas-text) 7%, transparent);
+  }
+  .tp-img-skeleton::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      100deg,
+      transparent 30%,
+      color-mix(in srgb, var(--color-surface) 45%, transparent) 50%,
+      transparent 70%
+    );
+    translate: -100% 0;
+    animation: tp-skeleton 1.4s ease-in-out 4;
+  }
+  @keyframes tp-skeleton {
+    to {
+      translate: 100% 0;
+    }
+  }
+
+  /* One section rhythm for full sections: 96px, 128px from sm. */
+  .tp-section {
+    padding-block: 6rem;
+  }
+  @media (min-width: 640px) {
+    .tp-section {
+      padding-block: 8rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tp-img-skeleton::before {
+      animation: none;
+      display: none;
+    }
+    .tp-card-hover,
+    .tp-card-hover:hover {
+      translate: none;
+    }
+  }
+}
+
+/*
+ * Entrances for content that is on screen at load (heroes, the top of a page).
+ * Plain CSS keyframes that run from the first paint — no JavaScript needed to
+ * reveal the text — so the page's main content is visible as soon as it is
+ * drawn. Scroll-in reveals further down still use InView/Reveal.
+ */
+@layer components {
+  [data-rise][data-now] {
+    animation: tp-rise-now 700ms var(--ease-ui) var(--d, 0ms) both;
+  }
+  .tp-rise-now {
+    animation: tp-rise-soft 700ms var(--ease-editorial) var(--d, 0ms) both;
+  }
+  /* Starts faintly visible, never at 0: Chrome ignores content first painted at opacity 0 when it measures LCP. */
+  @keyframes tp-rise-now {
+    from {
+      opacity: 0.2;
+      translate: 0 16px;
+      filter: blur(3px);
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+      filter: blur(0);
+    }
+  }
+  @keyframes tp-rise-soft {
+    from {
+      opacity: 0.2;
+      translate: 0 14px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    [data-rise][data-now],
+    .tp-rise-now {
+      animation: none;
+      opacity: 1;
+    }
+  }
+}
+
+/*
+ * TP Elite rooms in the light theme. The sections below the /elite hero are
+ * written for a dark ground — in white, ink and the elite-* tones — and stay
+ * exactly that in the dark theme. In the light theme, `.tp-elite-adaptive`
+ * swaps just those colours for its subtree: white type becomes ink, the dark
+ * grounds become white and warm off-white, and the white buttons become ink
+ * buttons. `.tp-elite-fixed` restores the dark values for art that is a dark
+ * object in either theme (the wallet illustration).
+ */
+@layer base {
+  :root[data-theme="light"] .tp-elite-adaptive {
+    --color-white: #0a0a0b;
+    --color-ink: #ffffff;
+    --color-elite-void: #ffffff;
+    --color-elite-umber: #f4f1ee;
+    --color-elite-ivory: #171716;
+    --color-elite-gold: #171716;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) .tp-elite-adaptive {
+      --color-white: #0a0a0b;
+      --color-ink: #ffffff;
+      --color-elite-void: #ffffff;
+      --color-elite-umber: #f4f1ee;
+      --color-elite-ivory: #171716;
+      --color-elite-gold: #171716;
+      color-scheme: light;
+    }
+  }
+  .tp-elite-adaptive .tp-elite-fixed {
+    --color-white: #ffffff;
+    --color-ink: #0a0a0b;
+    --color-elite-void: #0d0b0a;
+    --color-elite-umber: #1b1311;
+    --color-elite-ivory: #f5f5f5;
+    --color-elite-gold: #ffffff;
+  }
+}
+
+/*
+ * TP Elite skyline hero. The photograph settles from a slight zoom on load,
+ * then drifts slower than the page as it scrolls away: a scroll-driven
+ * animation, so it runs on the compositor with no JavaScript, and browsers
+ * without support simply keep it still. Off under reduced motion.
+ */
+@layer components {
+  .tp-skyline-in {
+    animation: tp-skyline-in 2.2s var(--ease-editorial) both;
+  }
+  @keyframes tp-skyline-in {
+    from {
+      scale: 1.07;
+    }
+  }
+  @supports (animation-timeline: scroll()) {
+    .tp-skyline-parallax {
+      animation: tp-skyline-parallax linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100vh;
+    }
+    @keyframes tp-skyline-parallax {
+      to {
+        translate: 0 16%;
+      }
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tp-skyline-in,
+    .tp-skyline-parallax {
+      animation: none;
+    }
+  }
+}
+
+/* The 3D stage's rise (Tickets hero): from first paint, never from opacity 0 (LCP). */
+@layer components {
+  .tp-stage-in {
+    animation: tp-stage-in 1.1s var(--ease-editorial) var(--d, 0ms) both;
+  }
+  @keyframes tp-stage-in {
+    from {
+      opacity: 0.2;
+      translate: 0 48px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tp-stage-in {
       animation: none;
     }
   }

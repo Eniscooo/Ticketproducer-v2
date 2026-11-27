@@ -1,9 +1,10 @@
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { CalendarDays, Ticket } from "lucide-react";
 import { GridPulse } from "@/components/ui/grid-pulse";
 import { broadwayReel } from "@/lib/broadway-reel";
 import { BroadwayCarousel } from "./broadway-carousel";
 import { InView } from "./motion";
+import { FlowButton } from "@/components/ui/flow-button";
+import { site } from "@/lib/site";
 
 /** A halo in the hero's own cream, so lit grid cells never crowd the letters. */
 const GUARD =
@@ -49,21 +50,24 @@ export function LandingHero() {
             data-grid-avoid
             className={`mx-auto mt-5 text-balance font-display text-[clamp(2.25rem,4.7vw,4.4rem)] font-extrabold leading-[0.98] tracking-[-0.035em] text-canvas-text ${GUARD}`}
           >
-            Find Your Seat for
-            <br className="hidden sm:block" /> Broadway&rsquo;s Biggest Nights
+            {site.tagline}.
           </h1>
         </InView>
 
         {/* The description carries the margin notes, so they track its edges at every width */}
-        <div className="relative mx-auto mt-5 max-w-[27rem]">
+        <div className="relative mx-auto mt-5 max-w-[36rem]">
           <InView immediate delay={120}>
             <p
               data-grid-avoid
               className={`text-pretty text-[0.9375rem] leading-[1.6] text-canvas-text-muted ${GUARD}`}
             >
-              Verified tickets for Hamilton, The Lion King, Wicked and every show in
-              between &mdash; and the team that plans and runs live events across
-              New York.
+              {site.intro}
+            </p>
+            <p
+              data-grid-avoid
+              className={`mt-4 text-[0.8125rem] font-medium tracking-[0.02em] text-canvas-text ${GUARD}`}
+            >
+              {site.credibility}
             </p>
           </InView>
 
@@ -117,20 +121,13 @@ export function LandingHero() {
             </svg>
           </InView>
 
-          <InView immediate delay={240} className="flex flex-col items-center gap-3 sm:flex-row">
-            <Link
-              href="/ticket-resale"
-              className="press group inline-flex h-12 items-center gap-2.5 rounded-full bg-curtain px-6 text-[0.9375rem] font-semibold text-white shadow-[0_0_0_4px_var(--color-canvas-alt),0_0_0_5px_color-mix(in_srgb,var(--color-curtain)_35%,transparent),0_14px_30px_-12px_rgba(123,30,43,0.55)] transition-[background-color,scale] duration-200 ease-ui hover:bg-curtain-deep"
-            >
+          <InView immediate delay={240} className="flex flex-row flex-wrap items-center justify-center gap-2.5 sm:gap-3">
+            <FlowButton href="/ticket-resale" tone="curtain" icon={Ticket}>
               Find tickets
-              <ArrowRight aria-hidden className="h-4 w-4 transition-transform duration-200 ease-ui group-hover:translate-x-0.5" />
-            </Link>
-            <Link
-              href="/event-management"
-              className="press inline-flex h-12 items-center rounded-full border border-canvas-text/15 px-6 text-[0.9375rem] font-semibold text-canvas-text transition-[border-color,background-color,scale] duration-200 ease-ui hover:border-canvas-text/30 hover:bg-canvas-text/[0.04]"
-            >
+            </FlowButton>
+            <FlowButton href="/event-management" icon={CalendarDays}>
               Plan an event
-            </Link>
+            </FlowButton>
           </InView>
         </div>
       </div>

@@ -7,6 +7,8 @@ import { clsx } from "@/lib/clsx";
 import { useReducedMotionSafe } from "@/lib/use-reduced-motion-safe";
 import { budgetRanges, calcEventTypes } from "@/lib/event-management-page";
 import { site } from "@/lib/site";
+import { FlowButton } from "@/components/ui/flow-button";
+import { Send } from "lucide-react";
 
 const EASE = [0.16, 0.84, 0.28, 1] as const;
 
@@ -418,13 +420,9 @@ export function ProposalDialog({
                     </p>
                   ) : null}
 
-                  <button
-                    type="submit"
-                    disabled={status === "sending"}
-                    className="label mt-8 w-full rounded-control bg-graphite px-7 py-4 text-linen pressable hover:bg-graphite-dim disabled:cursor-not-allowed disabled:opacity-60"
-                  >
+                  <FlowButton type="submit" disabled={status === "sending"} icon={Send} fullWidth className="mt-8">
                     {status === "sending" ? "Sending…" : "Send Proposal Request"}
-                  </button>
+                  </FlowButton>
                   <p className="mt-4 text-center text-xs leading-relaxed text-taupe">
                     We&rsquo;ll only use these details to prepare your proposal.
                   </p>

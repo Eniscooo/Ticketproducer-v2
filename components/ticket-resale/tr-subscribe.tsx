@@ -5,6 +5,8 @@ import Image from "next/image";
 import { Check, Loader2 } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 import { trSubscribe } from "@/lib/ticket-resale-page";
+import { FlowButton } from "@/components/ui/flow-button";
+import { Mail } from "lucide-react";
 
 type Status = "idle" | "sending" | "done" | "error";
 
@@ -98,11 +100,7 @@ export function TrSubscribe() {
                   aria-invalid={status === "error"}
                   className="min-w-0 flex-1 rounded-control border border-white/20 bg-white/10 px-4 py-3.5 text-[0.9375rem] text-white outline-none transition-colors duration-300 ease-editorial placeholder:text-linen/45 focus-visible:border-champagne"
                 />
-                <button
-                  type="submit"
-                  disabled={status === "sending"}
-                  className="ds-btn-primary shrink-0 rounded-control bg-bone text-ink hover:bg-linen disabled:opacity-70 sm:px-7"
-                >
+                <FlowButton type="submit" disabled={status === "sending"} tone="light" icon={Mail}>
                   {status === "sending" ? (
                     <>
                       <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />
@@ -116,7 +114,7 @@ export function TrSubscribe() {
                   ) : (
                     trSubscribe.cta
                   )}
-                </button>
+                </FlowButton>
               </form>
 
               <p

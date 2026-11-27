@@ -15,6 +15,8 @@ import {
 } from "@/lib/event-management-page";
 import { EmSectionHeader } from "./em-section-header";
 import { useProposal } from "./proposal-context";
+import { FlowButton } from "@/components/ui/flow-button";
+import { FileText } from "lucide-react";
 
 const usd = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -54,7 +56,7 @@ export function BudgetCalculator() {
   return (
     <section
       id="budget-calculator"
-      className="relative scroll-mt-28 bg-canvas-alt py-20"
+      className="tp-section relative scroll-mt-28 bg-canvas-alt"
     >
       <div className="mx-auto w-full max-w-[75rem] px-6 sm:px-10">
         <EmSectionHeader
@@ -233,8 +235,11 @@ export function BudgetCalculator() {
                 Real pricing depends on the venue, the date, and the run of show.
               </p>
 
-              <button
-                type="button"
+              <FlowButton
+                tone="light"
+                icon={FileText}
+                fullWidth
+                className="mt-7"
                 onClick={() =>
                   open({
                     eventType: eventTypeLabel,
@@ -242,10 +247,9 @@ export function BudgetCalculator() {
                     budgetRange: targetRange || undefined,
                   })
                 }
-                className="ds-btn-ghost mt-7 w-full"
               >
                 Request a Proposal
-              </button>
+              </FlowButton>
             </div>
           </Reveal>
         </div>

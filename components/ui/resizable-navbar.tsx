@@ -3,7 +3,8 @@
 import * as React from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, type LucideIcon } from "lucide-react";
+import { FlowButton } from "@/components/ui/flow-button";
 import { Logo } from "@/components/brand/logo";
 import { IconSwap } from "@/components/ui/primitives";
 import { useReducedMotionSafe } from "@/lib/use-reduced-motion-safe";
@@ -77,20 +78,19 @@ export function Navbar({ children, className, threshold = 80, transparent = fals
     () => window.scrollY > threshold,
     () => false,
   );
-  const reduceMotion = useReducedMotionSafe();
 
-  const state = React.useMemo(() => ({ visible, transparent }), [visible, transparent]);
+  const state =React.useMemo(() => ({ visible, transparent }), [visible, transparent]);
 
   return (
     <NavbarContext.Provider value={state}>
-      <motion.header
-        initial={{ y: -96 }}
-        animate={{ y: 0 }}
-        transition={{ duration: reduceMotion ? 0.01 : 0.9, ease: EASE }}
-        className={cn("fixed inset-x-0 top-3 z-50 px-4 sm:top-5 sm:px-8", className)}
-      >
+      {/*
+       * Painted in place from the first frame — no slide-in. The entrance used to
+       * start the bar off screen until JavaScript ran, which made the logo the
+       * page's slowest-painting element on phones.
+       */}
+      <header className={cn("fixed inset-x-0 top-3 z-50 px-4 sm:top-5 sm:px-8", className)}>
         {children}
-      </motion.header>
+      </header>
     </NavbarContext.Provider>
   );
 }
@@ -258,44 +258,33 @@ export function NavbarLogo({ href = "/", className }: { href?: string; className
   return (
     <Link
       href={href}
-      aria-label="Ticket Producer — home"
       className={cn("shrink-0 transition-opacity duration-300 ease-ui hover:opacity-70", className)}
     >
+      {/* Named by its visible wordmark, plus "home" for screen readers — no aria-label overriding what's on screen. */}
       <Logo variant="compact" />
+      <span className="sr-only"> home</span>
     </Link>
   );
 }
 
-type ButtonVariant = "primary" | "secondary" | "dark";
-
-const VARIANTS: Record<ButtonVariant, string> = {
-  primary: "bg-bone text-ink hover:bg-brass-light",
-  secondary: "text-bone/80 hover:bg-bone/8 hover:text-bone",
-  dark: "border border-bone/20 bg-ink text-bone hover:border-brass/70",
-};
-
 export type NavbarButtonProps = {
-  variant?: ButtonVariant;
   className?: string;
   children: React.ReactNode;
-  /** With an href it renders a link; without one, a button. */
-  href?: string;
+  href: string;
   onClick?: () => void;
+  icon?: LucideIcon | null;
+  /** Stretch to the row — the mobile menu's buttons. */
+  fullWidth?: boolean;
 };
 
-export function NavbarButton({ variant = "primary", className, children, href, onClick }: NavbarButtonProps) {
-  const classes = cn(
-    "pressable inline-flex h-9 items-center justify-center whitespace-nowrap rounded-full px-4 text-sm font-semibold",
-    VARIANTS[variant],
-    className,
-  );
-  return href ? (
-    <Link href={href} onClick={onClick} className={classes}>
+/**
+ * The nav's actions are the site's one button (FlowButton), in its small size
+ * and the white tone — the bar is dark glass on every page.
+ */
+export function NavbarButton({ className, children, href, onClick, icon, fullWidth }: NavbarButtonProps) {
+  return (
+    <FlowButton href={href} onClick={onClick} icon={icon} tone="light" size="sm" fullWidth={fullWidth} className={className}>
       {children}
-    </Link>
-  ) : (
-    <button type="button" onClick={onClick} className={classes}>
-      {children}
-    </button>
+    </FlowButton>
   );
 }

@@ -5,6 +5,8 @@ import { Check, Loader2 } from "lucide-react";
 import { Field, FormError, PasswordField, inputClass } from "./auth-fields";
 import { LIMITS, validateSignUp, type FieldErrors, type SignUpFields } from "@/lib/auth";
 import { site } from "@/lib/site";
+import { FlowButton } from "@/components/ui/flow-button";
+import { Send } from "lucide-react";
 
 type Status = "idle" | "sending" | "sent";
 
@@ -200,11 +202,7 @@ export function SignUpForm() {
 
       <FormError>{formError}</FormError>
 
-      <button
-        type="submit"
-        disabled={sending}
-        className="ds-btn-primary w-full py-4 disabled:pointer-events-none disabled:opacity-70"
-      >
+      <FlowButton type="submit" disabled={sending} icon={Send} fullWidth>
         {sending ? (
           <>
             <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />
@@ -213,7 +211,7 @@ export function SignUpForm() {
         ) : (
           "Sign up"
         )}
-      </button>
+      </FlowButton>
 
       <p className="pt-1 text-center text-[0.75rem] leading-relaxed text-taupe">
         Accounts are opened by hand for producers, venues, and TP Elite clients — we

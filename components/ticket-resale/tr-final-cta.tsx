@@ -1,7 +1,8 @@
 import Image from "next/image";
-import Link from "next/link";
 import { Reveal } from "@/components/ui/reveal";
 import { trFinalCta } from "@/lib/ticket-resale-page";
+import { FlowButton } from "@/components/ui/flow-button";
+import { Ticket } from "lucide-react";
 
 /**
  * design.md's inverted closing block: dark surface, generous radius,
@@ -49,10 +50,9 @@ export function TrFinalCta() {
           </Reveal>
 
           <Reveal delay={0.14}>
-            {/* `ds-btn-ghost` is already inline-flex, so the centred text line places it. */}
-            <Link href={trFinalCta.cta.href} className="ds-btn-ghost mt-9">
+            <FlowButton href={trFinalCta.cta.href} tone="light" icon={Ticket} className="mt-9">
               {trFinalCta.cta.label}
-            </Link>
+            </FlowButton>
           </Reveal>
         </div>
       </div>

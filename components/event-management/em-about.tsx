@@ -21,7 +21,7 @@ import { emAbout } from "@/lib/event-management-page";
  */
 export function EmAbout() {
   return (
-    <section className="relative bg-paper py-20">
+    <section className="tp-section relative bg-paper">
       <div className="mx-auto w-full max-w-[75rem] px-6 sm:px-10">
         <div className="grid gap-4 lg:grid-cols-12">
           <Reveal className="lg:col-span-5">

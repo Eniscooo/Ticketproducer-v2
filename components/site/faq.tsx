@@ -1,13 +1,13 @@
 "use client";
 
 import { useId, useState } from "react";
-import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { Plus } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 import { clsx } from "@/lib/clsx";
 import { useReducedMotionSafe } from "@/lib/use-reduced-motion-safe";
 import { faq, type FaqItem } from "@/lib/site";
+import { FlowButton } from "@/components/ui/flow-button";
 
 const EASE = [0.16, 0.84, 0.28, 1] as const;
 
@@ -63,12 +63,9 @@ export function Faq({
                 <span className="font-semibold">{headingBold}</span>
               </h2>
               <p className="ds-body mt-5 max-w-sm text-canvas-text-muted">{body}</p>
-              <Link
-                href={contactHref}
-                className="ds-btn-primary mt-8 rounded-control"
-              >
+              <FlowButton href={contactHref} className="mt-8">
                 {contactLabel}
-              </Link>
+              </FlowButton>
             </Reveal>
           </div>
 

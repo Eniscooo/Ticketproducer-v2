@@ -5,6 +5,8 @@ import { Reveal } from "@/components/ui/reveal";
 import { site } from "@/lib/site";
 import { emFinalCta } from "@/lib/event-management-page";
 import { useProposal } from "./proposal-context";
+import { FlowButton } from "@/components/ui/flow-button";
+import { CalendarDays, Phone } from "lucide-react";
 
 /**
  * design.md's inverted closing block: dark surface, generous radius,
@@ -20,7 +22,7 @@ export function EmFinalCta() {
   const { open } = useProposal();
 
   return (
-    <section className="relative bg-paper pb-20">
+    <section className="relative bg-paper pb-24 sm:pb-32">
       <div className="mx-auto w-full max-w-[75rem] px-6 sm:px-10">
         <div className="relative isolate overflow-hidden rounded-card bg-graphite px-7 py-16 text-center ring-1 ring-inset ring-white/10 shadow-[0_50px_100px_-50px_rgba(10,10,11,0.7)] sm:px-12 sm:py-24">
           <Image
@@ -57,8 +59,8 @@ export function EmFinalCta() {
           <Reveal>
             <p className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-[0.8125rem] font-medium text-white/85 backdrop-blur">
               <span aria-hidden className="relative flex h-2 w-2">
-                <span className="tp-live-ring absolute inset-0 rounded-full bg-confirm" />
-                <span className="relative h-2 w-2 rounded-full bg-confirm" />
+                <span className="tp-live-ring absolute inset-0 rounded-full bg-white" />
+                <span className="relative h-2 w-2 rounded-full bg-white" />
               </span>
               Taking bookings now
             </p>
@@ -75,20 +77,13 @@ export function EmFinalCta() {
           </Reveal>
 
           <Reveal delay={0.14}>
-            <div className="mt-9 flex flex-col items-center justify-center gap-2 sm:flex-row">
-              <button
-                type="button"
-                onClick={() => open()}
-                className="pressable inline-flex h-12 w-full items-center justify-center rounded-full bg-white px-7 text-[0.9375rem] font-semibold text-ink transition-colors duration-200 ease-ui hover:bg-linen sm:w-auto"
-              >
+            <div className="mt-9 flex flex-row flex-wrap items-center justify-center gap-2.5 sm:gap-3">
+              <FlowButton onClick={() => open()} tone="light" icon={CalendarDays}>
                 {emFinalCta.primaryCta.label}
-              </button>
-              <a
-                href={site.contact.phoneHref}
-                className="pressable inline-flex h-12 w-full items-center justify-center rounded-full border border-white/25 bg-white/10 px-7 text-[0.9375rem] font-semibold text-white backdrop-blur transition-colors duration-200 ease-ui hover:bg-white/20 sm:w-auto"
-              >
+              </FlowButton>
+              <FlowButton href={site.contact.phoneHref} tone="light" icon={Phone}>
                 Talk to Event Management
-              </a>
+              </FlowButton>
             </div>
             <p className="ds-body mt-6 text-linen/55">{site.contact.phone}</p>
           </Reveal>

@@ -26,8 +26,8 @@ export function EmSectionHeader({
     <Reveal className={clsx(center && "mx-auto text-center", "max-w-2xl", className)}>
       <p className="inline-flex items-center gap-2 rounded-full border border-canvas-border bg-surface/75 px-3.5 py-1.5 text-[0.8125rem] font-medium text-canvas-text-muted backdrop-blur">
         <span aria-hidden className="relative flex h-2 w-2">
-          <span className="tp-live-ring absolute inset-0 rounded-full bg-confirm" />
-          <span className="relative h-2 w-2 rounded-full bg-confirm" />
+          <span className="tp-live-ring absolute inset-0 rounded-full bg-canvas-text" />
+          <span className="relative h-2 w-2 rounded-full bg-canvas-text" />
         </span>
         {eyebrow}
       </p>

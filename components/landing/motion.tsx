@@ -61,7 +61,8 @@ export function InView({
   }, [immediate]);
 
   const Tag = as as React.ElementType;
-  const data = { [`data-${kind}`]: "" };
+  /* `data-now`: on screen at load, so a CSS keyframe reveals it from first paint (globals.css) — no waiting on JS. */
+  const data = { [`data-${kind}`]: "", ...(immediate ? { "data-now": "" } : {}) };
   return (
     <Tag
       ref={ref}

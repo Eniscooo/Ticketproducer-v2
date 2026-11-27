@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Search } from "lucide-react";
+import { FlowButton } from "@/components/ui/flow-button";
 
 /**
  * Uncontrolled input, committed on submit rather than on every keystroke —
@@ -34,9 +35,9 @@ export function EventSearch({
         aria-label={placeholder}
         className="min-w-0 flex-1 bg-transparent py-2.5 text-[0.9375rem] text-canvas-text placeholder:text-taupe/70 focus:outline-none"
       />
-      <button type="submit" className="ds-btn-primary shrink-0">
+      <FlowButton type="submit" icon={Search}>
         Search
-      </button>
+      </FlowButton>
     </form>
   );
 }

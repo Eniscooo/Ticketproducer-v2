@@ -1,8 +1,8 @@
 import Image from "next/image";
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import { site } from "@/lib/site";
 import { InView } from "./motion";
+import { FlowButton } from "@/components/ui/flow-button";
+import { CalendarDays, Ticket } from "lucide-react";
 
 /**
  * The close: the two doors one last time, and every way to reach a person.
@@ -11,11 +11,16 @@ import { InView } from "./motion";
  */
 export function Closing() {
   const { phone, phoneHref, email, addressLines } = site.contact;
+  const address = addressLines.join(", ");
 
+  /* Beside the number: email, and the address — which opens in maps, so every line here is something you can act on. */
   const ways = [
-    { label: "Call", value: phone, href: phoneHref },
     { label: "Email", value: email, href: `mailto:${email}` },
-    { label: "Visit", value: addressLines.join(", "), href: undefined },
+    {
+      label: "Visit",
+      value: address,
+      href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`,
+    },
   ];
 
   return (
@@ -34,33 +39,35 @@ export function Closing() {
 
       <div className="mx-auto w-full max-w-[76rem] px-6 text-center sm:px-10">
         <InView>
-          <h2 className="mx-auto max-w-3xl text-balance font-display text-[clamp(2.4rem,5.6vw,4.5rem)] font-extrabold leading-[0.98] tracking-[-0.035em] text-white">
-            Your next night out starts here.
+          <h2 className="text-[0.8125rem] font-medium uppercase tracking-[0.2em] text-bone/70">
+            Start the conversation.
           </h2>
         </InView>
+
+        {/* The number is the star: big, and the whole thing dials */}
         <InView delay={60}>
+          <a
+            href={phoneHref}
+            aria-label={`Call ${site.name} on ${phone}`}
+            className="mt-6 inline-block font-display text-[clamp(2.6rem,9vw,7rem)] font-extrabold leading-none tracking-[-0.03em] text-white tabular-nums transition-opacity duration-300 ease-ui hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-white"
+          >
+            {phone}
+          </a>
           <p className="mx-auto mt-5 max-w-md text-pretty text-[0.9375rem] leading-[1.65] text-bone/70">
             Tell us the show, or tell us the room. Either way, a person picks up.
           </p>
         </InView>
 
-        <InView delay={120} className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <Link
-            href="/ticket-resale"
-            className="press group inline-flex h-12 items-center gap-2.5 rounded-full bg-white px-6 text-[0.9375rem] font-semibold text-ink transition-[background-color,scale] duration-200 ease-ui hover:bg-bone"
-          >
+        <InView delay={120} className="mt-9 flex flex-row flex-wrap items-center justify-center gap-2.5 sm:gap-3">
+          <FlowButton href="/ticket-resale" tone="light" icon={Ticket}>
             Find tickets
-            <ArrowRight aria-hidden className="h-4 w-4 transition-transform duration-200 ease-ui group-hover:translate-x-0.5" />
-          </Link>
-          <Link
-            href="/event-management"
-            className="press inline-flex h-12 items-center rounded-full border border-white/20 px-6 text-[0.9375rem] font-semibold text-white transition-[border-color,background-color,scale] duration-200 ease-ui hover:border-white/40 hover:bg-white/[0.06]"
-          >
+          </FlowButton>
+          <FlowButton href="/event-management" tone="light" icon={CalendarDays}>
             Plan an event
-          </Link>
+          </FlowButton>
         </InView>
 
-        <dl className="mx-auto mt-20 grid max-w-4xl gap-px overflow-hidden rounded-[1.25rem] border border-white/10 bg-white/10 text-left sm:mt-24 sm:grid-cols-3">
+        <dl className="mx-auto mt-16 grid max-w-3xl gap-px overflow-hidden rounded-[1.25rem] border border-white/10 bg-white/10 text-left sm:mt-20 sm:grid-cols-2">
           {ways.map((way, i) => (
             <InView key={way.label} delay={180 + i * 60} className="bg-ink/80 p-6 backdrop-blur-sm">
               <dt className="text-[0.8125rem] text-stone">{way.label}</dt>
@@ -68,7 +75,8 @@ export function Closing() {
                 {way.href ? (
                   <a
                     href={way.href}
-                    className="break-anywhere transition-colors duration-200 ease-ui hover:text-champagne"
+                    {...(way.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                    className="break-anywhere underline-offset-4 transition-colors duration-200 ease-ui hover:text-white/75 hover:underline"
                   >
                     {way.value}
                   </a>

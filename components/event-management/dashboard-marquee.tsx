@@ -75,7 +75,7 @@ export function DashboardMarquee() {
   }, []);
 
   return (
-    <section className="relative isolate overflow-hidden bg-paper py-24">
+    <section className="tp-section relative isolate overflow-hidden bg-paper">
       {/* The pointer lights the grid behind the wall, as on the landing hero */}
       <GridPulse className="-z-10" />
 

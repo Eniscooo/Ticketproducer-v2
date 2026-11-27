@@ -240,13 +240,32 @@ export function BroadwayCarousel({ cards, label }: { cards: ReelCard[]; label: s
     });
     resize.observe(stage);
 
+    /*
+     * The drift waits for the page to go idle after load: the cards are already
+     * placed (above), so nothing looks different, but the per-frame loop no
+     * longer competes with hydration — on a throttled phone it was most of the
+     * landing page's blocking time.
+     */
+    let started = false;
+    let visible = false;
     const seen = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) run();
+      visible = entry.isIntersecting;
+      if (!started) return;
+      if (visible) run();
       else halt();
     });
     seen.observe(stage);
+    const begin = () => {
+      started = true;
+      if (visible) run();
+    };
+    // Safari only gained requestIdleCallback recently; fall back to a short timer.
+    const hasIdle = typeof window.requestIdleCallback === "function";
+    const idle = hasIdle ? window.requestIdleCallback(begin, { timeout: 2500 }) : setTimeout(begin, 1500);
 
     return () => {
+      if (hasIdle) window.cancelIdleCallback(idle as number);
+      else clearTimeout(idle);
       halt();
       seen.disconnect();
       resize.disconnect();
@@ -308,7 +327,7 @@ export function BroadwayCarousel({ cards, label }: { cards: ReelCard[]; label: s
             tabIndex={echo ? -1 : undefined}
             aria-label={`${card.title} — ${card.place}`}
             className={clsx(
-              "group relative block h-full w-full overflow-hidden rounded-[0.9rem] bg-ink",
+              "tp-img-skeleton group relative block h-full w-full overflow-hidden rounded-[0.9rem]",
               "shadow-[0_18px_40px_-22px_rgba(23,23,22,0.55)] outline-none",
               "focus-visible:ring-2 focus-visible:ring-curtain-ink focus-visible:ring-offset-2 focus-visible:ring-offset-canvas-alt",
               dragging && "pointer-events-none",

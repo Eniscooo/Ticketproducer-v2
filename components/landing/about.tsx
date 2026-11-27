@@ -12,14 +12,14 @@ export function About() {
   return (
     <section
       id="about"
-      className="relative -mt-8 scroll-mt-20 rounded-t-[2rem] bg-canvas-alt py-24 sm:py-32"
+      className="relative -mt-8 scroll-mt-20 rounded-t-[2rem] bg-canvas-alt tp-section"
     >
       <div className="mx-auto grid w-full max-w-[76rem] items-center gap-12 px-6 sm:px-10 lg:grid-cols-12 lg:gap-16">
         <div className="flex flex-col justify-center lg:col-span-6">
           <InView>
-            <p className="text-[0.8125rem] font-medium text-curtain-ink">About us</p>
+            
             <h2 className="mt-3 text-balance font-display text-[clamp(2.1rem,4.4vw,3.5rem)] font-bold leading-[1.02] tracking-[-0.03em] text-canvas-text">
-              Made in New York, on the floor &mdash; not in a deck.
+              About Us.
             </h2>
             <p className="mt-5 max-w-lg text-pretty text-[0.9375rem] leading-[1.65] text-canvas-text-muted">
               We started out running doors for other people&rsquo;s events. The

@@ -2,8 +2,10 @@
 export const site = {
   name: "Ticket Producer",
   tagline: "Live events, produced properly",
-  eyebrow: ["New York", "Live Events", "Ticketing", "Resale", "Private Access"],
   credibility: "10+ years producing live events, based in New York.",
+  /** The landing hero's subtext, word for word from the brief. */
+  intro:
+    "Ticket Producer runs the systems behind live events — staffing, venue mapping, and the platform that sells the seat — plus the resale market on the other side, and a concierge line for people who never miss a show.",
   description:
     "Ticket Producer plans and runs live events for the people putting them on, and sells verified tickets to the people going to them. New York.",
   contact: {
@@ -15,8 +17,8 @@ export const site = {
   /** The landing page's own links: the two doors, then the company sections that live on `/`. */
   nav: [
     { label: "Event Management", href: "/event-management" },
-    { label: "Tickets", href: "/ticket-resale" },
-    { label: "About", href: "/#about" },
+    { label: "Ticket Resale", href: "/ticket-resale" },
+    { label: "TP Elite", href: "/elite" },
     { label: "Contact", href: "/#contact" },
   ],
   company: [
@@ -49,64 +51,42 @@ export type Side = {
   key: SideKey;
   /** Full name, as the landing page and footer print it. */
   label: string;
-  /** The tag that sits beside the logo once a visitor is inside this side. */
-  tag: string;
   href: string;
-  /** Who this side is for, in one line. */
-  audience: string;
   /** In-page links for this side's own nav. */
   links: readonly { label: string; href: string }[];
-  /** The one action this side exists to get. */
-  cta: { label: string; href: string };
-  /** The way across to the other side, always one click away. */
-  crossover: { label: string; href: string };
 };
 
 /**
  * The site is two businesses under one name: event management sells to the
  * people putting an event on, the ticket side sells to the people going to
  * one. Each gets its own section, nav, call to action and FAQ; the landing
- * page at `/` explains both and lets the visitor pick. Every route under a
- * side's `href` wears that side's nav.
+ * page at `/` explains both and lets the visitor pick. The footer lists each
+ * side's links in its own column.
  */
 export const sides: Record<SideKey, Side> = {
   events: {
     key: "events",
     label: "Event Management",
-    tag: "Events",
     href: "/event-management",
-    audience: "For producers, venues and companies",
     links: [
       { label: "Services", href: "/event-management#em-services" },
       { label: "Budget", href: "/event-management#budget-calculator" },
       { label: "Event Types", href: "/event-management#event-guide" },
+      { label: "TP Elite", href: "/elite" },
       { label: "FAQs", href: "/event-management#em-faq" },
     ],
-    cta: { label: "Plan Your Event", href: "/event-management#event-guide" },
-    crossover: { label: "Looking for tickets?", href: "/ticket-resale" },
   },
   tickets: {
     key: "tickets",
-    label: "Tickets",
-    tag: "Tickets",
+    label: "Ticket Resale",
     href: "/ticket-resale",
-    audience: "For fans and ticket buyers",
     links: [
       { label: "Browse Events", href: "/ticket-resale#suggested" },
-      { label: "TP Elite", href: "/ticket-resale#tp-elite" },
+      { label: "TP Elite", href: "/elite" },
       { label: "FAQs", href: "/ticket-resale#tr-faq" },
     ],
-    cta: { label: "Find Tickets", href: "/ticket-resale#suggested" },
-    crossover: { label: "Planning an event?", href: "/event-management" },
   },
 };
-
-/** Which side a pathname belongs to, or `null` for the landing page and shared routes. */
-export function sideFor(pathname: string): SideKey | null {
-  if (pathname.startsWith(sides.events.href)) return "events";
-  if (pathname.startsWith(sides.tickets.href)) return "tickets";
-  return null;
-}
 
 export type ServiceItem = {
   title: string;
@@ -114,7 +94,6 @@ export type ServiceItem = {
 };
 
 export const eventManagement = {
-  index: "01",
   headline: "Event Management",
   description:
     "Staffing, venue mapping, and a ticketing platform built for the room, not a template.",
@@ -132,46 +111,11 @@ export const eventManagement = {
       body: "Planning and strategy for producers who want a second set of expert eyes.",
     },
   ] satisfies ServiceItem[],
-  cta: "Explore Event Management",
-  href: "/event-management",
-  /**
-   * The homepage floor-plan story: each step owns a slice of the section's
-   * scroll progress, starting at `at`. The caption sits under the plan while
-   * that step is current.
-   */
-  steps: [
-    {
-      at: 0,
-      title: "Discovery",
-      body: "We learn what you want guests to feel and remember.",
-      caption: "Your brief: a gala dinner on the waterfront",
-    },
-    {
-      at: 0.22,
-      title: "Design",
-      body: "Layout, stage, colours and flow, shaped around your brief.",
-      caption: "Design: layout, stage and colour palette",
-    },
-    {
-      at: 0.45,
-      title: "Planning",
-      body: "Seating, vendors and timelines, all handled by us.",
-      caption: "Planning: tables placed, vendors booked",
-    },
-    {
-      at: 0.7,
-      title: "Delivery",
-      body: "We run the day so you can be a guest at your own event.",
-      caption: "Event day: lights up, every seat filled",
-    },
-  ],
 };
 
 export const ticketResale = {
-  index: "02",
-  headline: "Tickets",
-  description:
-    "Verified seats for Broadway shows in New York, on one platform built for the primary and secondary markets.",
+  headline: "Ticket Resale Services",
+  description: "One platform for primary and secondary market resale, backed by real strategy.",
   items: [
     {
       title: "Resale Platform",
@@ -182,15 +126,12 @@ export const ticketResale = {
       body: "Pricing, inventory, and resale strategy from people who've run the market.",
     },
   ] satisfies ServiceItem[],
-  cta: "Find Tickets",
-  href: "/ticket-resale",
 };
 
 export const tpElite = {
-  index: "03",
   label: "By Invitation",
   headline: "TP Elite",
-  description: "Concierge access for people who live for live events.",
+  description: "Concierge access for people who never miss a show.",
   boxDescription:
     "High-end concierge access for people who live for live events.",
   body: "Some clients don't need an event managed — they need a seat, a table, or a suite handled quietly and well. TP Elite is the line we pick up first.",
@@ -215,24 +156,100 @@ export const tpElite = {
   ],
 };
 
-export const pullQuote = "Every seat has a story. We make sure it gets told right.";
+/**
+ * /elite membership tiers. Every feature here is one TP Elite already offers
+ * (see `tpElite.bullets`) — nothing new is promised.
+ *
+ * PRICES: set `monthly` and `yearly` (per-month price when billed annually)
+ * for each tier. While any is `null` the cards read "By invitation" (as the brief asks: not a generic pricing tier) and
+ * the billing toggle is hidden; once all six are numbers, the toggle, the rolling
+ * prices and the "save up to X%" line (computed from these numbers) switch on.
+ */
+export const eliteTiers = [
+  {
+    name: "Access",
+    monthly: null,
+    yearly: null,
+    description: "For the shows you can't find a seat for.",
+    features: ["Priority access to sold-out events", "Front-of-line seating"],
+    cta: "Request access",
+    href: "#request",
+  },
+  {
+    name: "Concierge",
+    monthly: null,
+    yearly: null,
+    description: "A direct line for the nights that need handling.",
+    features: [
+      "Everything in Access",
+      "Hard-to-get tables",
+      "A dedicated line",
+      "Last-minute requests",
+    ],
+    cta: "Request access",
+    href: "#request",
+    isPopular: true,
+  },
+  {
+    name: "Private",
+    monthly: null,
+    yearly: null,
+    description: "The whole night, handled — for you and your guests.",
+    features: ["Everything in Concierge", "Group plans", "Travel around the show"],
+    cta: "Request access",
+    href: "#request",
+  },
+] satisfies {
+  name: string;
+  monthly: number | null;
+  yearly: number | null;
+  description: string;
+  features: string[];
+  cta: string;
+  href: string;
+  isPopular?: boolean;
+}[];
 
-export const whyChoose = {
-  label: "Why Ticket Producer",
-  headline: "Built for the details others overlook.",
-  reasons: [
-    { title: "Experience", body: "10+ years producing live events." },
-    {
-      title: "Control",
-      body: "Systems built around the room rather than generic templates.",
-    },
-    { title: "Strategy", body: "Expert thinking across production and resale." },
-    {
-      title: "Access",
-      body: "A private concierge line for clients who require more.",
-    },
-  ],
-};
+/** /elite: how a request becomes access. Stated as the business works today — by conversation, not checkout. */
+export const eliteSteps = [
+  {
+    title: "Request",
+    body: "Tell us who you are and what you're after — a show, a date, a table, a group. The form takes a minute; the line is faster.",
+  },
+  {
+    title: "A call",
+    body: "Someone from the line calls you back to talk it through. Access is confirmed on that call, not at a checkout.",
+  },
+  {
+    title: "Handled",
+    body: "From then on, requests go to your direct line — seats, tables, last-minute changes and the travel around the show.",
+  },
+];
+
+export const eliteFaq: FaqItem[] = [
+  {
+    question: "What is TP Elite?",
+    answer:
+      "A concierge line for people who go to a lot of live events. Instead of searching listings, you tell us what you want and we handle it — seats, tables, group plans and the travel around the show.",
+  },
+  {
+    question: "How do I get access?",
+    answer:
+      "By request. Send the form on this page or call the line; we call you back, talk it through, and confirm access on that call. There is no online checkout for TP Elite.",
+  },
+  {
+    question: "Is it only for Broadway?",
+    answer:
+      "No. Members use it for Broadway and for other events across New York — the line is about having someone handle it, whatever the night is.",
+  },
+  {
+    question: "Can I still buy tickets the normal way?",
+    answer:
+      "Yes. Every listing on the Tickets side stays open to everyone. TP Elite is for the requests a listing can't answer.",
+  },
+];
+
+export const pullQuote ="Every seat has a story. We make sure it gets told right.";
 
 export type FaqItem = { question: string; answer: string };
 

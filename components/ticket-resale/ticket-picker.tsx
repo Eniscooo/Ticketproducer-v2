@@ -5,6 +5,8 @@ import { Minus, Plus, ShieldCheck } from "lucide-react";
 import { clsx } from "@/lib/clsx";
 import { formatUsd, seatLayoutFor, type ResaleEvent } from "@/lib/ticket-resale-page";
 import { SeatMap } from "./seat-map";
+import { FlowButton } from "@/components/ui/flow-button";
+import { Ticket } from "lucide-react";
 
 const MAX_QUANTITY = 8;
 
@@ -114,16 +116,18 @@ export function TicketPicker({ event }: { event: ResaleEvent }) {
           </p>
         </div>
 
-        <a
-          href={`tel:+18008090443`}
-          className="ds-btn-primary mt-5 w-full rounded-control"
+        <FlowButton
+          href="tel:+18008090443"
+          icon={Ticket}
+          fullWidth
+          className="mt-5"
           aria-label={`Reserve ${quantity} ${tier.name} tickets for ${event.name} by phone`}
         >
           Reserve {quantity} · {formatUsd(total)}
-        </a>
+        </FlowButton>
 
         <p className="mt-3 text-center text-[0.8125rem] leading-relaxed text-taupe">
-          Prices are per ticket and set by the seller. Fees are shown before you pay.
+          Prices are per ticket, set by the seller, and include fees.
         </p>
       </div>
     </div>

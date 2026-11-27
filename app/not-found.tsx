@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { ArrowUpRight } from "lucide-react";
 import { SiteNav } from "@/components/site/site-nav";
 import { SiteFooter } from "@/components/site/site-footer";
-import { Action } from "@/components/ui/primitives";
 import { Reveal } from "@/components/ui/reveal";
 import { sides, site } from "@/lib/site";
+import { FlowButton } from "@/components/ui/flow-button";
 
 const WAYS_OUT = [
   { label: "Home", href: "/" },
@@ -45,13 +45,9 @@ export default function NotFound() {
             <ul className="mt-12 grid gap-2.5 sm:grid-cols-3">
               {WAYS_OUT.map((item) => (
                 <li key={item.href}>
-                  <Action href={item.href} tone="ink" className="w-full">
+                  <FlowButton href={item.href} icon={ArrowUpRight} fullWidth>
                     {item.label}
-                    <ArrowUpRight
-                      aria-hidden
-                      className="h-3.5 w-3.5 transition-transform duration-300 ease-ui group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                    />
-                  </Action>
+                  </FlowButton>
                 </li>
               ))}
             </ul>

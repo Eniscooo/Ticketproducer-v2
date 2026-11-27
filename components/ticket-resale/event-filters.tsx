@@ -97,7 +97,7 @@ export function TypeChips({
               className={clsx(
                 "shrink-0 whitespace-nowrap rounded-ds-pill border px-4 py-2.5 text-[0.875rem] font-medium transition-colors duration-300 ease-editorial",
                 active
-                  ? "border-champagne bg-champagne/12 text-champagne"
+                  ? "border-canvas-text bg-canvas-text text-paper"
                   : "border-canvas-border bg-surface text-canvas-text-muted hover:border-taupe/50 hover:text-canvas-text",
               )}
             >

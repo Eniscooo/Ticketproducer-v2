@@ -27,6 +27,9 @@ export const formatUsd = (value: number) =>
     maximumFractionDigits: 0,
   }).format(value);
 
+/** The one way a starting price is written anywhere on the site: "From $89 incl. fees". */
+export const formatFromPrice = (value: number) => `From ${formatUsd(value)} incl. fees`;
+
 export const trHero = {
   headline: "Find your next event.",
   body: "Verified tickets for every show on Broadway — without the markup games.",
@@ -70,6 +73,8 @@ export type ResaleEvent = {
   category: ShowKind;
   image: string;
   imagePosition: string;
+  /** The image is portrait key art (a poster), not a photograph. */
+  imageIsPoster?: boolean;
   /** SAMPLE until a live inventory feed is connected. */
   startingPrice: number;
   tiers: TicketTier[];
@@ -108,20 +113,23 @@ function tiersFor(category: ShowKind, startingPrice: number): TicketTier[] {
 }
 
 /**
- * Listing artwork, in one place so HD replacements land here and nowhere else.
- * Every file is openly licensed and credited (PHOTO-CREDITS.md, /credits).
+ * Listing artwork, in one place so replacements land here and nowhere else.
+ * `poster: true` marks the show posters supplied by the site owner (portrait
+ * key art, small files) — the event page shows those at their own size over a
+ * blurred backdrop instead of stretching them. The rest are openly licensed
+ * photographs, credited in PHOTO-CREDITS.md and on /credits.
  */
-const IMAGES: Record<string, { src: string; position: string }> = {
-  chicago: { src: "/shows/chicago.jpg", position: "object-[50%_45%]" },
-  "the-great-gatsby": { src: "/shows/the-great-gatsby.jpg", position: "object-[50%_40%]" },
+const IMAGES: Record<string, { src: string; position: string; poster?: boolean }> = {
+  chicago: { src: "/posters/chicago.jpg", position: "object-[50%_30%]", poster: true },
+  "the-great-gatsby": { src: "/posters/the-great-gatsby.jpg", position: "object-[50%_30%]", poster: true },
   "radio-city-christmas-spectacular": { src: "/shows/radio-city-christmas-spectacular.jpg", position: "object-[50%_45%]" },
   "oh-mary": { src: "/shows/oh-mary.jpg", position: "object-[50%_50%]" },
-  wicked: { src: "/shows/wicked.jpg", position: "object-[50%_55%]" },
-  hamilton: { src: "/shows/hamilton.jpg", position: "object-[40%_50%]" },
-  "the-lion-king": { src: "/shows/the-lion-king.jpg", position: "object-[50%_30%]" },
-  aladdin: { src: "/shows/aladdin.jpg", position: "object-[50%_65%]" },
+  wicked: { src: "/posters/wicked.jpg", position: "object-[50%_30%]", poster: true },
+  hamilton: { src: "/posters/hamilton.jpg", position: "object-[50%_30%]", poster: true },
+  "the-lion-king": { src: "/posters/the-lion-king.jpg", position: "object-[50%_30%]", poster: true },
+  aladdin: { src: "/posters/aladdin.png", position: "object-[50%_30%]", poster: true },
   hadestown: { src: "/shows/hadestown.jpg", position: "object-[60%_40%]" },
-  "the-book-of-mormon": { src: "/shows/the-book-of-mormon.jpg", position: "object-[50%_60%]" },
+  "the-book-of-mormon": { src: "/posters/the-book-of-mormon.jpg", position: "object-[50%_30%]", poster: true },
   "mj-the-musical": { src: "/shows/mj-the-musical.jpg", position: "object-[50%_50%]" },
   "harry-potter-and-the-cursed-child": { src: "/shows/harry-potter-and-the-cursed-child.jpg", position: "object-[50%_40%]" },
   "maybe-happy-ending": { src: "/shows/maybe-happy-ending.jpg", position: "object-[50%_50%]" },
@@ -129,6 +137,9 @@ const IMAGES: Record<string, { src: string; position: string }> = {
   "just-in-time": { src: "/shows/just-in-time.jpg", position: "object-[50%_40%]" },
   "operation-mincemeat": { src: "/shows/operation-mincemeat.jpg", position: "object-[50%_45%]" },
   six: { src: "/shows/six.jpg", position: "object-[50%_60%]" },
+  "and-juliet": { src: "/shows/and-juliet.jpg", position: "object-[50%_45%]" },
+  "stranger-things-the-first-shadow": { src: "/shows/stranger-things-the-first-shadow.jpg", position: "object-[70%_70%]" },
+  "buena-vista-social-club": { src: "/shows/buena-vista-social-club.jpg", position: "object-[50%_60%]" },
 };
 
 type RawEvent = Omit<ResaleEvent, "tiers" | "image" | "imagePosition" | "city">;
@@ -391,6 +402,54 @@ const RAW_EVENTS: RawEvent[] = [
     runNote: "Final performance Jan 3, 2027",
     officialUrl: "https://www.sixonbroadway.com/",
   },
+  {
+    slug: "and-juliet",
+    name: "& Juliet",
+    date: "Sat, Dec 12, 2026",
+    time: "2:00 PM",
+    venue: "Stephen Sondheim Theatre",
+    address: "124 West 43rd Street, New York, NY 10036",
+    category: "Musical",
+    startingPrice: 61,
+    schedule: "Tue & Thu 7pm · Wed 2pm · Fri 8pm · Sat 2pm & 8pm · Sun 1pm & 6:30pm",
+    runningTime: "2h 40m, one intermission",
+    ageGuidance: "Recommended 8+; under 4 not admitted",
+    description: "A jukebox musical built on Max Martin's pop songs that imagines Juliet choosing her own life after Romeo and Juliet.",
+    runNote: "Final performance Jan 3, 2027",
+    officialUrl: "https://andjulietbroadway.com/",
+  },
+  {
+    slug: "stranger-things-the-first-shadow",
+    name: "Stranger Things: The First Shadow",
+    date: "Sat, Dec 19, 2026",
+    time: "1:00 PM",
+    venue: "Marquis Theatre",
+    address: "210 West 46th Street, New York, NY 10036",
+    category: "Play",
+    startingPrice: 75,
+    schedule: "Tue–Fri 7pm · Sat & Sun 1pm & 7pm",
+    runningTime: "2h 45m, one intermission",
+    ageGuidance: "Recommended 12+",
+    description: "A prequel to the Netflix series, set in Hawkins in 1959, from Netflix and Sonia Friedman Productions.",
+    runNote: "Final performance Jan 3, 2027",
+    officialUrl: "https://strangerthingsonstage.com/",
+  },
+  {
+    slug: "buena-vista-social-club",
+    name: "Buena Vista Social Club",
+    date: "Sun, Jan 10, 2027",
+    time: "3:00 PM",
+    venue: "Gerald Schoenfeld Theatre",
+    address: "236 West 45th Street, New York, NY 10036",
+    category: "Musical",
+    startingPrice: 64,
+    schedule: "Tue, Thu & Fri 7pm · Wed 2pm & 7:30pm · Sat 2pm & 7:30pm · Sun 3pm",
+    runningTime: "2h 10m, one intermission",
+    ageGuidance: "Recommended 8+; under 4 not admitted",
+    description: "A musical about the Havana musicians behind the 1996 Buena Vista Social Club album, built on their Cuban son repertoire.",
+    runNote: "Final performance Jan 17, 2027",
+    officialUrl: "https://buenavistamusical.com/",
+  },
 ];
 
 export const resaleEvents: ResaleEvent[] = RAW_EVENTS.map((event) => ({
@@ -398,6 +457,7 @@ export const resaleEvents: ResaleEvent[] = RAW_EVENTS.map((event) => ({
   city: NY,
   image: IMAGES[event.slug].src,
   imagePosition: IMAGES[event.slug].position,
+  imageIsPoster: IMAGES[event.slug].poster ?? false,
   tiers: tiersFor(event.category, event.startingPrice),
 }));
 
@@ -438,25 +498,47 @@ export const eventRails: EventRail[] = [
       "just-in-time",
       "operation-mincemeat",
       "six",
+      "and-juliet",
+      "buena-vista-social-club",
     ],
   },
   {
     id: "plays",
     title: "Plays",
-    slugs: ["oh-mary", "harry-potter-and-the-cursed-child"],
+    slugs: ["oh-mary", "harry-potter-and-the-cursed-child", "stranger-things-the-first-shadow"],
     variant: "feature",
   },
   {
     id: "family",
     title: "Family",
-    subtitle: "Recommended for ages 6 and up, or all ages.",
-    slugs: ["radio-city-christmas-spectacular", "the-lion-king", "aladdin", "operation-mincemeat"],
+    subtitle: "Recommended for ages 8 and up, or all ages — youngest first.",
+    slugs: [
+      "radio-city-christmas-spectacular",
+      "operation-mincemeat",
+      "the-lion-king",
+      "aladdin",
+      "wicked",
+      "maybe-happy-ending",
+      "and-juliet",
+      "buena-vista-social-club",
+      "mj-the-musical",
+      "hadestown",
+      "harry-potter-and-the-cursed-child",
+    ],
   },
   {
     id: "last-chance",
     title: "Last chance",
-    subtitle: "Closing dates and limited runs.",
-    slugs: ["six", "radio-city-christmas-spectacular", "operation-mincemeat"],
+    subtitle: "Closing dates and limited runs, soonest first.",
+    slugs: [
+      "six",
+      "and-juliet",
+      "stranger-things-the-first-shadow",
+      "radio-city-christmas-spectacular",
+      "buena-vista-social-club",
+      "operation-mincemeat",
+      "oh-mary",
+    ],
   },
 ];
 

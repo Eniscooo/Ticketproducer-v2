@@ -24,14 +24,8 @@ export function TrHero({ onSearch }: { onSearch: (query: string) => void }) {
       />
 
       <div className="mx-auto w-full max-w-[48rem] px-6 text-center sm:px-10">
-        <Reveal>
-          <p className="inline-flex items-center gap-2 rounded-full border border-canvas-border bg-surface/75 px-3.5 py-1.5 text-[0.8125rem] font-medium text-canvas-text-muted backdrop-blur">
-            <span aria-hidden className="relative flex h-2 w-2">
-              <span className="tp-live-ring absolute inset-0 rounded-full bg-confirm" />
-              <span className="relative h-2 w-2 rounded-full bg-confirm" />
-            </span>
-            Verified tickets &middot; Live availability
-          </p>
+        <Reveal immediate>
+          
           {/* `text-balance` evens the two lines it wraps to on a phone, instead
               of leaving one word alone on the second. */}
           <h1 className="ds-display mt-5 text-balance text-[clamp(2.25rem,5.6vw,3.75rem)] text-canvas-text">

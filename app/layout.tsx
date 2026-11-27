@@ -27,6 +27,8 @@ const caveat = Caveat({
 });
 
 export const metadata: Metadata = {
+  /* Absolute base for share-image and canonical URLs. Set NEXT_PUBLIC_SITE_URL if the live domain differs. */
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://ticketproducer.com"),
   title: {
     default: "Ticket Producer — Live events, produced properly",
     template: "%s · Ticket Producer",
@@ -50,6 +52,8 @@ export const metadata: Metadata = {
     locale: "en_US",
     type: "website",
   },
+  /* X/Twitter shows the same share image (app/opengraph-image.tsx), full width. */
+  twitter: { card: "summary_large_image" },
   robots: { index: true, follow: true },
 };
 

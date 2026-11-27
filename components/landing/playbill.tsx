@@ -83,7 +83,7 @@ export function Playbill() {
       <div className="mx-auto w-full max-w-[76rem] px-6 sm:px-10">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <InView>
-            <p className="text-[0.8125rem] font-medium text-champagne">The programme</p>
+            <p className="text-[0.8125rem] font-medium text-champagne">Trending</p>
             <h2 className="mt-3 font-display text-[clamp(2.1rem,4.4vw,3.5rem)] font-bold leading-[1.02] tracking-[-0.03em] text-white">
               On Broadway.
             </h2>
@@ -135,9 +135,7 @@ export function Playbill() {
             </InView>
           ))}
         </ol>
-        <p className="mt-6 text-[0.8125rem] text-stone-dim">
-          Show titles belong to their productions. Availability changes nightly.
-        </p>
+      
       </div>
     </section>
   );

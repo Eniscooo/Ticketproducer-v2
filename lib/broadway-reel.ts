@@ -21,10 +21,10 @@ export type ReelCard = {
 
 export const broadwayReel: ReelCard[] = [
   {
-    src: "/broadway/great-gatsby.jpg",
+    src: "/posters/the-great-gatsby.jpg",
     title: "The Great Gatsby",
     place: "Broadway Theatre",
-    alt: "The Great Gatsby's stage lit in blue and green before the show, the audience in the foreground",
+    alt: "The Great Gatsby's poster",
     href: "/ticket-resale/the-great-gatsby",
   },
   {
@@ -35,24 +35,24 @@ export const broadwayReel: ReelCard[] = [
     href: "/ticket-resale/oh-mary",
   },
   {
-    src: "/broadway/lion-king.jpg",
+    src: "/posters/the-lion-king.jpg",
     title: "The Lion King",
     place: "Minskoff Theatre",
-    alt: "The Lion King's yellow marquee at the Minskoff Theatre at night",
+    alt: "The Lion King's poster",
     href: "/ticket-resale/the-lion-king",
   },
   {
-    src: "/broadway/hamilton.jpg",
+    src: "/posters/hamilton.jpg",
     title: "Hamilton",
     place: "Richard Rodgers Theatre",
-    alt: "The Hamilton marquee above the Richard Rodgers Theatre entrance",
+    alt: "Hamilton's poster",
     href: "/ticket-resale/hamilton",
   },
   {
-    src: "/broadway/wicked.jpg",
+    src: "/posters/wicked.jpg",
     title: "Wicked",
     place: "Gershwin Theatre",
-    alt: "Green Wicked banners on the front of the Gershwin Theatre",
+    alt: "Wicked's poster",
     href: "/ticket-resale/wicked",
   },
   {
@@ -63,10 +63,10 @@ export const broadwayReel: ReelCard[] = [
     href: "/ticket-resale/radio-city-christmas-spectacular",
   },
   {
-    src: "/broadway/aladdin.jpg",
+    src: "/posters/aladdin.png",
     title: "Aladdin",
     place: "New Amsterdam Theatre",
-    alt: "The purple Aladdin marquee under the New Amsterdam Theatre's vertical sign",
+    alt: "Aladdin's poster",
     href: "/ticket-resale/aladdin",
   },
   {
@@ -77,10 +77,10 @@ export const broadwayReel: ReelCard[] = [
     href: "/ticket-resale/hadestown",
   },
   {
-    src: "/broadway/chicago.jpg",
+    src: "/posters/chicago.jpg",
     title: "Chicago",
     place: "Ambassador Theatre",
-    alt: "The lit Chicago marquee above the Ambassador Theatre at night",
+    alt: "Chicago's poster",
     href: "/ticket-resale/chicago",
   },
   {
@@ -105,10 +105,10 @@ export const broadwayReel: ReelCard[] = [
     href: "/ticket-resale/hadestown",
   },
   {
-    src: "/broadway/book-of-mormon.jpg",
+    src: "/posters/the-book-of-mormon.jpg",
     title: "The Book of Mormon",
     place: "Eugene O'Neill Theatre",
-    alt: "The Book of Mormon marquee at the Eugene O'Neill Theatre",
+    alt: "The Book of Mormon's poster",
     href: "/ticket-resale/the-book-of-mormon",
   },
   {

@@ -2,6 +2,7 @@ import { Phone } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 import { site, tpElite } from "@/lib/site";
 import { EliteWallet } from "./elite-wallet";
+import { FlowButton } from "@/components/ui/flow-button";
 
 /**
  * The visual peak: the only place in the light body the site turns dark
@@ -17,8 +18,8 @@ export function TPElite() {
       id="tp-elite"
       className="grain relative isolate mx-auto w-full max-w-[78rem] scroll-mt-28 rounded-feature overflow-hidden bg-elite-void py-8 shadow-[0_-26px_56px_-26px_rgba(0,0,0,0.6)] sm:py-12"
     >
-      {/* A richer, warmer ground — the room behind the room */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+      {/* A richer, warmer ground — the room behind the room (dark theme only; on white these glows read as stains) */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 hidden dark:block">
         <div className="absolute inset-0 bg-[radial-gradient(85%_60%_at_18%_0%,rgba(74,27,40,0.55),transparent_62%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(70%_55%_at_88%_92%,rgba(27,19,17,0.92),transparent_60%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(45%_35%_at_50%_46%,rgba(255,255,255,0.09),transparent_70%)]" />
@@ -33,18 +34,18 @@ export function TPElite() {
       </span>
 
       <div className="mx-auto w-full max-w-[80rem] px-6 sm:px-10">
-        <div className="rounded-[2rem] border border-elite-gold/20 bg-elite-umber/50 px-6 py-10 backdrop-blur-sm sm:px-10 sm:py-14 lg:px-14 lg:py-16">
+        <div className="rounded-[2rem] border border-elite-gold/20 bg-elite-umber/50 px-6 py-10 sm:px-10 sm:py-14 lg:px-14 lg:py-16">
           <div className="grid gap-12 lg:grid-cols-12 lg:gap-14">
             <div className="lg:col-span-7">
               <Reveal>
                 <h2 className="display text-[clamp(2.25rem,5.6vw,4rem)] text-elite-ivory">
-                  {tpElite.description}
+                  {tpElite.boxDescription}
                 </h2>
               </Reveal>
 
               <Reveal delay={0.12}>
                 <p className="mt-7 max-w-xl text-[0.9375rem] leading-[1.9] text-elite-ivory/70">
-                  {tpElite.body}
+                  {tpElite.items.map((item) => item.body).join(" ")}
                 </p>
               </Reveal>
 
@@ -83,19 +84,9 @@ export function TPElite() {
                   Introductions and requests are taken by phone.
                 </p>
               </div>
-              <a
-                href={site.contact.phoneHref}
-                className="group pressable relative inline-flex min-h-14 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-elite-gold px-9 py-4 text-elite-void"
-              >
-                <span
-                  aria-hidden
-                  className="pointer-events-none absolute inset-x-0 bottom-0 h-full origin-bottom scale-y-0 bg-elite-ivory/70 transition-transform duration-500 ease-editorial group-hover:scale-y-100"
-                />
-                <span className="label relative z-10 inline-flex items-center gap-2.5">
-                  Sign Up
-                  <Phone aria-hidden className="h-3.5 w-3.5" />
-                </span>
-              </a>
+              <FlowButton href={site.contact.phoneHref} tone="light" icon={Phone}>
+                Call the line
+              </FlowButton>
             </div>
           </Reveal>
         </div>

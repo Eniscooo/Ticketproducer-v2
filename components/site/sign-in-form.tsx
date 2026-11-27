@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { Field, FormError, PasswordField, inputClass } from "./auth-fields";
 import { validateSignIn, type FieldErrors, type SignInFields } from "@/lib/auth";
+import { FlowButton } from "@/components/ui/flow-button";
+import { LogIn } from "lucide-react";
 
 type Status = "idle" | "sending";
 
@@ -127,11 +129,7 @@ export function SignInForm() {
 
       <FormError>{formError}</FormError>
 
-      <button
-        type="submit"
-        disabled={sending}
-        className="ds-btn-primary w-full py-4 disabled:pointer-events-none disabled:opacity-70"
-      >
+      <FlowButton type="submit" disabled={sending} icon={LogIn} fullWidth>
         {sending ? (
           <>
             <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />
@@ -140,7 +138,7 @@ export function SignInForm() {
         ) : (
           "Sign In"
         )}
-      </button>
+      </FlowButton>
 
       <p className="pt-1 text-center text-[0.8125rem] text-canvas-text-muted">
         <Link

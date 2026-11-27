@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
      * here is what keeps the optimizer off the biggest resamples.
      */
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2560],
+    /* Small tiles (event cards, favourites, the reel) get candidates under 640px. */
+    imageSizes: [96, 160, 256, 320, 384, 480],
+    /* AVIF first — typically 20–50% smaller than WebP for these photographs — WebP as the fallback. */
+    formats: ["image/avif", "image/webp"],
     /* Optimized output is content-addressed by (src, width, quality); none of
        these sources change without a filename change, so hold them for a year
        instead of re-encoding on a stale-cache miss. */

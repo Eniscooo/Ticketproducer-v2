@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowUpRight, Calendar, CalendarDays, Clock, MapPin, Ticket, Users } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Calendar, KeyRound, CalendarDays, Clock, MapPin, Ticket, Users } from "lucide-react";
 import { SiteNav } from "@/components/site/site-nav";
 import { SiteFooter } from "@/components/site/site-footer";
 import { Reveal } from "@/components/ui/reveal";
 import { EventSection } from "@/components/ticket-resale/event-section";
 import { TicketPicker } from "@/components/ticket-resale/ticket-picker";
-import { categoryPlural, formatUsd, resaleEvents, type ResaleEvent } from "@/lib/ticket-resale-page";
+import { categoryPlural, formatFromPrice, formatUsd, resaleEvents, type ResaleEvent } from "@/lib/ticket-resale-page";
+import { FlowButtonLook } from "@/components/ui/flow-button";
 
 /**
  * One page per event, replacing the dialog the cards used to open. The catalogue
@@ -32,7 +33,7 @@ export async function generateMetadata({
 
   return {
     title: `${event.name} — ${event.venue}`,
-    description: `${event.name} at ${event.venue}, ${event.city} on ${event.date}. Verified resale tickets from ${formatUsd(event.startingPrice)}.`,
+    description: `${event.name} at ${event.venue}, ${event.city} on ${event.date}. Verified resale tickets from ${formatUsd(event.startingPrice)} incl. fees.`,
   };
 }
 
@@ -44,7 +45,7 @@ function EventFacts({ event }: { event: ResaleEvent }) {
     { icon: Clock, label: "Running time", value: event.runningTime },
     { icon: Users, label: "Age guidance", value: event.ageGuidance },
     { icon: MapPin, label: "Theatre", value: `${event.venue}, ${event.address}` },
-    { icon: Ticket, label: "From", value: `${formatUsd(event.startingPrice)} per ticket` },
+    { icon: Ticket, label: "Tickets", value: `${formatFromPrice(event.startingPrice)}, per ticket` },
   ];
 
   return (
@@ -80,14 +81,35 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         {/* The room, full width, with the name over it */}
         <section className="relative">
           <div className="relative h-[52vh] min-h-[22rem] w-full overflow-hidden sm:h-[58vh]">
-            <Image
-              src={event.image}
-              alt=""
-              fill
-              priority
-              sizes="100vw"
-              className={`object-cover ${event.imagePosition}`}
-            />
+            {event.imageIsPoster ? (
+              /*
+               * A poster is small portrait key art: stretched across the banner
+               * it would blur. So a blurred, darkened copy fills the width, and
+               * the poster itself stands sharp at its own scale on the right.
+               */
+              <>
+                <Image
+                  src={event.image}
+                  alt=""
+                  fill
+                  preload
+                  sizes="40vw"
+                  className="scale-110 object-cover opacity-70 blur-2xl"
+                />
+                <div className="absolute bottom-8 right-[6%] top-24 z-10 hidden aspect-[2/3] sm:top-28 overflow-hidden rounded-feature shadow-[0_40px_80px_-30px_rgba(0,0,0,0.8)] ring-1 ring-white/15 sm:block lg:right-[10%]">
+                  <Image src={event.image} alt={`${event.name} poster`} fill sizes="22rem" className="object-cover" />
+                </div>
+              </>
+            ) : (
+              <Image
+                src={event.image}
+                alt=""
+                fill
+                preload
+                sizes="100vw"
+                className={`object-cover ${event.imagePosition}`}
+              />
+            )}
             <div className="absolute inset-0 bg-gradient-to-t from-graphite via-graphite/45 to-graphite/25" />
 
             <div className="absolute inset-x-0 bottom-0">
@@ -125,6 +147,26 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             <Reveal>
               <TicketPicker event={event} />
             </Reveal>
+
+            {/* When the best seats are nearly gone, the concierge line is the next door */}
+            {event.tiers.some((tier) => tier.availability === "Almost gone") ? (
+              <Reveal delay={0.04} className="mt-6">
+                <Link
+                  href="/elite"
+                  className="tp-card-hover group flex flex-col gap-4 rounded-feature bg-graphite p-6 text-white ring-1 ring-inset ring-white/10 sm:flex-row sm:items-center sm:justify-between sm:p-7"
+                >
+                  <div>
+                    <p className="label text-white/60">TP Elite</p>
+                    <p className="mt-2 text-[1.0625rem] font-semibold">
+                      Can&rsquo;t find the seats you want? Our concierge line can.
+                    </p>
+                  </div>
+                  <FlowButtonLook tone="light" icon={KeyRound}>
+                    Request access
+                  </FlowButtonLook>
+                </Link>
+              </Reveal>
+            ) : null}
 
             <Reveal delay={0.08} className="mt-10 sm:mt-12">
               <div className="grid gap-8 rounded-feature border border-canvas-border bg-canvas-alt/50 p-6 sm:p-8 lg:grid-cols-[1.1fr_1fr] lg:gap-12">

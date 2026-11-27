@@ -1,8 +1,7 @@
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import { eventManagement } from "@/lib/site";
 import { eventProcess } from "@/lib/landing";
 import { InView } from "./motion";
+import { FlowButton } from "@/components/ui/flow-button";
 
 /**
  * The event side, explained in four beats. One rule runs across the steps and
@@ -13,7 +12,7 @@ import { InView } from "./motion";
  */
 export function Process() {
   return (
-    <section className="relative -mt-8 rounded-t-[2rem] bg-paper py-24 sm:py-32">
+    <section className="relative -mt-8 rounded-t-[2rem] bg-paper tp-section">
       <div className="mx-auto w-full max-w-[76rem] px-6 sm:px-10">
         <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
           <InView className="lg:col-span-7">
@@ -26,13 +25,9 @@ export function Process() {
             <p className="max-w-sm text-pretty text-[0.9375rem] leading-[1.65] text-canvas-text-muted">
               {eventManagement.description}
             </p>
-            <Link
-              href="/event-management"
-              className="press group mt-6 inline-flex h-11 items-center gap-2 rounded-full bg-canvas-text px-5 text-[0.9375rem] font-semibold text-paper transition-[opacity,scale] duration-200 ease-ui hover:opacity-90"
-            >
+            <FlowButton href="/event-management" className="mt-6">
               See how we work
-              <ArrowRight aria-hidden className="h-4 w-4 transition-transform duration-200 ease-ui group-hover:translate-x-0.5" />
-            </Link>
+            </FlowButton>
           </InView>
         </div>
 
@@ -67,18 +62,7 @@ export function Process() {
           </ol>
         </div>
 
-        {/* What sits behind the steps — the three services, as plain tags */}
-        <InView delay={120} className="mt-16 flex flex-wrap items-center gap-2 border-t border-canvas-border pt-8 sm:mt-20">
-          <span className="mr-2 text-[0.8125rem] text-canvas-text-muted">What we bring</span>
-          {eventManagement.items.map((item) => (
-            <span
-              key={item.title}
-              className="rounded-full border border-canvas-border bg-surface px-3.5 py-1.5 text-[0.8125rem] font-medium text-canvas-text"
-            >
-              {item.title}
-            </span>
-          ))}
-        </InView>
+       
       </div>
     </section>
   );

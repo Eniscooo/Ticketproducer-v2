@@ -96,7 +96,7 @@ export function TrFaves() {
             {faves.map((fave) => (
               <li key={fave.name} className="shrink-0">
                 <Link href={fave.href} className="group block w-[6.5rem] text-center sm:w-[7.5rem] lg:w-[8.5rem]">
-                  <span className="relative block aspect-square overflow-hidden rounded-full bg-canvas-alt ring-2 ring-transparent ring-offset-[3px] ring-offset-paper transition-[box-shadow] duration-300 ease-editorial group-hover:ring-champagne group-focus-visible:ring-champagne">
+                  <span className="tp-img-skeleton relative block aspect-square overflow-hidden rounded-full ring-2 ring-transparent ring-offset-[3px] ring-offset-paper transition-[box-shadow] duration-300 ease-editorial group-hover:ring-champagne group-focus-visible:ring-champagne">
                     <Image
                       src={fave.image}
                       alt=""

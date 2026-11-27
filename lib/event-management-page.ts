@@ -9,7 +9,6 @@
 import { eventManagement } from "@/lib/site";
 
 export const emHero = {
-  label: "Event Management",
   headlineTop: "Built for the room.",
   headlineBottom: "Built for the event.",
   body: " Ticket-Producer is the corporate event planning agency trusted to design, produce, and run your most important moments - anywhere in the world.",
@@ -28,24 +27,29 @@ export const emSteps = [
   {
     index: "01",
     title: "Create your event",
+    /** The brief's service this step delivers — named on the card. */
+    service: eventManagement.items[2].title,
     body: "Pre-production, sequencing and an ops review from producers who have run the room. A second set of expert eyes before anything goes live.",
     demo: "create",
   },
   {
     index: "02",
     title: "Enable your seat map",
+    service: eventManagement.items[1].title,
     body: "Seating charts built around the venue, with sightlines checked and capacity modelled.",
     demo: "seats",
   },
   {
     index: "03",
-    title: "Sell and scan tickets",
-    body: "A ticketing platform built for the room, not a template. Every ticket is checked at the door.",
+    title: "Sell tickets, check guests in",
+    service: eventManagement.items[1].title,
+    body: "A ticketing platform built for the room, not a template. Every guest is checked in at the door.",
     demo: "tickets",
   },
   {
     index: "04",
     title: "Staff the room",
+    service: eventManagement.items[0].title,
     body: `${eventManagement.items[0].body} Box office and floor crew, placed and confirmed.`,
     demo: "staff",
   },
@@ -327,7 +331,6 @@ export function compareToTarget(
 }
 
 export const emAbout = {
-  label: "About Us",
   headline: "We have stood in the room before.",
   body: "Ticket Producer did not start as software. It started on floors and loading docks, running doors for other people's events and watching where the plan met the building. That is still how we work — the systems came after the shifts, not instead of them.",
   points: [
@@ -360,7 +363,7 @@ export const emAbout = {
     { src: "/nyc/marquee-radio-city.jpg", position: "object-[30%_45%]" },
     { src: "/nyc/met-opera-interior.jpg", position: "object-[50%_50%]" },
     { src: "/nyc/skyline-empire-state.jpg", position: "object-[60%_40%]" },
-    { src: "/intro-bg.jpg", position: "object-[40%_50%]" },
+    { src: "/nyc/skyline-dusk.jpg", position: "object-[50%_50%]" },
     { src: "/nyc/marquee-richard-rodgers.jpg", position: "object-[40%_50%]" },
     { src: "/nyc/msg-basketball.jpg", position: "object-[50%_55%]" },
     { src: "/nyc/skyline-hudson-yards.jpg", position: "object-[50%_45%]" },

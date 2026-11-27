@@ -82,7 +82,7 @@ export function EliteWallet() {
   return (
     <div
       ref={ref}
-      className="relative aspect-[4/5] overflow-hidden rounded-[1.5rem] border border-elite-gold/25 bg-[radial-gradient(90%_70%_at_70%_20%,rgba(74,27,40,0.55),transparent_70%),linear-gradient(180deg,#1b1311,#0d0b0a)]"
+      className="tp-elite-fixed relative aspect-[4/5] overflow-hidden rounded-[1.5rem] border border-elite-gold/25 bg-[radial-gradient(90%_70%_at_70%_20%,rgba(74,27,40,0.55),transparent_70%),linear-gradient(180deg,#1b1311,#0d0b0a)]"
     >
       {/* The phone, tilted, behind the wallet */}
       <div className="absolute right-[7%] top-[7%] w-[44%] rotate-[8deg] rounded-[1.6rem] border border-elite-gold/30 bg-elite-void p-1.5 shadow-[0_40px_70px_-30px_rgba(0,0,0,0.9)]">

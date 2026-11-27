@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
 import { motion, useMotionValue, useSpring, useTransform, type MotionValue } from "framer-motion";
 import { useMediaQuery } from "@/lib/use-media-query";
 import { useReducedMotionSafe } from "@/lib/use-reduced-motion-safe";
@@ -21,8 +20,6 @@ import { cn } from "@/lib/utils";
  * pointer effects are off entirely and no listener is attached; reduced motion
  * also stills the floating and the entrance.
  *
- * `Component` wraps the stage in a complete hero (badge, title, subtitle, two
- * actions), with the same props as the reference demo.
  */
 
 const EASE = [0.16, 0.84, 0.28, 1] as const;
@@ -166,12 +163,12 @@ export function PerspectiveStage({
          * element below (the root of the 3D scene), not as CSS `perspective`
          * up here, and the depth never snaps in when the fade ends.
          */}
-        <motion.div
-          initial={reduceMotion ? false : { opacity: 0, y: 64 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={reduceMotion ? { duration: 0 } : { duration: 1.1, ease: EASE, delay }}
-          className="motion-reduce:!opacity-100 motion-reduce:![transform:none]"
-        >
+        {/*
+         * The rise is a CSS keyframe that runs from first paint (`.tp-stage-in`),
+         * not a JS animation: the ticket's artwork is often the page's largest
+         * element, and it no longer waits on hydration to appear.
+         */}
+        <div className="tp-stage-in" style={{ ["--d" as string]: `${Math.round(delay * 1000)}ms` }}>
           <motion.div
             style={{ transformPerspective: 1800, rotateX, rotateY }}
             className="[transform-style:preserve-3d]"
@@ -190,120 +187,8 @@ export function PerspectiveStage({
               ))}
             </div>
           </motion.div>
-        </motion.div>
+        </div>
       </div>
     </StageContext.Provider>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* Complete hero, with the reference demo's props                      */
-/* ------------------------------------------------------------------ */
-
-type Action = { label: string; href: string };
-
-export type Animated3DHeroProps = {
-  badge?: React.ReactNode;
-  /** Wrap words in [[double brackets]] to highlight them. */
-  title: string;
-  subtitle?: React.ReactNode;
-  primaryAction?: Action;
-  secondaryAction?: Action;
-  mainStageContent: React.ReactNode;
-  leftFloatingWidget?: React.ReactNode;
-  rightFloatingWidget?: React.ReactNode;
-  /** Any further layers, placed and layered by the caller. */
-  floatingWidgets?: FloatingLayer[];
-  /** Painted behind everything, e.g. a pattern. */
-  background?: React.ReactNode;
-  /** Rendered under the stage. */
-  children?: React.ReactNode;
-  className?: string;
-};
-
-/** Splits "a [[b]] c" into plain and highlighted runs. */
-function renderTitle(title: string) {
-  return title.split(/(\[\[.+?\]\])/g).map((part, i) =>
-    part.startsWith("[[") ? (
-      <span key={i} className="text-curtain-ink">
-        {part.slice(2, -2)}
-      </span>
-    ) : (
-      <React.Fragment key={i}>{part}</React.Fragment>
-    ),
-  );
-}
-
-export function Component({
-  badge,
-  title,
-  subtitle,
-  primaryAction,
-  secondaryAction,
-  mainStageContent,
-  leftFloatingWidget,
-  rightFloatingWidget,
-  floatingWidgets = [],
-  background,
-  children,
-  className,
-}: Animated3DHeroProps) {
-  const layers: FloatingLayer[] = [
-    ...(leftFloatingWidget
-      ? [{ id: "left", node: leftFloatingWidget, className: "left-0 top-[18%] hidden lg:block", depth: 140 }]
-      : []),
-    ...(rightFloatingWidget
-      ? [{ id: "right", node: rightFloatingWidget, className: "right-0 bottom-[12%] hidden sm:block", depth: 160 }]
-      : []),
-    ...floatingWidgets,
-  ];
-
-  return (
-    <section className={cn("relative isolate overflow-hidden bg-canvas-alt pb-20 pt-28 sm:pt-32", className)}>
-      {background}
-      <div className="mx-auto max-w-[56rem] px-6 text-center">
-        {badge ? (
-          <p className="inline-flex items-center gap-2 rounded-full border border-canvas-border bg-surface/70 px-3.5 py-1.5 text-[0.8125rem] font-medium text-canvas-text-muted backdrop-blur">
-            {badge}
-          </p>
-        ) : null}
-        <h1 className="mt-5 text-balance font-display text-[clamp(2.25rem,4.7vw,4.4rem)] font-extrabold leading-[0.98] tracking-[-0.035em] text-canvas-text">
-          {renderTitle(title)}
-        </h1>
-        {subtitle ? (
-          <p className="mx-auto mt-5 max-w-[34rem] text-pretty text-[0.9375rem] leading-[1.6] text-canvas-text-muted">
-            {subtitle}
-          </p>
-        ) : null}
-        {primaryAction || secondaryAction ? (
-          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            {primaryAction ? (
-              <Link
-                href={primaryAction.href}
-                className="press inline-flex h-12 items-center rounded-full bg-curtain px-6 text-[0.9375rem] font-semibold text-white transition-colors duration-200 ease-ui hover:bg-curtain-deep"
-              >
-                {primaryAction.label}
-              </Link>
-            ) : null}
-            {secondaryAction ? (
-              <Link
-                href={secondaryAction.href}
-                className="press inline-flex h-12 items-center rounded-full border border-canvas-text/15 px-6 text-[0.9375rem] font-semibold text-canvas-text transition-colors duration-200 ease-ui hover:border-canvas-text/30"
-              >
-                {secondaryAction.label}
-              </Link>
-            ) : null}
-          </div>
-        ) : null}
-      </div>
-
-      <PerspectiveStage
-        className="mt-12 px-4 sm:mt-16"
-        stageClassName="h-[30rem] max-w-[68rem] sm:h-[34rem]"
-        main={mainStageContent}
-        layers={layers}
-      />
-      {children}
-    </section>
   );
 }

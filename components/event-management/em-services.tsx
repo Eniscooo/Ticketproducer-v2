@@ -17,7 +17,7 @@ import { PhoneDemo } from "./phone-demos";
  */
 export function EmServices() {
   return (
-    <section id="em-services" className="relative scroll-mt-28 bg-paper py-24">
+    <section id="em-services" className="tp-section relative scroll-mt-28 bg-paper">
       <div className="mx-auto w-full max-w-[75rem] px-6 sm:px-10">
         <EmSectionHeader
           eyebrow="How it works"
@@ -82,7 +82,7 @@ export function EmServices() {
                     dark ? "bg-white/10 text-white" : "bg-ink/5 text-canvas-text",
                   )}
                 >
-                  Step {step.index}
+                  Step {step.index} · {step.service}
                 </span>
                 <h3
                   className={clsx(

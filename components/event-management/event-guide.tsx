@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { ArrowUpRight } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 import { clsx } from "@/lib/clsx";
 import { eventGuide } from "@/lib/event-management-page";
@@ -24,7 +23,7 @@ export function EventGuide() {
   const { open } = useProposal();
 
   return (
-    <section id="event-guide" className="relative scroll-mt-28 bg-canvas-alt py-24">
+    <section id="event-guide" className="tp-section relative scroll-mt-28 bg-canvas-alt">
       <div className="mx-auto w-full max-w-[75rem] px-6 sm:px-10">
         <EmSectionHeader
           eyebrow="Event types"
@@ -42,10 +41,7 @@ export function EventGuide() {
                 aria-label={`Request a proposal for ${item.title}`}
                 className={clsx(
                   "group pressable relative block aspect-[4/5] w-full overflow-hidden rounded-feature text-left [--press-scale:0.98]",
-                  "shadow-[0_18px_40px_-28px_rgba(23,23,22,0.55)] ring-1 ring-inset ring-black/5",
-                  "transition-[translate,box-shadow] duration-500 ease-editorial",
-                  "hover:-translate-y-1.5 hover:shadow-[0_30px_60px_-30px_rgba(23,23,22,0.6)]",
-                  "focus-visible:-translate-y-1.5",
+                  "tp-card-hover tp-img-skeleton ring-1 ring-inset ring-black/5",
                 )}
               >
                 <Image
@@ -63,14 +59,11 @@ export function EventGuide() {
                   className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/15 to-transparent"
                 />
 
-                {/* Frosted bar: the type's name and the way in */}
+                {/* Frosted bar: the type's name. The whole card is the button — no separate control inside it. */}
                 <div className="absolute inset-x-2 bottom-2 flex items-center justify-between gap-2 rounded-[1.1rem] border border-white/20 bg-white/12 px-3 py-2.5 backdrop-blur-md sm:inset-x-3 sm:bottom-3 sm:px-4 sm:py-3">
                   <h3 className="min-w-0 text-[0.8125rem] font-semibold leading-snug text-white sm:text-[0.9375rem]">
                     {item.title}
                   </h3>
-                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-white text-ink transition-transform duration-500 ease-editorial group-hover:rotate-45 sm:h-8 sm:w-8">
-                    <ArrowUpRight aria-hidden className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                  </span>
                 </div>
               </button>
             </Reveal>

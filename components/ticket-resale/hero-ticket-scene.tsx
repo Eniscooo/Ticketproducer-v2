@@ -9,7 +9,6 @@ import {
   useStageMotion,
   type FloatingLayer,
 } from "@/components/ui/animated-3d-perspective-hero-with-floating-glass-layers";
-import { QrGlyph } from "@/components/ui/qr-glyph";
 import { useReducedMotionSafe } from "@/lib/use-reduced-motion-safe";
 import { cn } from "@/lib/utils";
 
@@ -48,14 +47,14 @@ type Show = {
  * schedule; seats and prices are representative.
  */
 const SHOWS: Show[] = [
-  { title: "Hamilton", venue: "Richard Rodgers Theatre", date: "Fri, Dec 18", time: "7:00 PM", runtime: "2h 45m", section: "Orchestra", row: "F", seat: "112", total: "$318", number: "TP-4821-0937", image: "/broadway/hamilton.jpg" },
-  { title: "Wicked", venue: "Gershwin Theatre", date: "Sat, Dec 12", time: "2:00 PM", runtime: "2h 45m", section: "Mezzanine", row: "B", seat: "204", total: "$238", number: "TP-5174-2280", image: "/broadway/wicked.jpg" },
-  { title: "The Great Gatsby", venue: "Broadway Theatre", date: "Sat, Dec 5", time: "8:00 PM", runtime: "2h 30m", section: "Orchestra", row: "H", seat: "14", total: "$198", number: "TP-5502-7716", image: "/broadway/great-gatsby.jpg" },
-  { title: "The Lion King", venue: "Minskoff Theatre", date: "Sun, Dec 6", time: "1:00 PM", runtime: "2h 30m", section: "Orchestra", row: "K", seat: "18", total: "$258", number: "TP-6032-1145", image: "/broadway/lion-king.jpg" },
-  { title: "Chicago", venue: "Ambassador Theatre", date: "Fri, Dec 4", time: "8:00 PM", runtime: "2h 30m", section: "Orchestra", row: "M", seat: "21", total: "$178", number: "TP-6650-3391", image: "/broadway/chicago.jpg" },
-  { title: "Aladdin", venue: "New Amsterdam Theatre", date: "Wed, Dec 9", time: "1:00 PM", runtime: "2h 30m", section: "Mezzanine", row: "A", seat: "107", total: "$198", number: "TP-7129-0458", image: "/broadway/aladdin.jpg" },
+  { title: "Hamilton", venue: "Richard Rodgers Theatre", date: "Fri, Dec 18", time: "7:00 PM", runtime: "2h 45m", section: "Orchestra", row: "F", seat: "112", total: "$318", number: "TP-4821-0937", image: "/posters/hamilton.jpg" },
+  { title: "Wicked", venue: "Gershwin Theatre", date: "Sat, Dec 12", time: "2:00 PM", runtime: "2h 45m", section: "Mezzanine", row: "B", seat: "204", total: "$238", number: "TP-5174-2280", image: "/posters/wicked.jpg" },
+  { title: "The Great Gatsby", venue: "Broadway Theatre", date: "Sat, Dec 5", time: "8:00 PM", runtime: "2h 30m", section: "Orchestra", row: "H", seat: "14", total: "$198", number: "TP-5502-7716", image: "/posters/the-great-gatsby.jpg" },
+  { title: "The Lion King", venue: "Minskoff Theatre", date: "Sun, Dec 6", time: "1:00 PM", runtime: "2h 30m", section: "Orchestra", row: "K", seat: "18", total: "$258", number: "TP-6032-1145", image: "/posters/the-lion-king.jpg" },
+  { title: "Chicago", venue: "Ambassador Theatre", date: "Fri, Dec 4", time: "8:00 PM", runtime: "2h 30m", section: "Orchestra", row: "M", seat: "21", total: "$178", number: "TP-6650-3391", image: "/posters/chicago.jpg" },
+  { title: "Aladdin", venue: "New Amsterdam Theatre", date: "Wed, Dec 9", time: "1:00 PM", runtime: "2h 30m", section: "Mezzanine", row: "A", seat: "107", total: "$198", number: "TP-7129-0458", image: "/posters/aladdin.png" },
   { title: "Hadestown", venue: "Walter Kerr Theatre", date: "Sat, Dec 19", time: "7:30 PM", runtime: "2h 30m", section: "Orchestra", row: "H", seat: "4", total: "$218", number: "TP-7713-6602", image: "/broadway/hadestown.jpg" },
-  { title: "The Book of Mormon", venue: "Eugene O'Neill Theatre", date: "Thu, Dec 10", time: "7:00 PM", runtime: "2h 30m", section: "Mezzanine", row: "C", seat: "11", total: "$198", number: "TP-8890-5513", image: "/broadway/book-of-mormon.jpg" },
+  { title: "The Book of Mormon", venue: "Eugene O'Neill Theatre", date: "Thu, Dec 10", time: "7:00 PM", runtime: "2h 30m", section: "Mezzanine", row: "C", seat: "11", total: "$198", number: "TP-8890-5513", image: "/posters/the-book-of-mormon.jpg" },
 ];
 
 /** How long each show stays on the ticket. */
@@ -108,7 +107,7 @@ function DigitalTicket({ index }: { index: number }) {
 
   return (
     <div className="w-[19rem] [filter:drop-shadow(0_38px_44px_rgba(23,23,22,0.34))_drop-shadow(0_8px_14px_rgba(23,23,22,0.2))] sm:w-[36rem] md:w-[40rem] dark:[filter:drop-shadow(0_38px_44px_rgba(0,0,0,0.7))]">
-      <div className="tp-ticket-cut relative flex flex-col overflow-hidden rounded-[1.75rem] bg-ink text-bone ring-1 ring-inset ring-white/8 sm:h-[18rem] sm:flex-row">
+      <div className="relative flex flex-col overflow-hidden rounded-[1.75rem] bg-ink text-bone ring-1 ring-inset ring-white/8 sm:h-[18rem] sm:flex-row">
         {/* Artwork: every show's photo is stacked and cross-faded, so each is loaded before its turn */}
         <div className="relative h-28 shrink-0 sm:h-auto sm:w-[13rem]">
           {SHOWS.map((s, i) => (
@@ -118,6 +117,8 @@ function DigitalTicket({ index }: { index: number }) {
               alt=""
               fill
               loading={i === 0 ? "eager" : "lazy"}
+              // The first show's art is the Tickets page's largest element: fetch it first.
+              fetchPriority={i === 0 ? "high" : "low"}
               sizes="(min-width: 640px) 208px, 304px"
               className={cn(
                 "object-cover object-[50%_42%] transition-[opacity,scale] duration-1000 ease-editorial sm:object-[50%_30%]",
@@ -178,18 +179,23 @@ function DigitalTicket({ index }: { index: number }) {
           </div>
         </div>
 
-        {/* Stub: the tear line sits exactly on the mask's notches (.tp-ticket-cut) */}
-        <div className="relative flex h-[9.5rem] shrink-0 items-center gap-4 border-t border-dashed border-bone/20 px-5 sm:h-auto sm:w-[11.5rem] sm:flex-col sm:justify-center sm:gap-3 sm:border-l sm:border-t-0 sm:px-4">
-          <div className="relative shrink-0 overflow-hidden rounded-xl bg-white p-2 [--scan-travel:5.5rem] sm:[--scan-travel:6.5rem]">
-            <QrGlyph seed={4821 + index * 97} className="h-[5.5rem] w-[5.5rem] text-ink sm:h-[6.5rem] sm:w-[6.5rem]" />
-            {/* The entry scanner passing over the code */}
-            <span
-              aria-hidden
-              className="tp-scan absolute inset-x-1 top-2 h-0.5 rounded-full bg-confirm shadow-[0_0_10px_2px_rgba(91,189,138,0.65)]"
-            />
+        {/*
+         * The seal panel. Deliberately no ticket clichés (the brief rules out
+         * barcodes, perforations and torn edges): a plain hairline divides it,
+         * and the mark is the logo's own letterforms in a fine ring.
+         */}
+        <div className="relative flex h-[9.5rem] shrink-0 items-center gap-4 border-t border-bone/10 px-5 sm:h-auto sm:w-[11.5rem] sm:flex-col sm:justify-center sm:gap-3 sm:border-l sm:border-t-0 sm:px-4">
+          <div className="grid h-20 w-20 shrink-0 place-items-center rounded-full border border-bone/25 sm:h-24 sm:w-24">
+            <div className="grid h-[4.25rem] w-[4.25rem] place-items-center rounded-full border border-bone/10 sm:h-20 sm:w-20">
+              <span className="flex flex-col items-center font-display text-[0.6875rem] font-light leading-none tracking-[0.32em] text-bone">
+                <span className="indent-[0.32em]">TP</span>
+                <span aria-hidden className="my-1.5 h-px w-6 bg-bone/50" />
+                <span className="text-[0.5rem] tracking-[0.28em] indent-[0.28em] text-stone">NYC</span>
+              </span>
+            </div>
           </div>
           <div className="min-w-0 sm:text-center">
-            <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-bone">Scan at entry</p>
+            <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-bone">Your seat, confirmed</p>
             <p className="mt-1 font-mono text-[0.6875rem] text-stone">{show.number}</p>
             <p className="mt-2 inline-flex items-center gap-1 rounded-full bg-confirm/15 px-2 py-0.5 text-[0.625rem] font-semibold text-confirm">
               <BadgeCheck aria-hidden className="h-3 w-3" />
@@ -235,9 +241,9 @@ function DiscoveryCard() {
         </p>
         <div className="mt-2.5 flex items-center justify-between">
           <p className="text-xs text-canvas-text-muted">
-            From <span className="text-sm font-bold text-canvas-text">$109</span>
+            From <span className="text-sm font-bold text-canvas-text">$109</span> incl. fees
           </p>
-          <span className="rounded-full bg-curtain px-2.5 py-1 text-[0.6875rem] font-semibold text-white">Get tickets</span>
+          <span className="shrink-0 whitespace-nowrap rounded-full bg-curtain px-2.5 py-1 text-[0.6875rem] font-semibold text-white">Get tickets</span>
         </div>
       </div>
     </div>
@@ -247,7 +253,7 @@ function DiscoveryCard() {
 /** Right: the moment it's bought. The ring draws, the tick lands, then the three steps confirm in turn. */
 function PurchaseConfirmation({ index }: { index: number }) {
   const show = SHOWS[index];
-  const steps = ["Payment successful", "Ticket confirmed", "QR ticket ready"];
+  const steps = ["Payment successful", "Ticket confirmed", "Mobile ticket ready"];
   return (
     <div className={cn(GLASS, "w-60 p-3.5 sm:w-64 sm:p-4")}>
       <div className="flex items-center gap-3">
@@ -362,7 +368,7 @@ function ResaleCard() {
       </div>
       <div className="mt-2.5 flex items-center gap-2.5">
         <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg">
-          <Image src="/broadway/chicago.jpg" alt="" fill sizes="40px" className="object-cover" />
+          <Image src="/posters/chicago.jpg" alt="" fill sizes="40px" className="object-cover object-top" />
         </div>
         <div className="min-w-0">
           <p className="truncate text-sm font-bold leading-tight">Chicago</p>

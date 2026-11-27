@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { SiteNav } from "@/components/site/site-nav";
 import { SiteFooter } from "@/components/site/site-footer";
 import { Faq } from "@/components/site/faq";
-import { TPElite } from "@/components/site/tp-elite";
 import { TicketResaleNav } from "@/components/ticket-resale/ticket-resale-nav";
 import { TrDiscovery } from "@/components/ticket-resale/tr-discovery";
 import { TrFaves } from "@/components/ticket-resale/tr-faves";
@@ -14,14 +13,15 @@ import { eventRails, resaleEvents, trFaq, type ResaleEvent } from "@/lib/ticket-
 export const metadata: Metadata = {
   title: "Tickets",
   description:
-    "Verified tickets for Broadway shows in New York, plus TP Elite, a private concierge line for hard-to-get seats.",
+    "Verified tickets for every Broadway show in New York — musicals, plays and holiday shows.",
 };
 
 /**
  * The ticket side of the site — everything here is for the person buying a
  * seat. Order: hero and search, the filter bar and results, the row of
- * popular picks as a shortcut into the rails, the rails themselves, then TP
- * Elite for the buyers who want someone to handle it for them.
+ * popular picks as a shortcut into the rails, the rails themselves, then the
+ * newsletter, FAQ and closing call to action. (TP Elite used to sit after the
+ * rails; it is being reworked into its own part of the system.)
  *
  * Cards link to /ticket-resale/[slug] now, so there is no shared dialog
  * provider to wrap the tree in.
@@ -65,11 +65,6 @@ export default function Page() {
             />
           );
         })}
-
-        {/* The concierge line belongs to the buyer side: a seat, handled for you */}
-        <div className="bg-paper px-3 py-10 sm:px-6 sm:py-14">
-          <TPElite />
-        </div>
 
         <TrSubscribe />
 

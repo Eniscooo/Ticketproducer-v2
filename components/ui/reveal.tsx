@@ -12,6 +12,11 @@ type RevealProps = {
   distance?: number;
   as?: "div" | "section" | "li" | "span" | "p";
   className?: string;
+  /**
+   * For content on screen at load: plain markup with a CSS entrance that runs
+   * from first paint, instead of waiting for JavaScript to reveal it.
+   */
+  immediate?: boolean;
 };
 
 /**
@@ -33,10 +38,23 @@ export function Reveal({
   distance = 14,
   as = "div",
   className,
+  immediate = false,
 }: RevealProps) {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { once: true, margin: "-12% 0px -8% 0px" });
   const reduceMotion = useReducedMotionSafe();
+
+  if (immediate) {
+    const Tag = as;
+    return (
+      <Tag
+        className={className ? `tp-rise-now ${className}` : "tp-rise-now"}
+        style={delay ? ({ ["--d" as string]: `${Math.round(delay * 1000)}ms` } as React.CSSProperties) : undefined}
+      >
+        {children}
+      </Tag>
+    );
+  }
 
   const Component = motion[as];
   const hidden = { opacity: 0, transform: `translateY(${distance}px)` };

@@ -88,7 +88,7 @@ export function SiteFooter() {
               >
                 {site.contact.email}
               </a>
-              <span className="label text-stone-dim/80">
+              <span className="label text-stone-dim">
                 {site.contact.addressLines.join(" · ")}
               </span>
             </div>
@@ -97,7 +97,7 @@ export function SiteFooter() {
 
         {/* Sign-off bar: copyright, then the legal links and socials */}
         <div className="mt-14 flex flex-col gap-5 border-t border-bone/10 pt-7 sm:mt-16 sm:flex-row sm:items-center sm:justify-between">
-          <p className="label text-stone-dim/80">© 2026 {site.name}</p>
+          <p className="label text-stone-dim">© 2026 {site.name}. All rights reserved.</p>
           <div className="flex flex-wrap items-center gap-x-8 gap-y-5">
             <nav aria-label="Legal" className="flex flex-wrap gap-x-6 gap-y-5 sm:gap-y-2">
               {site.legal.map((item) => (
