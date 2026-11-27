@@ -69,9 +69,12 @@ export function EmServices() {
                 <span
                   aria-hidden
                   className={clsx(
-                    // Fill made transparent with text-fill-color (not `color`), so the stroke can use currentColor.
-                    "block font-display text-[clamp(4.5rem,9vw,7rem)] font-extrabold leading-[0.8] tracking-[-0.05em] [-webkit-text-fill-color:transparent] [-webkit-text-stroke:1.5px_currentColor]",
-                    dark ? "text-white/30" : "text-ink/20",
+                    // A faint solid numeral, not an outline: "1" and "4" are drawn from overlapping
+                    // shapes, and a text-stroke outline traced the seams where they meet (worst on
+                    // phones), so those two never matched "2" and "3". A fill draws each digit as one
+                    // shape, identically everywhere. The light card's tint follows the theme.
+                    "block font-display text-[clamp(4.5rem,9vw,7rem)] font-extrabold leading-[0.8] tracking-[-0.05em]",
+                    dark ? "text-white/[0.12]" : "text-canvas-text/[0.09]",
                   )}
                 >
                   {String(step.index).padStart(2, "0")}

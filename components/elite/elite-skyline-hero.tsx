@@ -104,11 +104,7 @@ export function EliteSkylineHero() {
       {/* Where we are: on the fade into the next section, so it takes the theme's text colour */}
       <div className="absolute inset-x-0 bottom-0">
         <div className="mx-auto w-full max-w-[75rem] px-6 pb-8 sm:px-10 sm:pb-10">
-          <p className="tp-rise-now flex items-center gap-3 text-[0.75rem] font-semibold uppercase tracking-[0.22em] text-canvas-text/80 [--d:300ms]">
-            <span aria-hidden className="hidden h-px w-8 bg-canvas-text/40 sm:block" />
-            <MapPin aria-hidden className="h-3.5 w-3.5" />
-            Manhattan · New York City
-          </p>
+          
         </div>
       </div>
     </section>
